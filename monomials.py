@@ -1,9 +1,18 @@
 class Monomial:
-    def __init__(self, coefficient=0, variables=[]):
+    def __init__(self, coefficient=1, variables=[]):
         """
         Initialize the monomial
         """
-        self.coefficient = int(coefficient)
+
+        # Set the coefficient type
+        if not type(coefficient) in (int, float):
+            if coefficient.isdigit():
+                coefficient = int(coefficient)
+            else:
+                coefficient = float(coefficient)
+
+        # Initialize the monomial
+        self.coefficient = coefficient
         self.variables = variables
         self.regroup_variables()
 
@@ -37,12 +46,17 @@ class Monomial:
         self.variables.clear()
         for var in counter.keys():
             if not counter[var] == 0:
+                if counter[var] < 0:
+                    raise ValueError("Not a monomial")
                 if not counter[var] in (0, 1):
                     var += "^" + str(counter[var])
                 self.variables.append(var)
 
         # Sort them
         self.variables.sort()
+
+        # Add the monomial degree
+        self.degree = sum(counter.values())
 
     def __str__(self):
         """
@@ -51,12 +65,15 @@ class Monomial:
         Ex:
         Monomial(2, ["x^5", "y^3"]) => 2x^5y^3
         """
-        if self.coefficient == 1:
+        if self.coefficient == 1 and self.variables == []:
+            return "1"
+        elif self.coefficient == 1:
             return "".join(self.variables)
         elif self.coefficient == 0:
-            return ""
+            return "0"
         else:
-            return str(self.coefficient) + "".join(self.variables)
+            return str(self.coefficient) +
+            "".join(self.variables)
 
     def __add__(self, other):
         """
@@ -67,8 +84,8 @@ class Monomial:
         => Monomial(9, ["x", "y"])
         """
         if self.variables == other.variables:
-            return Monomial(self.coefficient + other.coefficient,
-                            self.variables)
+            return Monomial(self.coefficient +
+                            other.coefficient, self.variables)
         else:
             raise ValueError("The variables are not equals")
 
@@ -81,8 +98,8 @@ class Monomial:
         => Monomial(-5, ["x", "y"])
         """
         if self.variables == other.variables:
-            return Monomial(self.coefficient - other.coefficient,
-                            self.variables)
+            return Monomial(self.coefficient -
+                            other.coefficient, self.variables)
         else:
             raise ValueError("The variables are not equals")
 
@@ -94,8 +111,14 @@ class Monomial:
         Monomial(2, ["x", "y"]) * Monomial(7, ["x", "y"])
         => Monomial(14, ["x^2", "y^2"])
         """
+
+        # Make an exception for integer / float
+        if not type(other) == Monomial:
+            return Monomial(self.coefficient * other,
+                            self.variables)
+
         return Monomial(self.coefficient * other.coefficient,
-                        self.variables + other.variables)
+                        self.variables)
 
     def __truediv__(self, other):
         """
@@ -106,6 +129,11 @@ class Monomial:
         => Monomial(2, ["x"])
         """
 
+        # Make an exception for integer / float
+        if not type(other) == Monomial:
+            return Monomial(self.coefficient / other,
+                            self.variables)
+
         # Divide the variables
         variables = self.variables
         for var in other.variables:
@@ -115,7 +143,7 @@ class Monomial:
             else:
                 exponent = -1
             variables.append(letter + "^" + str(exponent))
-
+        print(self.coefficient / other.coefficient)
         return Monomial(self.coefficient / other.coefficient,
                         variables)
 
