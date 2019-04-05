@@ -72,8 +72,7 @@ class Monomial:
         elif self.coefficient == 0:
             return "0"
         else:
-            return str(self.coefficient) +
-            "".join(self.variables)
+            return str(self.coefficient) + "".join(self.variables)
 
     def __add__(self, other):
         """
@@ -84,8 +83,8 @@ class Monomial:
         => Monomial(9, ["x", "y"])
         """
         if self.variables == other.variables:
-            return Monomial(self.coefficient +
-                            other.coefficient, self.variables)
+            return Monomial(self.coefficient + other.coefficient,
+                            self.variables)
         else:
             raise ValueError("The variables are not equals")
 
@@ -98,8 +97,8 @@ class Monomial:
         => Monomial(-5, ["x", "y"])
         """
         if self.variables == other.variables:
-            return Monomial(self.coefficient -
-                            other.coefficient, self.variables)
+            return Monomial(self.coefficient - other.coefficient,
+                            self.variables)
         else:
             raise ValueError("The variables are not equals")
 
@@ -135,7 +134,7 @@ class Monomial:
                             self.variables)
 
         # Divide the variables
-        variables = self.variables
+        variables = self.variables[:]
         for var in other.variables:
             letter = var.split("^")[0]
             if "^" in var:
@@ -143,7 +142,6 @@ class Monomial:
             else:
                 exponent = -1
             variables.append(letter + "^" + str(exponent))
-        print(self.coefficient / other.coefficient)
         return Monomial(self.coefficient / other.coefficient,
                         variables)
 
