@@ -168,3 +168,27 @@ class Monomial:
             variables.append(letter + "^" + str(exponent))
 
         return Monomial(self.coefficient ** n, variables)
+
+    def __pos__ (self):
+        """
+        Return the monomial itself
+        """
+        return Monomial(self.coefficient, self.variables)
+
+    def __neg__ (self):
+        """
+        Return the opposite of the monomial
+        """
+        return Monomial(- self.coefficient, self.variables)
+
+    def __abs__ (self):
+        """
+        Return the absolute value of the monomial
+        """
+        return Monomial(abs(self.coefficient), self.variables)
+
+    def __round__ (self, n=0):
+        """
+        Return the rounded value of the monomial
+        """
+        return Monomial(round(self.coefficient, n), self.variables)
