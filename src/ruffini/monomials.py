@@ -5,15 +5,13 @@ class Monomial:
         """
 
         # Set the coefficient type
-        if not type(coefficient) in (int, float):
-            if coefficient.isdigit():
-                coefficient = int(coefficient)
-            else:
-                coefficient = float(coefficient)
+        if type(coefficient) == str:
+            coefficient = eval(coefficient)
 
         # Initialize the monomial
         self.coefficient = coefficient
         self.variables = variables
+        self.variables_str = lambda: "".join(self.variables)
         self.regroup_variables()
 
     def regroup_variables(self):
@@ -27,6 +25,8 @@ class Monomial:
 
         # Create a counter and count the variables
         counter = {}
+
+        # Extract letters and exponents
         for var in self.variables:
             letter = var.split("^")[0]
             if "^" in var:
@@ -37,6 +37,8 @@ class Monomial:
                 exponent = int(exponent)
             else:
                 exponent = 1
+
+            # Add them to the counter
             if letter in counter.keys():
                 counter[letter] += exponent
             else:
@@ -45,12 +47,13 @@ class Monomial:
         # Rewrite the variables
         self.variables.clear()
         for var in counter.keys():
-            if not counter[var] == 0:
-                if counter[var] < 0:
-                    raise ValueError("Not a monomial")
-                if not counter[var] in (0, 1):
-                    var += "^" + str(counter[var])
-                self.variables.append(var)
+            if counter[var] == 0:
+                continue
+            elif counter[var] < 0:
+                raise ValueError("Not a monomial")
+            elif counter[var] > 1:
+                var += "^" + str(counter[var])
+            self.variables.append(var)
 
         # Sort them
         self.variables.sort()
@@ -68,11 +71,11 @@ class Monomial:
         if self.coefficient == 1 and self.variables == []:
             return "1"
         elif self.coefficient == 1:
-            return "".join(self.variables)
+            return self.variables_str()
         elif self.coefficient == 0:
             return "0"
         else:
-            return str(self.coefficient) + "".join(self.variables)
+            return str(self.coefficient) + self.variables_str()
 
     def __add__(self, other):
         """
@@ -112,12 +115,12 @@ class Monomial:
         """
 
         # Make an exception for integer / float
-        if not type(other) == Monomial:
+        if not type(other) == type(self):
             return Monomial(self.coefficient * other,
                             self.variables)
 
         return Monomial(self.coefficient * other.coefficient,
-                        self.variables)
+                        self.variables + other.variables)
 
     def __truediv__(self, other):
         """
@@ -129,7 +132,7 @@ class Monomial:
         """
 
         # Make an exception for integer / float
-        if not type(other) == Monomial:
+        if not type(other) == type(self):
             return Monomial(self.coefficient / other,
                             self.variables)
 
@@ -154,7 +157,7 @@ class Monomial:
         => Monomial(4, ["x^4", "y^2"])
         """
 
-        # Divide the variables
+        # Raise the variables to power
         variables = []
         for var in self.variables:
             letter = var.split("^")[0]
