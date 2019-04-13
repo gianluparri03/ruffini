@@ -1,3 +1,11 @@
+from functools import reduce
+from fractions import gcd
+from collections import Counter
+
+
+def lcm(x, y): return int((x*y) / gcd(x, y))
+
+
 class Monomial:
     def __init__(self, coefficient=1, variables=[]):
         """
@@ -23,26 +31,7 @@ class Monomial:
         => Monomial(2, ["x^5", "y^3"])
         """
 
-        # Create a counter and count the variables
-        counter = {}
-
-        # Extract letters and exponents
-        for var in self.variables:
-            letter = var.split("^")[0]
-            if "^" in var:
-                exponent = var.split("^")[1]
-                if "(" in exponent:
-                    exponent = exponent.replace("(", "")
-                    exponent = exponent.replace(")", "")
-                exponent = int(exponent)
-            else:
-                exponent = 1
-
-            # Add them to the counter
-            if letter in counter.keys():
-                counter[letter] += exponent
-            else:
-                counter[letter] = exponent
+        counter = self.count_variables()
 
         # Rewrite the variables
         self.variables.clear()
@@ -72,10 +61,19 @@ class Monomial:
             return "1"
         elif self.coefficient == 1:
             return self.variables_str()
+        elif self.coefficient == -1:
+            return "-" + self.variables_str()
         elif self.coefficient == 0:
             return "0"
         else:
             return str(self.coefficient) + self.variables_str()
+
+    def __eq__(self, other):
+        """
+        Return True if the monomials are equivalent
+        """
+        return all([self.coefficient == other.coefficient,
+                   self.variables == other.variables])
 
     def __add__(self, other):
         """
@@ -85,7 +83,7 @@ class Monomial:
         Monomial(2, ["x", "y"]) + Monomial(7, ["x", "y"])
         => Monomial(9, ["x", "y"])
         """
-        if self.variables == other.variables:
+        if self.similar_to(other):
             return Monomial(self.coefficient + other.coefficient,
                             self.variables)
         else:
@@ -99,7 +97,7 @@ class Monomial:
         Monomial(2, ["x", "y"]) - Monomial(7, ["x", "y"])
         => Monomial(-5, ["x", "y"])
         """
-        if self.variables == other.variables:
+        if self.similar_to(other):
             return Monomial(self.coefficient - other.coefficient,
                             self.variables)
         else:
@@ -169,26 +167,151 @@ class Monomial:
 
         return Monomial(self.coefficient ** n, variables)
 
-    def __pos__ (self):
+    def __pos__(self):
         """
         Return the monomial itself
         """
         return Monomial(self.coefficient, self.variables)
 
-    def __neg__ (self):
+    def __neg__(self):
         """
         Return the opposite of the monomial
         """
         return Monomial(- self.coefficient, self.variables)
 
-    def __abs__ (self):
+    def __abs__(self):
         """
         Return the absolute value of the monomial
         """
         return Monomial(abs(self.coefficient), self.variables)
 
-    def __round__ (self, n=0):
+    def __round__(self, n=0):
         """
         Return the rounded value of the monomial
         """
         return Monomial(round(self.coefficient, n), self.variables)
+
+    def degree_variable(self, var):
+        """
+        Return the degree of a specified variable
+        """
+
+        # Raise an error if var is not a variable
+        if not var.isalpha() or len(var) > 1:
+            raise ValueError("Not a variable")
+
+        if any(v.startswith(var) for v in self.variables):
+            for v in self.variables:
+                if v.startswith(var):
+                    if "^" in v:
+                        return v["^"][1]
+                    else:
+                        return 1
+        else:
+            return 0
+
+    def similar_to(self, other):
+        """
+        Return True if the given Monomial is 
+        similar to this Monomial, otherwise
+        return False
+        """
+
+        # Raise an error if "other" is not a monomial
+        if not type(self) == type(other):
+            raise ValueError("Not a monomial")
+
+        return self.variables == other.variables
+
+    def count_variables(self):
+        """
+        Return the variable counter
+        """
+
+        counter = Counter()
+
+        # Extract letters and exponents
+        for var in self.variables:
+            letter = var.split("^")[0]
+            if "^" in var:
+                exponent = var.split("^")[1]
+                if "(" in exponent:
+                    exponent = exponent.replace("(", "")
+                    exponent = exponent.replace(")", "")
+                exponent = int(exponent)
+            else:
+                exponent = 1
+
+            # Add them to the counter
+            counter[letter] += exponent
+
+        return counter
+
+    def gcd(self, *others):
+        """
+        Return the great common divisor for
+        this monomial and others.
+        """
+
+        monomials = others + (self, )
+
+        # Calculate the gcd of the coefficients
+        coefficients = [m.coefficient for m in monomials]
+        coefficient = reduce(gcd, coefficients)
+        if 0 < coefficient < 1:
+            coefficient = 1
+
+        # Regroup the variables
+        variables = []
+        exponents = Counter()
+        for monomial in monomials:
+            variables += monomial.variables
+
+        # Select the great exponent
+        for var in variables:
+            letter = var.split("^")[0]
+            if "^" in var:
+                exponent = int(var.split("^")[1])
+            else:
+                exponent = 1
+            exponents[letter] = gcd(exponents[letter], exponent)
+
+        # Rewrite the variables
+        variables = [f"{l}^{exponents[l]}" for l in exponents]
+
+        return Monomial(coefficient, variables)
+
+    def lcm(self, *others):
+        """
+        Return the great common divisor for
+        this monomial and others.
+        """
+
+        monomials = others + (self, )
+
+        # Calculate the lcm of the coefficients
+        coefficients = [m.coefficient for m in monomials]
+        coefficient = reduce(lcm, coefficients)
+
+        # Regroup the variables
+        variables = []
+        for monomial in monomials:
+            variables += monomial.variables
+        variables.sort()
+
+        # Calculate the lcm of the variables
+        exponents = Counter()
+        for variable in variables:
+            letter = variable.split("^")[0]
+            if "^" in variable:
+                exponent = int(variable.split("^")[1])
+            else:
+                exponent = 1
+            if exponents[letter] == 0:
+                exponents[letter] = exponent
+            exponents[letter] = lcm(exponents[letter], exponent)
+
+        # Rewrite the variables
+        variables = [f"{l}^{exponents[l]}" for l in exponents]
+
+        return Monomial(coefficient, variables)
