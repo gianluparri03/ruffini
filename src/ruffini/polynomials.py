@@ -1,4 +1,5 @@
 from .monomials import Monomial
+from collections import Counter
 
 class Polynomial:
     def __init__(self, *monomials):
@@ -12,18 +13,14 @@ class Polynomial:
         """
         Sum all the simil monomials
         """
-        old_terms = self.terms[:]
+        old_terms = self.terms.deepcopy()
         self.terms.clear()
 
         # Make a counter and sum simil monomials
-        counter = {}
+        counter = Counter()
         var_to_list = {}
         for term in old_terms:
-            if term.variables_str() in counter.keys():
-                counter[term.variables_str()] += term.coefficient
-            else:
-                counter[term.variables_str()] = term.coefficient
-                var_to_list[term.variables_str()] = term.variables
+            counter[term.variables_str()] += term.coefficient
 
         # Create new monomials from the sums
         for var in counter:
