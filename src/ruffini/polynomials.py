@@ -1,30 +1,49 @@
 from .monomials import Monomial
-from collections import Counter
+from collections import Counter, defaultdict
+from functools import reduce
+
 
 class Polynomial:
     def __init__(self, *monomials):
         """
         Initialize the polynomial
         """
+
         self.terms = list(monomials)
         self.reduce()
+
+        # Add polynomial degrees
+        self.degree = max(m.degree for m in self.terms)
+        self.degrees = {}
+
+        # Calculate it for each letter
+        letters = set()
+        for m in self.terms:
+            letters |= set(m.degrees.keys())
+        for l in letters:
+            self.degrees[l] = max(m.degrees[l] for m in self.terms)
+
+        self.ishomogeneous = all(
+            self.terms[0].degree == m.degree for m in self.terms)
 
     def reduce(self):
         """
         Sum all the simil monomials
         """
-        old_terms = self.terms.deepcopy()
-        self.terms.clear()
 
         # Make a counter and sum simil monomials
         counter = Counter()
-        var_to_list = {}
-        for term in old_terms:
-            counter[term.variables_str()] += term.coefficient
+        for m in self.terms:
+            counter[" ".join(m.variables)] += m.coefficient
 
         # Create new monomials from the sums
+        self.terms.clear()
         for var in counter:
-            self.terms.append(Monomial(counter[var], var_to_list[var]))
+            self.terms.append(Monomial(counter[var],
+                                       var.split(" ")))
 
-        # Add polynomial degree
-        self.degree = max(term.degree for term in self.terms)
+    def __str__(self):
+        """
+        Return the polynomial as a string
+        """
+        return "".join(str(m) for m in self.terms)

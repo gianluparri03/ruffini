@@ -1,6 +1,6 @@
 from functools import reduce
 from fractions import gcd
-from collections import Counter
+from collections import Counter, defaultdict
 
 
 def lcm(x, y): return int((x*y) / gcd(x, y))
@@ -20,6 +20,7 @@ class Monomial:
         self.coefficient = coefficient
         self.variables = variables
         self.regroup_variables()
+        self.degree = sum(self.degrees.values())
 
     """
     Utility Methods
@@ -28,14 +29,10 @@ class Monomial:
     def regroup_variables(self):
         """
         Regroup the variables of the monomial
-
-        Ex:
-        Monomial(2, [y^2", "y", "x^5"])
-        => Monomial(2, ["x^5", "y^3"])
         """
 
         counter = Counter()
-        self.degrees = {}
+        self.degrees = defaultdict(lambda: 0)
 
         # Extract letters and exponents
         for var in self.variables:
@@ -67,9 +64,6 @@ class Monomial:
 
         # Sort them
         self.variables.sort()
-
-        # Add the monomial degree
-        self.degree = sum(self.degrees.values())
 
     def similar_to(self, other):
         """
@@ -162,9 +156,6 @@ class Monomial:
     def __str__(self):
         """
         Return the monomial as a string
-
-        Ex:
-        Monomial(2, ["x^5", "y^3"]) => 2x^5y^3
         """
 
         variables = "".join(self.variables)
@@ -229,10 +220,6 @@ class Monomial:
     def __add__(self, other):
         """
         Add two monomials
-
-        Ex.
-        Monomial(2, ["x", "y"]) + Monomial(7, ["x", "y"])
-        => Monomial(9, ["x", "y"])
         """
         if self.similar_to(other):
             return Monomial(self.coefficient + other.coefficient,
@@ -243,10 +230,6 @@ class Monomial:
     def __sub__(self, other):
         """
         Subtract two monomials
-
-        Ex.
-        Monomial(2, ["x", "y"]) - Monomial(7, ["x", "y"])
-        => Monomial(-5, ["x", "y"])
         """
         if self.similar_to(other):
             return Monomial(self.coefficient - other.coefficient,
@@ -257,10 +240,6 @@ class Monomial:
     def __mul__(self, other):
         """
         Multiply two monomials
-
-        Ex.
-        Monomial(2, ["x", "y"]) * Monomial(7, ["x", "y"])
-        => Monomial(14, ["x^2", "y^2"])
         """
 
         # Make an exception for integer / float
@@ -274,10 +253,6 @@ class Monomial:
     def __truediv__(self, other):
         """
         Divide two monomials
-
-        Ex.
-        Monomial(18, ["x", "y"]) * Monomial(9, ["y"])
-        => Monomial(2, ["x"])
         """
 
         # Make an exception for integer / float
@@ -301,10 +276,6 @@ class Monomial:
     def __pow__(self, n):
         """
         Raise a monomial to power
-
-        Ex.
-        Monomial(2, ["x^2", "y"]) ** 2
-        => Monomial(4, ["x^4", "y^2"])
         """
 
         # Raise the variables to power
