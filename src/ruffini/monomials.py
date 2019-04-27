@@ -1,9 +1,9 @@
 from functools import reduce
-from fractions import gcd
+from fractions import _gcd
 from collections import Counter, defaultdict
 
 
-def lcm(x, y): return int((x*y) / gcd(x, y))
+def _lcm(x, y): return int((x*y) / _gcd(x, y))
 
 
 class Monomial:
@@ -96,7 +96,7 @@ class Monomial:
 
         return self.variables == other.variables
 
-    def gcd(self, *others: 'Monomial(s)') -> 'Monomial':
+    def gcd(self, *others: 'Monomial') -> 'Monomial':
         """
         This method returns the greatest common divisor
         of two or more monomials (*others):
@@ -112,7 +112,7 @@ class Monomial:
 
         # Calculate the gcd of the coefficients
         coefficients = [m.coefficient for m in monomials]
-        coefficient = reduce(gcd, sorted(coefficients))
+        coefficient = reduce(_gcd, sorted(coefficients))
         if 0 < coefficient < 1:
             coefficient = 1
 
@@ -127,7 +127,7 @@ class Monomial:
 
         return Monomial(coefficient, variables)
 
-    def lcm(self, *others: 'Monomial(s)') -> 'Monomial':
+    def lcm(self, *others: 'Monomial') -> 'Monomial':
         """
         This method returns the least common multiple
         of two or more monomials (*others):
@@ -143,7 +143,7 @@ class Monomial:
 
         # Calculate the lcm of the coefficients
         coefficients = [m.coefficient for m in monomials]
-        coefficient = reduce(lcm, coefficients)
+        coefficient = reduce(_lcm, coefficients)
 
         # Calculate the lcm of the variables
         variables = {}
@@ -161,7 +161,7 @@ class Monomial:
         """
         Return the monomial as a string (without *
         operator):
-        
+
         >>> str(Monomial(14, ["x", "y"]))
         '14xy'
         >>> str(Monomial(-1, ["a"]))
@@ -248,7 +248,7 @@ class Monomial:
         """
         return Monomial(abs(self.coefficient), self.variables)
 
-    def __round__(self, n: int=0) -> 'Monomial':
+    def __round__(self, n: int = 0) -> 'Monomial':
         """
         This method is used to round the
         coefficient of the monomial with a custom
