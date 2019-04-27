@@ -1,2 +1,2 @@
-from .monomials import *
-from .polynomials import *
+from .monomials import Monomial
+from .polynomials import Polynomial
