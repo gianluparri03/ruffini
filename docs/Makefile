@@ -1,13 +1,4 @@
 # Minimal makefile for Sphinx documentation
-#
-
-# You can set these variables from the command line.
-SPHINXOPTS    =
-SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = ruffini
-SOURCEDIR     = rst
-BUILDDIR      = build
-
 
 clean:
 	rm -rf _* *.js *.html
@@ -22,3 +13,6 @@ apidoc:
 	sphinx-apidoc -o source ../src/ruffini
 	cp source/modules.rst source/index.rst
 
+doctest:
+	python3 -m doctest -v ../src/ruffini/monomials.py
+	python3 -m doctest -v ../src/ruffini/polynomials.py
