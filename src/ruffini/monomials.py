@@ -55,6 +55,8 @@ class Monomial:
 
         # Extract letters and exponents
         for var in self.variables:
+            if any([n in var for n in map(str, range(10))]) and "^" not in var:
+                raise ValueError(f"'{var}' is not a variable")
             letter = var.split("^")[0]
             if "^" in var:
                 exponent = var.split("^")[1]
@@ -115,7 +117,7 @@ class Monomial:
         >>> b = Monomial(8, ["x"])
         >>> c = Monomial(-13, ["x", "y"])
         >>> print(a.gcd(b, c))
-        Monomial(1, ['x'])
+        x
 
         :param others: The others monomial 
         :type others: Monomial
@@ -150,7 +152,7 @@ class Monomial:
         >>> b = Monomial(8, ["x"])
         >>> c = Monomial(-13, ["x", "y"])
         >>> print(a.lcm(b, c))
-        Monomial(520, ['x', 'y'])
+        520xy
 
         :param others: The others monomial 
         :type others: Monomial
@@ -181,16 +183,26 @@ class Monomial:
         operator):
 
         >>> str(Monomial(14, ["x", "y"]))
-        "Monomial(14, ['x', 'y'])"
+        '14xy'
         >>> str(Monomial(-1+3, ["a"]))
-        "Monomial(2, ['a'])"
+        '2a'
         >>> str(Monomial(1, ["y", "y"]))
-        "Monomial(1, ['y^2'])"
+        'y^2'
 
         :rtype: str
         """
-
-        return f"Monomial({self.coefficient}, {self.variables})"
+        if self.coefficient == 1 and self.variables:
+            return ''.join(self.variables)
+        elif self.coefficient == -1 and self.variables:
+            return '-' + ''.join(self.variables)
+        elif self.coefficient == 0:
+            return ''
+        elif self.coefficient == 1 and not self.variables:
+            return '1'
+        elif self.coefficient == -1 and not self.variables:
+            return '-1'
+        else:
+            return str(self.coefficient) + ''.join(self.variables)
 
     def __eq__(self, other):
         """
@@ -221,9 +233,9 @@ class Monomial:
         purposes, now it has no utility)
 
         >>> print(+Monomial(14, ["x"]))
-        Monomial(14, ['x'])
+        14x
         >>> print(+Monomial(-8, ["b"]))
-        Monomial(-8, ['b'])
+        -8b
 
         :rtype: Monomial
         """
@@ -235,9 +247,9 @@ class Monomial:
         inverting the coefficient:
 
         >>> print(-Monomial(14, ["x"]))
-        Monomial(-14, ['x'])
+        -14x
         >>> print(-Monomial(-8, ["b"]))
-        Monomial(8, ['b'])
+        8b
 
         :rtype: Monomial
         """
@@ -250,9 +262,9 @@ class Monomial:
         the absolute value of the coefficient:
 
         >>> print(abs(Monomial(14, ["x"])))
-        Monomial(14, ['x'])
+        14x
         >>> print(abs(Monomial(-8, ["b"])))
-        Monomial(8, ['b'])
+        8b
 
         :rtype: Monomial
         """
@@ -265,9 +277,9 @@ class Monomial:
         number of decimals (n, default 0)
 
         >>> print(round(Monomial(15.3918, ["c"])))
-        Monomial(15.0, ['c'])
+        15.0c
         >>> print(round(Monomial(15.3918, ["c"]), 2))
-        Monomial(15.39, ['c'])
+        15.39c
 
         :param n: Numbers of decimals
         :type n: int
@@ -287,11 +299,11 @@ class Monomial:
         >>> c = Monomial(-13, ["x", "y"])
         >>> d = Monomial(2.3, ["x", "y"])
         >>> print(a + c)
-        Monomial(-8, ['x', 'y'])
+        -8xy
         >>> print(d + c)
-        Monomial(-10.7, ['x', 'y'])
+        -10.7xy
         >>> print(a + d)
-        Monomial(7.3, ['x', 'y'])
+        7.3xy
         >>> print(d + b) # They're not similar
         Traceback (most recent call last):
         ...
@@ -320,11 +332,11 @@ class Monomial:
         >>> c = Monomial(13, ["x", "y"])
         >>> d = Monomial(-2, ["x", "y"])
         >>> print(a - c)
-        Monomial(-8, ['x', 'y'])
+        -8xy
         >>> print(c - a)
-        Monomial(8, ['x', 'y'])
+        8xy
         >>> print(c - d)
-        Monomial(15, ['x', 'y'])
+        15xy
         >>> print(d + b) # They're not similar
         Traceback (most recent call last):
         ...
@@ -346,13 +358,13 @@ class Monomial:
         >>> b = Monomial(8, ["x"])
         >>> c = Monomial(-13, ["x", "y"])
         >>> print(a * b)
-        Monomial(40, ['x^2', 'y'])
+        40x^2y
         >>> print(c * a)
-        Monomial(-65, ['x^2', 'y^2'])
+        -65x^2y^2
         >>> print(c * 2)
-        Monomial(-26, ['x', 'y'])
+        -26xy
         >>> print(b * 1.3)
-        Monomial(10.4, ['x'])
+        10.4x
 
         :type other: Monomial, int, float
         :rtype: Monomial
@@ -375,11 +387,11 @@ class Monomial:
         >>> b = Monomial(8, ["x"])
         >>> c = Monomial(-10, ["x", "y"])
         >>> print(a / b)
-        Monomial(0.625, ['y'])
+        0.625y
         >>> print(a / c)
-        Monomial(-0.5, [])
+        -0.5
         >>> print(c / -2)
-        Monomial(5.0, ['x', 'y'])
+        5.0xy
         >>> print(b / a) #= 1.6y^(-1), it is not a monomial
         Traceback (most recent call last):
         ...
@@ -415,11 +427,11 @@ class Monomial:
         >>> b = Monomial(8, ["x"])
         >>> c = Monomial(16, ["x^6"])
         >>> print(a ** 2)
-        Monomial(25, ['x^2', 'y^2'])
+        25x^2y^2
         >>> print(b ** 3)
-        Monomial(512, ['x^3'])
+        512x^3
         >>> print(c ** .5) # square root
-        Monomial(4.0, ['x^3'])
+        4.0x^3
 
         :type n: int, float
         :rtype: monomial
