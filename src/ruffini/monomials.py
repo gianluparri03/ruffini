@@ -25,6 +25,8 @@ class Monomial:
         self.variables = variables
         self.regroup_variables()
 
+    ### Utility Methods ###
+
     def regroup_variables(self):
         """
         Rewrite the monomial variables regrouping
@@ -177,115 +179,35 @@ class Monomial:
 
         return Monomial(coefficient, variables)
 
-    def __str__(self):
+    def eval(self, **values):
         """
-        Return the monomial as a string (without *
-        operator):
+        Evaluate the monomial, giving the values
+        of the variables to the method
 
-        >>> str(Monomial(14, ["x", "y"]))
-        '14xy'
-        >>> str(Monomial(-1+3, ["a"]))
-        '2a'
-        >>> str(Monomial(1, ["y", "y"]))
-        'y^2'
+        >>> Monomial(5, ["x"]).eval(x=2)
+        10
+        >>> Monomial(-1, ["x", "y"]).eval(x=8, y=3)
+        -24
 
-        :rtype: str
+        If a value isn't specified, the method
+        will raise an error
+
+        >>> Monomial(1.2, ["a", "b"]).eval(b=3)
+        Traceback (most recent call last):
+        ...
+        KeyError: 'a'
+
+        :type values: int, float
+        :rtype: int, float
+        :raise: KeyError
         """
-        if self.coefficient == 1 and self.variables:
-            return ''.join(self.variables)
-        elif self.coefficient == -1 and self.variables:
-            return '-' + ''.join(self.variables)
-        elif self.coefficient == 0:
-            return ''
-        elif self.coefficient == 1 and not self.variables:
-            return '1'
-        elif self.coefficient == -1 and not self.variables:
-            return '-1'
-        else:
-            return str(self.coefficient) + ''.join(self.variables)
 
-    def __eq__(self, other):
-        """
-        Check if two monomials are equivalent,
-        simply comparating the coefficients and
-        the variables
+        r = "*".join(map(str, self.variables))
+        for var in self.variables:
+            r = r.replace(var, str(values[var]))
+        return eval(r) * self.coefficient
 
-        >>> Monomial(14, ["a"]) == Monomial(14, ["a"])
-        True
-        >>> Monomial(14, ["a"]) == Monomial(14, ["a^2"])
-        False
-        >>> Monomial(14, ["a"]) == Monomial(-14, ["a"])
-        False
-        >>> Monomial(14, ["a"]) == Monomial(19, ["a"])
-        False
-
-        :type other: Monomial
-        :rtype: bool
-        """
-        return self.coefficient == other.coefficient \
-            and self.variables == other.variables
-
-    def __pos__(self):
-        """
-        Return the positive monomial, which
-        is basically the monomial itself with
-        no changes (implemented only for future
-        purposes, now it has no utility)
-
-        >>> print(+Monomial(14, ["x"]))
-        14x
-        >>> print(+Monomial(-8, ["b"]))
-        -8b
-
-        :rtype: Monomial
-        """
-        return self
-
-    def __neg__(self):
-        """
-        Return the opposite of the monomial,
-        inverting the coefficient:
-
-        >>> print(-Monomial(14, ["x"]))
-        -14x
-        >>> print(-Monomial(-8, ["b"]))
-        8b
-
-        :rtype: Monomial
-        """
-        return Monomial(-self.coefficient, self.variables)
-
-    def __abs__(self):
-        """
-        Return the absolute value of the monomial
-        (the monomial without the sign) calculating
-        the absolute value of the coefficient:
-
-        >>> print(abs(Monomial(14, ["x"])))
-        14x
-        >>> print(abs(Monomial(-8, ["b"])))
-        8b
-
-        :rtype: Monomial
-        """
-        return Monomial(abs(self.coefficient), self.variables)
-
-    def __round__(self, n=0):
-        """
-        This method is used to round the
-        coefficient of the monomial with a custom
-        number of decimals (n, default 0)
-
-        >>> print(round(Monomial(15.3918, ["c"])))
-        15.0c
-        >>> print(round(Monomial(15.3918, ["c"]), 2))
-        15.39c
-
-        :param n: Numbers of decimals
-        :type n: int
-        :rtype: Monomial
-        """
-        return Monomial(round(self.coefficient, n), self.variables)
+    ### Operations Methods ###
 
     def __add__(self, other):
         """
@@ -450,30 +372,133 @@ class Monomial:
 
         return Monomial(self.coefficient ** n, variables)
 
-    def eval(self, **values):
+    ### Magic Methods ###
+
+    def __hash__(self):
         """
-        Evaluate the monomial, giving the values
-        of the variables to the method
+        __hash__ method is a magic method for useful
+        for python. You can access it by calling the
+        hash() function, giving the monomial as argument.
+        Thanks to this method you can create a set of
+        monomials, for example.
 
-        >>> Monomial(5, ["x"]).eval(x=2)
-        10
-        >>> Monomial(-1, ["x", "y"]).eval(x=8, y=3)
-        -24
+        >>> m1 = Monomial(5, ['x', 'y'])
+        >>> m2 = Monomial(-3, ['y', 'z'])
+        >>> m3 = Monomial(variables=['a^4', 'b'])
+        >>> m = {m1, m2, m3}
+        >>> # No error is raised (without __hash__ would
+        >>> # be raised a TypeError)
 
-        If a value isn't specified, the method
-        will raise an error
-
-        >>> Monomial(1.2, ["a", "b"]).eval(b=3)
-        Traceback (most recent call last):
-        ...
-        KeyError: 'a'
-
-        :type values: int, float
-        :rtype: int, float
-        :raise: KeyError
+        :rtipe: int
         """
+        return hash(str(self))
 
-        r = "*".join(map(str, self.variables))
-        for var in self.variables:
-            r = r.replace(var, str(values[var]))
-        return eval(r) * self.coefficient
+    def __str__(self):
+        """
+        Return the monomial as a string (without *
+        operator):
+
+        >>> str(Monomial(14, ["x", "y"]))
+        '14xy'
+        >>> str(Monomial(-1+3, ["a"]))
+        '2a'
+        >>> str(Monomial(1, ["y", "y"]))
+        'y^2'
+
+        :rtype: str
+        """
+        if self.coefficient == 1 and self.variables:
+            return ''.join(self.variables)
+        elif self.coefficient == -1 and self.variables:
+            return '-' + ''.join(self.variables)
+        elif self.coefficient == 0:
+            return '0'
+        elif self.coefficient == 1 and not self.variables:
+            return '1'
+        elif self.coefficient == -1 and not self.variables:
+            return '-1'
+        else:
+            return str(self.coefficient) + ''.join(self.variables)
+
+    def __eq__(self, other):
+        """
+        Check if two monomials are equivalent,
+        simply comparating the coefficients and
+        the variables
+
+        >>> Monomial(14, ["a"]) == Monomial(14, ["a"])
+        True
+        >>> Monomial(14, ["a"]) == Monomial(14, ["a^2"])
+        False
+        >>> Monomial(14, ["a"]) == Monomial(-14, ["a"])
+        False
+        >>> Monomial(14, ["a"]) == Monomial(19, ["a"])
+        False
+
+        :type other: Monomial
+        :rtype: bool
+        """
+        return self.coefficient == other.coefficient \
+            and self.variables == other.variables
+
+    def __pos__(self):
+        """
+        Return the positive monomial, which
+        is basically the monomial itself with
+        no changes (implemented only for future
+        purposes, now it has no utility)
+
+        >>> print(+Monomial(14, ["x"]))
+        14x
+        >>> print(+Monomial(-8, ["b"]))
+        -8b
+
+        :rtype: Monomial
+        """
+        return self
+
+    def __neg__(self):
+        """
+        Return the opposite of the monomial,
+        inverting the coefficient:
+
+        >>> print(-Monomial(14, ["x"]))
+        -14x
+        >>> print(-Monomial(-8, ["b"]))
+        8b
+
+        :rtype: Monomial
+        """
+        return Monomial(-self.coefficient, self.variables)
+
+    def __abs__(self):
+        """
+        Return the absolute value of the monomial
+        (the monomial without the sign) calculating
+        the absolute value of the coefficient:
+
+        >>> print(abs(Monomial(14, ["x"])))
+        14x
+        >>> print(abs(Monomial(-8, ["b"])))
+        8b
+
+        :rtype: Monomial
+        """
+        return Monomial(abs(self.coefficient), self.variables)
+
+    def __round__(self, n=0):
+        """
+        This method is used to round the
+        coefficient of the monomial with a custom
+        number of decimals (n, default 0)
+
+        >>> print(round(Monomial(15.3918, ["c"])))
+        15.0c
+        >>> print(round(Monomial(15.3918, ["c"]), 2))
+        15.39c
+
+        :param n: Numbers of decimals
+        :type n: int
+        :rtype: Monomial
+        """
+        return Monomial(round(self.coefficient, n), self.variables)
