@@ -1,8 +1,6 @@
 ruffini package
 ===============
 
-Submodules
-----------
 
 ruffini.monomials module
 ------------------------
@@ -23,12 +21,3 @@ ruffini.polynomials module
     :show-inheritance:
     :special-members:
     :exclude-members: __dict__,__module__,__weakref__
-
-
-Module contents
----------------
-
-.. automodule:: ruffini
-    :members:
-    :undoc-members:
-    :show-inheritance:

@@ -104,11 +104,10 @@ class Monomial:
         :type other: Monomial
         :rtype: bool
         """
-
-        if not type(self) == type(other):
-            raise ValueError("Not a monomial")
-
-        return self.variables == other.variables
+        if isinstance(other, type(self)):
+            return self.variables == other.variables
+        else:
+            return False
 
     def gcd(self, *others):
         """
@@ -210,6 +209,9 @@ class Monomial:
     ### Operations Methods ###
 
     def __add__(self, other):
+
+        from .polynomials import Polynomial
+
         """
         Return the sum of this monomial
         and another one, which is by the
@@ -226,22 +228,39 @@ class Monomial:
         -10.7xy
         >>> print(a + d)
         7.3xy
-        >>> print(d + b) # They're not similar
-        Traceback (most recent call last):
-        ...
-        ValueError: The monomials are not similar
 
-        :type other: Monomial
-        :rtype: Monomial
-        :raise: ValueError
+        If the monomials are not similar or the second
+        operator is a polynomial, the result will be
+        a polynomial
+        >>> print(d + b) # They're not similar
+        2.3xy +8x
+
+        :type other: Monomial, Polynomial
+        :rtype: Monomial, Polynomial
+        :raise: TypeError
         """
+
+        # monomial
         if self.similar_to(other):
             return Monomial(self.coefficient + other.coefficient,
                             self.variables)
+
+        # monomial (not similar)
+        elif isinstance(other, type(self)):
+            return Polynomial(self, other)
+
+        # polynomial
+        elif isinstance(other, Polynomial):
+            return Polynomial(self, *other)
+
         else:
-            raise ValueError("The monomials are not similar")
+            raise TypeError("unsupported operand type(s) for +:"
+                            f" 'Monomial' and '{type(other).__name__}'")
 
     def __sub__(self, other):
+
+        from .polynomials import Polynomial
+
         """
         Return the subtraction between this
         monomial and another one, which is the
@@ -259,18 +278,39 @@ class Monomial:
         8xy
         >>> print(c - d)
         15xy
-        >>> print(d + b) # They're not similar
-        Traceback (most recent call last):
-        ...
-        ValueError: The monomials are not similar
 
-        :type other: Monomial
-        :rtype: Monomial
-        :raise: ValueError
+        If the monomials are not similar or the second
+        operator is a polynomial, the result will be
+        a polynomial
+        >>> print(d - b) # not similar
+        -2xy -8x
+
+        :type other: Monomial, Polynomial
+        :rtype: Monomial, Polynomial
+        :raise: TypeError
         """
-        return self + (-other)
+
+        # monomial
+        if self.similar_to(other):
+            return Monomial(self.coefficient - other.coefficient,
+                            self.variables)
+
+        # monomial (not similar)
+        elif isinstance(other, type(self)):
+            return Polynomial(self, -other)
+
+        # polynomial
+        elif isinstance(other, Polynomial):
+            return Polynomial(self, *(-other))
+
+        else:
+            raise TypeError("unsupported operand type(s) for -:"
+                            f" 'Monomial' and '{type(other).__name__}'")
 
     def __mul__(self, other):
+
+        from .polynomials import Polynomial
+
         """
         Return the multiplication of this
         monomial and another one, which can
@@ -288,16 +328,25 @@ class Monomial:
         >>> print(b * 1.3)
         10.4x
 
-        :type other: Monomial, int, float
-        :rtype: Monomial
+        :type other: Monomial, int, float, Polynomial
+        :rtype: Monomial, Polynomial
+        :raise: TypeError
         """
 
-        # Make an exception for integer / float
-        if not type(other) == type(self):
+        # int or float
+        if isinstance(other, float) or isinstance(other, int):
             return Monomial(self.coefficient * other, self.variables)
 
-        return Monomial(self.coefficient * other.coefficient,
-                        self.variables + other.variables)
+        # monomial
+        elif isinstance(other, type(self)):
+            return Monomial(self.coefficient * other.coefficient,
+                            self.variables + other.variables)
+        # polynomial
+        elif isinstance(other, Polynomial):
+            return other * self
+        else:
+            raise TypeError("unsupported operand type(s) for *:"
+                            f" 'Monomial' and '{type(other).__name__}'")
 
     def __truediv__(self, other):
         """
@@ -321,25 +370,28 @@ class Monomial:
 
         :type other: Monomial, int, float
         :rtype: Monomial
-        :raise: ValueError
+        :raise: ValueError, TypeError
         """
 
         # Make an exception for integer / float
-        if not type(other) == type(self):
+        if isinstance(other, int) or isinstance(other, float):
             return Monomial(self.coefficient / other, self.variables)
+        elif isinstance(other, type(self)):
+            # Divide the variables
+            variables = self.variables[:]
+            for var in other.variables:
+                letter = var.split("^")[0]
+                if "^" in var:
+                    exponent = - int(var.split("^")[1])
+                else:
+                    exponent = -1
+                variables.append(letter + "^" + str(exponent))
 
-        # Divide the variables
-        variables = self.variables[:]
-        for var in other.variables:
-            letter = var.split("^")[0]
-            if "^" in var:
-                exponent = - int(var.split("^")[1])
-            else:
-                exponent = -1
-            variables.append(letter + "^" + str(exponent))
-
-        return Monomial(self.coefficient / other.coefficient,
-                        variables)
+            return Monomial(self.coefficient / other.coefficient,
+                            variables)
+        else:
+            raise TypeError("unsupported operand type(s) for /:"
+                            f" 'Monomial' and '{type(other).__name__}'")
 
     def __pow__(self, n):
         """
@@ -357,8 +409,13 @@ class Monomial:
 
         :type n: int, float
         :rtype: monomial
-        :raise: ValueError
+        :raise: ValueError, TypeError
         """
+
+        # Raise an error if the exponent is not a number
+        if not (isinstance(n, int) or isinstance(n, float)):
+            raise TypeError("unsupported operand type(s) for **:"
+                            f" 'Monomial' and '{type(other).__name__}'")
 
         # Raise the variables to power
         variables = []

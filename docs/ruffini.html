@@ -81,10 +81,8 @@
             
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">ruffini package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ruffini.monomials">ruffini.monomials module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ruffini.polynomials">ruffini.polynomials module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-ruffini">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -153,9 +151,6 @@
             
   <div class="section" id="ruffini-package">
 <h1>ruffini package<a class="headerlink" href="#ruffini-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
 <div class="section" id="module-ruffini.monomials">
 <span id="ruffini-monomials-module"></span><h2>ruffini.monomials module<a class="headerlink" href="#module-ruffini.monomials" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -184,35 +179,7 @@ the absolute value of the coefficient:</p>
 <dl class="method">
 <dt id="ruffini.monomials.Monomial.__add__">
 <code class="descname">__add__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#ruffini.monomials.Monomial.__add__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the sum of this monomial
-and another one, which is by the
-sum of the coefficients and the variables
-(which are equals in the two monomials)</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="o">-</span><span class="mi">13</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="mf">2.3</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span>
-<span class="go">-8xy</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">d</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span>
-<span class="go">-10.7xy</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">d</span><span class="p">)</span>
-<span class="go">7.3xy</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">d</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="c1"># They&#39;re not similar</span>
-<span class="gt">Traceback (most recent call last):</span>
-<span class="c">...</span>
-<span class="gr">ValueError</span>: <span class="n">The monomials are not similar</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#ruffini.monomials.Monomial" title="ruffini.monomials.Monomial">Monomial</a></p>
-</dd>
-<dt class="field-even">Raise</dt>
-<dd class="field-even"><p>ValueError</p>
-</dd>
-</dl>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="ruffini.monomials.Monomial.__eq__">
@@ -279,28 +246,7 @@ a list of variables, empty for default.</p>
 <dl class="method">
 <dt id="ruffini.monomials.Monomial.__mul__">
 <code class="descname">__mul__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#ruffini.monomials.Monomial.__mul__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the multiplication of this
-monomial and another one, which can
-be a monomial or a number too</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="o">-</span><span class="mi">13</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">)</span>
-<span class="go">40x^2y</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">c</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span>
-<span class="go">-65x^2y^2</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">c</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
-<span class="go">-26xy</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">b</span> <span class="o">*</span> <span class="mf">1.3</span><span class="p">)</span>
-<span class="go">10.4x</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#ruffini.monomials.Monomial" title="ruffini.monomials.Monomial">Monomial</a></p>
-</dd>
-</dl>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="ruffini.monomials.Monomial.__neg__">
@@ -360,7 +306,7 @@ purposes, now it has no utility)</p>
 <dd class="field-odd"><p>monomial</p>
 </dd>
 <dt class="field-even">Raise</dt>
-<dd class="field-even"><p>ValueError</p>
+<dd class="field-even"><p>ValueError, TypeError</p>
 </dd>
 </dl>
 </dd></dl>
@@ -410,36 +356,7 @@ operator):</p>
 <dl class="method">
 <dt id="ruffini.monomials.Monomial.__sub__">
 <code class="descname">__sub__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#ruffini.monomials.Monomial.__sub__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the subtraction between this
-monomial and another one, which is the
-subtraction between the coefficients
-and the variables (which are equals
-in the two monomials)</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">c</span><span class="p">)</span>
-<span class="go">-8xy</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">c</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span>
-<span class="go">8xy</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">c</span> <span class="o">-</span> <span class="n">d</span><span class="p">)</span>
-<span class="go">15xy</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">d</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="c1"># They&#39;re not similar</span>
-<span class="gt">Traceback (most recent call last):</span>
-<span class="c">...</span>
-<span class="gr">ValueError</span>: <span class="n">The monomials are not similar</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#ruffini.monomials.Monomial" title="ruffini.monomials.Monomial">Monomial</a></p>
-</dd>
-<dt class="field-even">Raise</dt>
-<dd class="field-even"><p>ValueError</p>
-</dd>
-</dl>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="ruffini.monomials.Monomial.__truediv__">
@@ -467,7 +384,7 @@ be a monomial or a number too</p>
 <dd class="field-odd"><p><a class="reference internal" href="#ruffini.monomials.Monomial" title="ruffini.monomials.Monomial">Monomial</a></p>
 </dd>
 <dt class="field-even">Raise</dt>
-<dd class="field-even"><p>ValueError</p>
+<dd class="field-even"><p>ValueError, TypeError</p>
 </dd>
 </dl>
 </dd></dl>
@@ -608,7 +525,57 @@ variables, basically:</p>
 <dl class="method">
 <dt id="ruffini.polynomials.Polynomial.__add__">
 <code class="descname">__add__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#ruffini.polynomials.Polynomial.__add__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Add two polynomials or a polynomial and
+a monomial</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m1</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m2</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m3</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m4</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y^3&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m5</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">m3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">m2</span><span class="p">,</span> <span class="n">m4</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">p1</span> <span class="o">+</span> <span class="n">p2</span><span class="p">)</span> <span class="c1"># polynomial + polynomial</span>
+<span class="go">14xy -2x +5xy^3</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">p1</span> <span class="o">+</span> <span class="n">m5</span><span class="p">)</span> <span class="c1"># polynomial + monomial</span>
+<span class="go">17xy -2x</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#ruffini.polynomials.Polynomial" title="ruffini.polynomials.Polynomial">Polynomial</a></p>
+</dd>
+<dt class="field-even">Raise</dt>
+<dd class="field-even"><p>TypeError</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ruffini.polynomials.Polynomial.__getitem__">
+<code class="descname">__getitem__</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="headerlink" href="#ruffini.polynomials.Polynomial.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable the indexing of polynomial’s terms.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m1</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m2</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m3</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a^4&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">m2</span><span class="p">,</span> <span class="n">m3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="go">5xy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="go">-3yz</span>
+</pre></div>
+</div>
+<p>Also negative indexing is enabled:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="go">a^4b</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="ruffini.polynomials.Polynomial.__init__">
@@ -657,6 +624,43 @@ as argument</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="ruffini.polynomials.Polynomial.__mul__">
+<code class="descname">__mul__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#ruffini.polynomials.Polynomial.__mul__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiply two polynomials, a polynomial and a
+monomial or a polynomial and a number (int/float)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m1</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m2</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m3</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m4</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y^3&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">m3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">m2</span><span class="p">,</span> <span class="n">m4</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">p1</span> <span class="o">*</span> <span class="n">p2</span><span class="p">)</span> <span class="c1"># polynomial * polynomial</span>
+<span class="go">-15x^2y^2 +70x^2y^4 +6x^2y -28x^2y^3</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">p1</span> <span class="o">*</span> <span class="n">m4</span><span class="p">)</span> <span class="c1"># polynomial * monomial</span>
+<span class="go">70x^2y^4 -28x^2y^3</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">p1</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span> <span class="c1"># polynomial * number</span>
+<span class="go">20xy -8x</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#ruffini.polynomials.Polynomial" title="ruffini.polynomials.Polynomial">Polynomial</a></p>
+</dd>
+<dt class="field-even">Raise</dt>
+<dd class="field-even"><p>TypeError</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="ruffini.polynomials.Polynomial.__next__">
 <code class="descname">__next__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ruffini.polynomials.Polynomial.__next__" title="Permalink to this definition">¶</a></dt>
 <dd><p>The next magic method (to use with iter)
@@ -684,25 +688,72 @@ itered. When it’s finished, it raise StopIteration</p>
 <dl class="method">
 <dt id="ruffini.polynomials.Polynomial.__str__">
 <code class="descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ruffini.polynomials.Polynomial.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the polynomial as a string</p>
+<dd><p>Return the polynomial as a string, adding
+a space between each term</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m1</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m2</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m3</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a^4&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">m2</span><span class="p">,</span> <span class="n">m3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">&#39;5xy -3yz +a^4b&#39;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="ruffini.polynomials.Polynomial.__sub__">
 <code class="descname">__sub__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#ruffini.polynomials.Polynomial.__sub__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Subtract two polynomials or a monomial from
+a polynomial</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m1</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m2</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m3</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m4</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y^3&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m5</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">m3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">m2</span><span class="p">,</span> <span class="n">m4</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">p1</span> <span class="o">-</span> <span class="n">p2</span><span class="p">)</span> <span class="c1"># polynomial - polynomial</span>
+<span class="go">8xy -2x -14xy^3</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">p1</span> <span class="o">-</span> <span class="n">m5</span><span class="p">)</span> <span class="c1"># polynomial - monomial</span>
+<span class="go">5xy -2x</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#ruffini.polynomials.Polynomial" title="ruffini.polynomials.Polynomial">Polynomial</a></p>
+</dd>
+<dt class="field-even">Raise</dt>
+<dd class="field-even"><p>TypeError</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="ruffini.polynomials.Polynomial.reduce">
 <code class="descname">reduce</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ruffini.polynomials.Polynomial.reduce" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sum all the simil monomials, so reduce the polynomial</p>
-</dd></dl>
-
-</dd></dl>
-
+<dd><p>Sum all the simil monomials, so reduce the polynomial.
+This method is automatically called by the __init__
+method.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m1</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m2</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m3</span> <span class="o">=</span> <span class="n">Monomial</span><span class="p">(</span><span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">m2</span><span class="p">,</span> <span class="n">m3</span><span class="p">)</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># p should be 5xy -3xy +xy, but</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># reduce method reduced it as...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">3xy</span>
+</pre></div>
 </div>
-<div class="section" id="module-ruffini">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ruffini" title="Permalink to this headline">¶</a></h2>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 
