@@ -1,4 +1,4 @@
-from .monomials import Monomial
+from monomials import Monomial
 
 from collections import Counter
 
@@ -23,8 +23,9 @@ class Polynomial:
         >>> p.degrees["z"]
         1
 
-        :param *terms: The terms of the monomial
-        :type *terms: list of Monomial
+        :param *terms: The terms of the polynomial
+        :type *terms: Monomials
+        :raise: TypeError
         """
 
         self.terms = [*terms]
@@ -201,7 +202,7 @@ class Polynomial:
         """
         Return the polynomial as a string, adding
         a space between each term
-    
+
         >>> m1 = Monomial(5, ['x', 'y'])
         >>> m2 = Monomial(-3, ['y', 'z'])
         >>> m3 = Monomial(variables=['a^4', 'b'])
@@ -264,7 +265,7 @@ class Polynomial:
         else:
             raise StopIteration
 
-    def __getitem__ (self, key):
+    def __getitem__(self, key):
         """
         Enable the indexing of polynomial's terms.
 
@@ -281,5 +282,81 @@ class Polynomial:
 
         >>> print(p[-1])
         a^4b
+
+        :raise: IndexError, TypeError
         """
         return self.terms[key]
+
+    def __eq__(self, other):
+        """
+        Check if two polynomials are equivalent,
+        comparating each term
+
+        >>> m1 = Monomial(14, ["a"])
+        >>> m2 = Monomial(14, ["a^2"])
+        >>> Polynomial(m1, m2) == Polynomial(m1, m2)
+        True
+        >>> Polynomial(m1, m2) == Polynomial(m1)
+        False
+
+        If a polynomial has a single term, it can
+        also be compared to a monomial
+        >>> Polynomial(m1) == m1
+        True
+
+        Otherwise, the result will be False
+        >>> Polynomial(m1, m2) == m1
+        False
+
+        :type other: Polynomial, Monomial
+        :rtype: bool
+        """
+
+        # polynomial == polynomial
+        if type(other) == type(self):
+            if not len(self) == len(other):
+                return False
+            else:
+                def _sort(p): return sorted(p, key=lambda m: m.coefficient)
+                p1 = _sort(self)
+                p2 = _sort(other)
+                return all(p1[i] == p2[i] for i in range(len(p1)))
+
+        # polynomial (1 term) == monomial
+        elif isinstance(other, Monomial) and len(self) == 1:
+            return self[0] == other
+
+        else:
+            return False
+
+    def __neg__(self):
+        """
+        Return the opposite of the polynomial,
+        changing the sign at all it's terms:
+
+        >>> m1 = Monomial(5, ['x', 'y'])
+        >>> m2 = Monomial(-3, ['y', 'z'])
+        >>> m3 = Monomial(15, ['a^4', 'b'])
+        >>> p = Polynomial(m1, m2, m3)
+        >>> print(-p)
+        -5xy +3yz -15a^4b
+
+        :rtype: Polynomial
+        """
+        return Polynomial(*(-m for m in self))
+
+    def __len__(self):
+        """
+        Return the number of terms of the
+        polynomial
+
+        >>> m1 = Monomial(5, ['x', 'y'])
+        >>> m2 = Monomial(-3, ['y', 'z'])
+        >>> m3 = Monomial(15, ['a^4', 'b'])
+        >>> p = Polynomial(m1, m2, m3)
+        >>> print(len(p))
+        3
+
+        :rtype: int
+        """
+        return len(self.terms)
