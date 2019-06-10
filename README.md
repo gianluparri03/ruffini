@@ -12,7 +12,7 @@ To see the complete and always updated documentations and examples, go to [gianl
 
 ## Authors
 
-* **Parri gianluca** - [gianluparri03](https://github.com/gianluparri03)
+* **Parri Gianluca** - *Creator and main developer* - [@gianluparri03](https://github.com/gianluparri03)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
