@@ -76,7 +76,7 @@ class Monomial:
             if exp == 0:
                 continue
             elif exp < 0:
-                raise ValueError("Not a monomial")
+                raise ValueError("Not a monomial (negative exponent)")
             elif exp == 1:
                 self.degrees[var] = 1
                 self.variables.append(var)
@@ -88,6 +88,8 @@ class Monomial:
         self.degree = sum(self.degrees.values())
 
     def similar_to(self, other):
+        from .polynomials import Polynomial
+
         """
         This method is used to check if two monomials
         are similar, so if they've got the same
@@ -101,11 +103,13 @@ class Monomial:
         >>> a.similar_to(c)
         True
 
-        :type other: Monomial
+        :type other: Monomial, Polynomial
         :rtype: bool
         """
         if isinstance(other, type(self)):
             return self.variables == other.variables
+        elif isinstance(other, Polynomial):
+            return other == self
         else:
             return False
 
@@ -124,7 +128,6 @@ class Monomial:
         :type others: Monomial
         :rtype: Monomial
         """
-
         monomials = self, *others
 
         # Calculate the gcd of the coefficients
@@ -159,6 +162,9 @@ class Monomial:
         :type others: Monomial
         :rtype: Monomial
         """
+
+        if not all(type(m) == Monomial for m in others):
+            raise TypeError("can calculate lcm only between monomials")
 
         monomials = self, *others
 
@@ -366,7 +372,7 @@ class Monomial:
         >>> print(b / a) #= 1.6y^(-1), it is not a monomial
         Traceback (most recent call last):
         ...
-        ValueError: Not a monomial
+        ValueError: Not a monomial (negative exponent)
 
         :type other: Monomial, int, float
         :rtype: Monomial
@@ -497,22 +503,6 @@ class Monomial:
         """
         return self.coefficient == other.coefficient \
             and self.variables == other.variables
-
-    def __pos__(self):
-        """
-        Return the positive monomial, which
-        is basically the monomial itself with
-        no changes (implemented only for future
-        purposes, now it has no utility)
-
-        >>> print(+Monomial(14, ["x"]))
-        14x
-        >>> print(+Monomial(-8, ["b"]))
-        -8b
-
-        :rtype: Monomial
-        """
-        return self
 
     def __neg__(self):
         """

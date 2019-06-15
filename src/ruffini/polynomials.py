@@ -1,4 +1,4 @@
-from monomials import Monomial
+from .monomials import Monomial
 
 from collections import Counter
 
