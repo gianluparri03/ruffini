@@ -88,6 +88,7 @@ class Monomial:
         self.degree = sum(self.degrees.values())
 
     def similar_to(self, other):
+
         from .polynomials import Polynomial
 
         """
@@ -103,9 +104,18 @@ class Monomial:
         >>> a.similar_to(c)
         True
 
+        It can also check between a monomial and a
+        polynomial with only a term
+        >>> a.similar_to(Polynomial(a))
+        True
+
+        To see an example of Monomial.similar_to(Polynomial),
+        please see the Polynomial.__sub__() section
+
         :type other: Monomial, Polynomial
         :rtype: bool
         """
+
         if isinstance(other, type(self)):
             return self.variables == other.variables
         elif isinstance(other, Polynomial):
@@ -241,6 +251,9 @@ class Monomial:
         >>> print(d + b) # They're not similar
         2.3xy +8x
 
+        To see an example of Monomial + Polynomial,
+        please see the Polynomial.__add__() section
+
         :type other: Monomial, Polynomial
         :rtype: Monomial, Polynomial
         :raise: TypeError
@@ -291,6 +304,9 @@ class Monomial:
         >>> print(d - b) # not similar
         -2xy -8x
 
+        To see an example of Monomial - Polynomial,
+        please see the Polynomial.__sub__() section
+
         :type other: Monomial, Polynomial
         :rtype: Monomial, Polynomial
         :raise: TypeError
@@ -333,6 +349,9 @@ class Monomial:
         -26xy
         >>> print(b * 1.3)
         10.4x
+
+        To see an example of Monomial * Polynomial,
+        please see the Polynomial.__mul__() section
 
         :type other: Monomial, int, float, Polynomial
         :rtype: Monomial, Polynomial
