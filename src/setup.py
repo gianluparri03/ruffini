@@ -1,13 +1,12 @@
-import ruffini
-
 from setuptools import setup
 
 setup(
     name="ruffini",
     version="0.01",
-    description="Monomials and Polynomials, all in a simple python package",
+    description="Monomials, Polynomials and lot more!",
     author="Gianluca Parri",
     author_email="gianlucaparri03@gmail.com",
+    website="https://github.com/gianluparri03/ruffini",
     packages=["ruffini"],
     license="MIT",
 )

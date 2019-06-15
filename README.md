@@ -2,12 +2,26 @@
     <img src="banner.svg" width=800>
 </p>
 
-*Ruffini* (/rʊˈfiːni/, referece to [Paolo Ruffini](https://en.wikipedia.org/wiki/Paolo_Ruffini), Italian mathematician) is a simple python library to compute monomials and polynomials.
+**Ruffini** (/rʊˈfiːni/, reference to [Paolo Ruffini](https://en.wikipedia.org/wiki/Paolo_Ruffini), Italian mathematician) is a simple python library to compute monomials and polynomials.
 
 
 ## Getting Started
 
-To see the complete and always updated documentations and examples, go to [gianluparri03.github.io/ruffini](https://gianluparri03.github.io/ruffini).
+### Installing
+You can easily install the most recent version of `ruffini` package by downloading it from Python Package Index (PyPI) just doing:
+```
+pip install ruffini
+```
+
+Instead, if you want to download and install it from the source, you have to do:
+```
+git clone https://github.com/gianluparri03/ruffini.git
+cd ruffini/src
+python3 setup.py install
+```
+
+### How To
+In this moment, the documentations for this project are available only in its [website](https://gianluparri03.github.io/ruffini). 
 
 
 ## Authors
