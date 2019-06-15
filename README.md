@@ -1,5 +1,8 @@
 <p align="center">
     <img src="banner.svg" width=800>
+    <img src="https://img.shields.io/github/languages/top/gianluparri03/ruffini.svg">
+    <img src="https://img.shields.io/github/languages/code-size/gianluparri03/ruffini.svg">
+    <img src="https://img.shields.io/pypi/v/ruffini.svg">
 </p>
 
 **Ruffini** (/rʊˈfiːni/, reference to [Paolo Ruffini](https://en.wikipedia.org/wiki/Paolo_Ruffini), Italian mathematician) is a simple python library to compute monomials and polynomials.
