@@ -2,7 +2,8 @@
     <img src="banner.svg" width=800>
     <img src="https://img.shields.io/github/languages/top/gianluparri03/ruffini.svg">
     <img src="https://img.shields.io/github/languages/code-size/gianluparri03/ruffini.svg">
-    <img src="https://img.shields.io/pypi/v/ruffini.svg">
+    <img src="https://img.shields.io/pypi/v/ruffini.svg?color=success">
+    <img src="https://img.shields.io/readthedocs/ruffini.svg">
 </p>
 
 **Ruffini** (/rʊˈfiːni/, reference to [Paolo Ruffini](https://en.wikipedia.org/wiki/Paolo_Ruffini), Italian mathematician) is a simple python library to compute monomials and polynomials.
@@ -23,8 +24,9 @@ cd ruffini/src
 python3 setup.py install
 ```
 
-### How To
-In this moment, the documentations for this project are available only in its [website](https://gianluparri03.github.io/ruffini). 
+### Documentations
+The documentations for this project can be find in [Read the Docs website](https://ruffini.rtfd.com). 
+If you want to see the documentation for the latest version, you can also see them in [my portfolio](https://gianluparri03.github.io/ruffini).
 
 
 ## Authors
