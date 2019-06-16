@@ -2,7 +2,8 @@
     <img src="banner.svg" width=800>
     <img src="https://img.shields.io/github/languages/top/gianluparri03/ruffini.svg">
     <img src="https://img.shields.io/github/languages/code-size/gianluparri03/ruffini.svg">
-    <img src="https://img.shields.io/pypi/v/ruffini.svg">
+    <img src="https://img.shields.io/pypi/v/ruffini.svg?color=success">
+    <img src="https://img.shields.io/readthedocs/ruffini.svg">
 </p>
 
 
@@ -24,8 +25,8 @@ cd ruffini/src
 python3 setup.py install
 ```
 
-### How To
-In this moment, the documentations for this project are available only in its [website](https://gianluparri03.github.io/ruffini). 
+### Documentations
+The documentations for this project can be find in [Read the Docs website](https://ruffini.readthedocs.io/en/stable/).
 
 
 ## Authors

@@ -11,6 +11,7 @@ build:
 	rm -rf build ruffini.egg-info ruffini dist
 
 push:
+	mkdir to_upload
 	cp ruffini* to_upload
 	twine upload to_upload/*
 	rm -rf to_upload
