@@ -1,12 +1,7 @@
 # Minimal makefile for Sphinx documentation
 
 clean:
-	rm -rf _* *.js *.html
-
-html:
-	sphinx-build -b html source .
-	rm -rf .doctrees
-	rm .buildinfo objects.inv
+	rm -rf *.rst
 
 apidoc:
 	rm source/*.rst

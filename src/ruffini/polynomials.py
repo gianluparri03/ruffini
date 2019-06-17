@@ -80,8 +80,10 @@ class Polynomial:
 
     def __add__(self, other):
         """
-        Add two polynomials or a polynomial and
-        a monomial
+        Add a polynomial with
+        - another polynomial
+        - a monomial
+        - an integer / a float 
 
         >>> m1 = Monomial(17, ['x', 'y'])
         >>> m2 = Monomial(-3, ['x', 'y'])
@@ -98,27 +100,31 @@ class Polynomial:
         >>> print(p1 + m5) # polynomial + monomial
         17xy -2x
 
-        :type other: Monomial or Polynomial
+        >>> print(p1 + 59) # polynomial + int (or float)
+        17xy -2x +59
+
+        :type other: Monomial, Polynomial, int, float
         :rtype: Polynomial
         :raise: TypeError
         """
 
-        # polynomial
+        if type(other) in [int, float]:
+            other = Monomial(other)
+
         if isinstance(other, type(self)):
             return Polynomial(*self.terms, *other.terms)
-
-        # monomial
         elif isinstance(other, Monomial):
             return Polynomial(*self.terms, other)
-
         else:
             raise TypeError("unsupported operand type(s) for +:"
                             f"'Polynomial' and '{type(other).__name__}'")
 
     def __sub__(self, other):
         """
-        Subtract two polynomials or a monomial from
-        a polynomial
+        Subtract from a polynomial:
+        - another polynomial
+        - a monomial
+        - an integer / a float
 
         >>> m1 = Monomial(5, ['x', 'y'])
         >>> m2 = Monomial(-3, ['x', 'y'])
@@ -135,20 +141,22 @@ class Polynomial:
         >>> print(p1 - m5) # polynomial - monomial
         5xy -2x
 
-        :type other: Monomial or Polynomial
+        >>> print(p1 - 0.5) # polynomial - float (or int)
+        5xy -2x -0.5
+
+        :type other: Monomial, Polynomial, int, float
         :rtype: Polynomial
         :raise: TypeError
         """
 
-        # polynomial
+        if type(other) in [int, float]:
+            other = Monomial(other)
+
         if isinstance(other, type(self)):
             other = list(map(lambda m: -m, other))
             return Polynomial(*self.terms, *other)
-
-        # monomial
         elif isinstance(other, Monomial):
             return Polynomial(*self.terms, -other)
-
         else:
             raise TypeError("unsupported operand type(s) for -:"
                             f"'Polynomial' and '{type(other).__name__}'")
@@ -195,6 +203,87 @@ class Polynomial:
         else:
             raise TypeError("unsupported operand type(s) for *:"
                             f"'Polynomial' and '{type(other).__name__}'")
+
+    def __radd__(self, other):
+        """
+        Add a polynomial to a monomial or to a number
+        (int / float).
+
+        >>> m1 = Monomial(17, ['x', 'y'])
+        >>> m2 = Monomial(-3, ['x', 'y'])
+        >>> m3 = Monomial(-2, ['x'])
+
+        >>> p = Polynomial(m1, m2)
+
+        >>> print(m3 + p) # monomial + polynomial
+        14xy -2x
+
+        >>> print(3 + p) # int (or float) + polynomial
+        14xy +3
+
+        :type other: Monomial, int, float
+        :rtype: Polynomial, NotImplemented
+        :raise: TypeError   
+        """
+
+        try:
+            return self.__add__(other)
+        except:
+            return NotImplemented
+
+    def __rsub__(self, other):
+        """
+        Subtract a monomial or a number (int / float)
+        from a polynomial
+
+        >>> m1 = Monomial(17, ['x', 'y'])
+        >>> m2 = Monomial(-3, ['x', 'y'])
+        >>> m3 = Monomial(-2, ['x'])
+
+        >>> p = Polynomial(m1, m2)
+
+        >>> print(m3 - p) # monomial - polynomial
+        -14xy -2x
+
+        >>> print(12 - p) # int (or float) - polynomial
+        -14xy +12
+
+        :type other: Monomial, int, float
+        :rtype: Polynomial, NotImplemented
+        :raise: TypeError   
+        """
+
+        try:
+            return (-self).__add__(other)
+        except:
+            return NotImplemented
+
+    def __rmul__(self, other):
+        """
+        Multiply a polynomial for a monomial
+        or a number (int / float).
+
+        >>> m1 = Monomial(17, ['x', 'y'])
+        >>> m2 = Monomial(-3, ['y'])
+        >>> m3 = Monomial(-2, ['x'])
+
+        >>> p = Polynomial(m1, m2)
+
+        >>> print(m3 * p) # monomial * polynomial
+        -34x^2y +6xy
+
+        >>> print(0.13 * p) # int (or float) * polynomial
+        2.21xy -0.39y
+
+        :type other: Monomial, int, float
+        :rtype: Polynomial, NotImplemented
+        :raise: TypeError   
+        """
+
+        try:
+            return self.__mul__(other)
+        except:
+            return NotImplemented
 
     ### Magic Methods ###
 
@@ -301,10 +390,12 @@ class Polynomial:
 
         If a polynomial has a single term, it can
         also be compared to a monomial
+
         >>> Polynomial(m1) == m1
         True
 
         Otherwise, the result will be False
+
         >>> Polynomial(m1, m2) == m1
         False
 

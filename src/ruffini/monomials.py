@@ -88,9 +88,6 @@ class Monomial:
         self.degree = sum(self.degrees.values())
 
     def similar_to(self, other):
-
-        from .polynomials import Polynomial
-
         """
         This method is used to check if two monomials
         are similar, so if they've got the same
@@ -104,22 +101,12 @@ class Monomial:
         >>> a.similar_to(c)
         True
 
-        It can also check between a monomial and a
-        polynomial with only a term
-        >>> a.similar_to(Polynomial(a))
-        True
-
-        To see an example of Monomial.similar_to(Polynomial),
-        please see the Polynomial.__sub__() section
-
-        :type other: Monomial, Polynomial
+        :type other: Monomial
         :rtype: bool
         """
 
         if isinstance(other, type(self)):
             return self.variables == other.variables
-        elif isinstance(other, Polynomial):
-            return other == self
         else:
             return False
 
@@ -225,9 +212,6 @@ class Monomial:
     ### Operations Methods ###
 
     def __add__(self, other):
-
-        from .polynomials import Polynomial
-
         """
         Return the sum of this monomial
         and another one, which is by the
@@ -251,35 +235,21 @@ class Monomial:
         >>> print(d + b) # They're not similar
         2.3xy +8x
 
-        To see an example of Monomial + Polynomial,
-        please see the Polynomial.__add__() section
-
-        :type other: Monomial, Polynomial
-        :rtype: Monomial, Polynomial
+        :type other: Monomial
+        :rtype: Monomial, Polynomial, NotImplemented
         :raise: TypeError
         """
 
-        # monomial
         if self.similar_to(other):
             return Monomial(self.coefficient + other.coefficient,
                             self.variables)
-
-        # monomial (not similar)
-        elif isinstance(other, type(self)):
+        elif type(other) == type(self):
+            from .polynomials import Polynomial
             return Polynomial(self, other)
-
-        # polynomial
-        elif isinstance(other, Polynomial):
-            return Polynomial(self, *other)
-
         else:
-            raise TypeError("unsupported operand type(s) for +:"
-                            f" 'Monomial' and '{type(other).__name__}'")
+            return NotImplemented
 
     def __sub__(self, other):
-
-        from .polynomials import Polynomial
-
         """
         Return the subtraction between this
         monomial and another one, which is the
@@ -300,43 +270,29 @@ class Monomial:
 
         If the monomials are not similar or the second
         operator is a polynomial, the result will be
-        a polynomial
+        a polynomial (see Polynomial.__radd__ for more)
         >>> print(d - b) # not similar
         -2xy -8x
 
-        To see an example of Monomial - Polynomial,
-        please see the Polynomial.__sub__() section
-
-        :type other: Monomial, Polynomial
-        :rtype: Monomial, Polynomial
+        :type other: Monomial
+        :rtype: Monomial, Polynomial, NotImplemented
         :raise: TypeError
         """
 
-        # monomial
         if self.similar_to(other):
             return Monomial(self.coefficient - other.coefficient,
                             self.variables)
-
-        # monomial (not similar)
-        elif isinstance(other, type(self)):
-            return Polynomial(self, -other)
-
-        # polynomial
-        elif isinstance(other, Polynomial):
-            return Polynomial(self, *(-other))
-
+        elif type(other) == type(self):
+            from .polynomials import Polynomial
+            return Polynomial(self, other)
         else:
-            raise TypeError("unsupported operand type(s) for -:"
-                            f" 'Monomial' and '{type(other).__name__}'")
+            return NotImplemented
 
     def __mul__(self, other):
-
-        from .polynomials import Polynomial
-
         """
-        Return the multiplication of this
-        monomial and another one, which can
-        be a monomial or a number too
+        Multiplicate thi monomial and:
+        - another monomial
+        - a number (inf / float)
 
         >>> a = Monomial(5, ["x", "y"])
         >>> b = Monomial(8, ["x"])
@@ -350,34 +306,24 @@ class Monomial:
         >>> print(b * 1.3)
         10.4x
 
-        To see an example of Monomial * Polynomial,
-        please see the Polynomial.__mul__() section
-
-        :type other: Monomial, int, float, Polynomial
-        :rtype: Monomial, Polynomial
+        :type other: Monomial, int, float
+        :rtype: Monomial, NotImplemented
         :raise: TypeError
         """
 
-        # int or float
-        if isinstance(other, float) or isinstance(other, int):
-            return Monomial(self.coefficient * other, self.variables)
+        if type(other) in [int, float]:
+            other = Monomial(other)
 
-        # monomial
-        elif isinstance(other, type(self)):
+        if isinstance(other, type(self)):
             return Monomial(self.coefficient * other.coefficient,
                             self.variables + other.variables)
-        # polynomial
-        elif isinstance(other, Polynomial):
-            return other * self
         else:
-            raise TypeError("unsupported operand type(s) for *:"
-                            f" 'Monomial' and '{type(other).__name__}'")
+            return NotImplemented
 
     def __truediv__(self, other):
         """
-        Return the division between this
-        monomial and another one, which can
-        be a monomial or a number too
+        Divide this monomial per another monomial or
+        per a number (int / float)
 
         >>> a = Monomial(5, ["x", "y"])
         >>> b = Monomial(8, ["x"])
@@ -394,14 +340,14 @@ class Monomial:
         ValueError: Not a monomial (negative exponent)
 
         :type other: Monomial, int, float
-        :rtype: Monomial
+        :rtype: Monomial, NotImplemented
         :raise: ValueError, TypeError
         """
 
-        # Make an exception for integer / float
-        if isinstance(other, int) or isinstance(other, float):
-            return Monomial(self.coefficient / other, self.variables)
-        elif isinstance(other, type(self)):
+        if type(other) in [int, float]:
+            other = Monomial(other)
+
+        if isinstance(other, type(self)):
             # Divide the variables
             variables = self.variables[:]
             for var in other.variables:
@@ -415,8 +361,7 @@ class Monomial:
             return Monomial(self.coefficient / other.coefficient,
                             variables)
         else:
-            raise TypeError("unsupported operand type(s) for /:"
-                            f" 'Monomial' and '{type(other).__name__}'")
+            return NotImplemented
 
     def __pow__(self, n):
         """
@@ -429,16 +374,14 @@ class Monomial:
         25x^2y^2
         >>> print(b ** 3)
         512x^3
-        >>> print(c ** .5) # square root
-        4.0x^3
 
-        :type n: int, float
+        :type n: int
         :rtype: monomial
         :raise: ValueError, TypeError
         """
 
         # Raise an error if the exponent is not a number
-        if not (isinstance(n, int) or isinstance(n, float)):
+        if not isinstance(n, int):
             raise TypeError("unsupported operand type(s) for **:"
                             f" 'Monomial' and '{type(other).__name__}'")
 
@@ -453,6 +396,29 @@ class Monomial:
             variables.append(letter + "^" + str(exponent))
 
         return Monomial(self.coefficient ** n, variables)
+
+    def __rmul__(self, other):
+        """
+        Multiply a number (int / float) for amonomial
+
+        >>> m1 = Monomial(17, ['x', 'y'])
+        >>> m2 = Monomial(-3, ['y'])
+
+        >>> print(8 * m1) # int * monomial
+        -34x^2y +6xy
+
+        >>> print(0.13 * m2) # float * monomial
+        2.21xy -0.39y
+
+        :type other: int, float
+        :rtype: Monomial, NotImplemented
+        :raise: TypeError   
+        """
+
+        try:
+            return self.__mul__(other)
+        except:
+            return NotImplemented
 
     ### Magic Methods ###
 
