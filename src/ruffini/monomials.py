@@ -232,6 +232,7 @@ class Monomial:
         If the monomials are not similar or the second
         operator is a polynomial, the result will be
         a polynomial
+
         >>> print(d + b) # They're not similar
         2.3xy +8x
 
@@ -271,6 +272,7 @@ class Monomial:
         If the monomials are not similar or the second
         operator is a polynomial, the result will be
         a polynomial (see Polynomial.__radd__ for more)
+        
         >>> print(d - b) # not similar
         -2xy -8x
 
@@ -290,9 +292,8 @@ class Monomial:
 
     def __mul__(self, other):
         """
-        Multiplicate thi monomial and:
-        - another monomial
-        - a number (inf / float)
+        Multiplicate this monomial and another monomial
+        or a number (inf / float)
 
         >>> a = Monomial(5, ["x", "y"])
         >>> b = Monomial(8, ["x"])
@@ -403,10 +404,8 @@ class Monomial:
 
         >>> m1 = Monomial(17, ['x', 'y'])
         >>> m2 = Monomial(-3, ['y'])
-
         >>> print(8 * m1) # int * monomial
         -34x^2y +6xy
-
         >>> print(0.13 * m2) # float * monomial
         2.21xy -0.39y
 
@@ -437,7 +436,7 @@ class Monomial:
         >>> # No error is raised (without __hash__ would
         >>> # be raised a TypeError)
 
-        :rtipe: int
+        :rtype: int
         """
         return hash(str(self))
 

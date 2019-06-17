@@ -90,16 +90,12 @@ class Polynomial:
         >>> m3 = Monomial(-2, ['x'])
         >>> m4 = Monomial(5, ['x', 'y^3'])
         >>> m5 = Monomial(0, ['x'])
-
         >>> p1 = Polynomial(m1, m3)
         >>> p2 = Polynomial(m2, m4)
-
         >>> print(p1 + p2) # polynomial + polynomial
         14xy -2x +5xy^3
-
         >>> print(p1 + m5) # polynomial + monomial
         17xy -2x
-
         >>> print(p1 + 59) # polynomial + int (or float)
         17xy -2x +59
 
@@ -131,16 +127,12 @@ class Polynomial:
         >>> m3 = Monomial(-2, ['x'])
         >>> m4 = Monomial(14, ['x', 'y^3'])
         >>> m5 = Monomial(0, ['x'])
-
         >>> p1 = Polynomial(m1, m3)
         >>> p2 = Polynomial(m2, m4)
-
         >>> print(p1 - p2) # polynomial - polynomial
         8xy -2x -14xy^3
-
         >>> print(p1 - m5) # polynomial - monomial
         5xy -2x
-
         >>> print(p1 - 0.5) # polynomial - float (or int)
         5xy -2x -0.5
 
@@ -212,12 +204,9 @@ class Polynomial:
         >>> m1 = Monomial(17, ['x', 'y'])
         >>> m2 = Monomial(-3, ['x', 'y'])
         >>> m3 = Monomial(-2, ['x'])
-
         >>> p = Polynomial(m1, m2)
-
         >>> print(m3 + p) # monomial + polynomial
         14xy -2x
-
         >>> print(3 + p) # int (or float) + polynomial
         14xy +3
 
@@ -239,12 +228,9 @@ class Polynomial:
         >>> m1 = Monomial(17, ['x', 'y'])
         >>> m2 = Monomial(-3, ['x', 'y'])
         >>> m3 = Monomial(-2, ['x'])
-
         >>> p = Polynomial(m1, m2)
-
         >>> print(m3 - p) # monomial - polynomial
         -14xy -2x
-
         >>> print(12 - p) # int (or float) - polynomial
         -14xy +12
 
@@ -266,12 +252,9 @@ class Polynomial:
         >>> m1 = Monomial(17, ['x', 'y'])
         >>> m2 = Monomial(-3, ['y'])
         >>> m3 = Monomial(-2, ['x'])
-
         >>> p = Polynomial(m1, m2)
-
         >>> print(m3 * p) # monomial * polynomial
         -34x^2y +6xy
-
         >>> print(0.13 * p) # int (or float) * polynomial
         2.21xy -0.39y
 
