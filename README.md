@@ -25,8 +25,9 @@ python3 setup.py install
 ```
 
 ### Documentations
-The documentations for this project can be find in [Read the Docs website](https://ruffini.rtfd.com). 
-If you want to see the documentation for the latest version, you can also see them in [my portfolio](https://gianluparri03.github.io/ruffini).
+The documentations for this project can be find in [Read the Docs website](https://ruffini.rtfd.com) in the two versions:
+- **latest:** the docs for this branch, updated at every commit in the branch `master`
+- **stable:** the docs for the latest relase of ruffini. Its source code is in the [relase](https://github.com/gianluparri03/ruffini/tree/relase) branch.
 
 
 ## Authors

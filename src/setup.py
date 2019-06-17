@@ -1,4 +1,5 @@
 from setuptools import setup
+from json import load
 
 readme = """
 # Ruffini
@@ -11,10 +12,12 @@ Instead, if you want to see the source, [click here](https://github.com/gianlupa
 If you want to see the source, [click here](https://github.com/gianluparri03/ruffini).
 """
 
+with open("config.json") as f:
+    version = load(f)["version"]
+
 setup(
     name="ruffini",
-    version="0.1",
-    version="v1.0",
+    version=version,
     description="Monomials, Polynomials and lot more!",
     long_description=readme,
     long_description_content_type="text/markdown",

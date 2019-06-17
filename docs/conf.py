@@ -14,8 +14,9 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../src/'))
+from json import load
 
+sys.path.insert(0, os.path.abspath('../src/'))
 
 # -- Project information -----------------------------------------------------
 
@@ -23,10 +24,8 @@ project = u'ruffini'
 copyright = u'2019, Parri Gianluca'
 author = u'Parri Gianluca'
 
-# The short X.Y version
-version = u''
-# The full version, including alpha/beta/rc tags
-release = u'0.0.1'
+with open("../src/config.json") as f:
+    version = load(f)["version"]
 
 
 # -- General configuration ---------------------------------------------------
