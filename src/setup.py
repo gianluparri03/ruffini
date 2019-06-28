@@ -1,19 +1,10 @@
 from setuptools import setup
 from json import load
 
-readme = """
-# Ruffini
+with open("../README.md") as f:
+    readme = f.read().split("</p>\n\n")[1]
 
-To see the documentation, please [click here](https://gianluparri03.github.io/ruffini).
-You can find the documentation for this project in
-[Read The Docs website](https://ruffini.readthedocs.io/en/stable/).
-
-Instead, if you want to see the source, [click here](https://github.com/gianluparri03/ruffini).
-If you want to see the source, [click here](https://github.com/gianluparri03/ruffini).
-"""
-
-with open("config.json") as f:
-    version = load(f)["version"]
+version = "v1.2"
 
 setup(
     name="ruffini",
