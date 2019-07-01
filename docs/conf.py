@@ -20,12 +20,10 @@ sys.path.insert(0, os.path.abspath('../src/'))
 
 # -- Project information -----------------------------------------------------
 
-project = u'ruffini'
-copyright = u'2019, Parri Gianluca'
-author = u'Parri Gianluca'
-
-with open("../src/config.json") as f:
-    version = load(f)["version"]
+project = 'ruffini'
+copyright = '2019, Parri Gianluca'
+author = 'Parri Gianluca'
+version = 'v1.2'
 
 
 # -- General configuration ---------------------------------------------------
