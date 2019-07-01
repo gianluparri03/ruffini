@@ -1,1 +1,2 @@
-from .monomials import Test as Test_Monomial
+from .monomials import Test as Test_monomials
+from .variables import Test as Test_variables
