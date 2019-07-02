@@ -71,12 +71,16 @@ class Monomial:
     def gcd(self, *others):
         """
         Calculate the greatest common divisor
-        of two or more monomials (*others):
+        of two or more monomials (*others)
+
+        Also with number is supported
 
         :type others: Monomial, int, float
-        :rtype: Monomial
+        :rtype: Monomial, int, float
         :raise: TypeError
         """
+
+        others = list(others)
 
         # Check types of the arguments
         for i in range(len(others)):
@@ -99,17 +103,24 @@ class Monomial:
             if all(letter in v for v in variables):
                 vars_gcd[letter] = max(v[letter] for v in variables)
 
-        return Monomial(coefficient_gcd, vars_gcd)
+        if vars_gcd == {}:
+            return coefficient_gcd
+        else:
+            return Monomial(coefficient_gcd, vars_gcd)
 
     def lcm(self, *others):
         """
         Calculate the least common multiple
-        of two or more monomials (*others):
+        of two or more monomials (*others)
+
+        Also with number is supported
 
         :type others: Monomial, int, float
-        :rtype: Monomial
+        :rtype: Monomial, int, float
         :raise: TypeError
         """
+
+        others = list(others)
 
         # Check types of the arguments
         for i in range(len(others)):
@@ -134,7 +145,10 @@ class Monomial:
         vars_lcm = {l: max([m.variables[l] for m in monomials])
                     for l in letters}
 
-        return Monomial(coefficient_lcm, vars_lcm)
+        if vars_lcm == {}:
+            return coefficient_lcm
+        else:
+            return Monomial(coefficient_lcm, vars_lcm)
 
     ### Operations Methods ###
 

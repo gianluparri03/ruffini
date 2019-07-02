@@ -43,16 +43,19 @@ class Test (TestCase):
         a = M(1, {'X': 1, 'y': 3})
         b = M(-4, {'x': 1, 'y': 3})
         c = M(8, {'X': 1})
+        d = 7
 
         # Test gcd
         self.assertEqual(a.gcd(b, c), b.gcd(c, a))
         self.assertEqual(a.gcd(b, c), c.gcd(a, b))
-        self.assertEqual(a.gcd(b, c), M(1, {'x': 1}))
+        self.assertIsInstance(b.gcd(c, d), int)
+        self.assertRaises(TypeError, a.gcd, 'test')
 
         # Test lcm
         self.assertEqual(a.lcm(b, c), b.lcm(c, a))
         self.assertEqual(a.lcm(b, c), c.lcm(a, b))
-        self.assertEqual(a.lcm(b, c), M(8, {'x': 1, 'y': 3}))
+        self.assertIsInstance(b.lcm(c, d), M)
+        self.assertRaises(TypeError, a.lcm, 'anothertest')
 
     def test_add_sub(self):
         a = M(1, {'X': 1, 'y': 3})

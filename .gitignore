@@ -2,3 +2,4 @@
 *.sublime-*
 *.pyc
 env
+**coverage
