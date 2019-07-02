@@ -11,6 +11,7 @@ class Test (TestCase):
 
         # Test coefficient
         self.assertIsInstance(a.coefficient, float)
+        self.assertRaises(TypeError, M, 'foo')
 
         # Test variables
         self.assertIsInstance(a.variables, VariablesDict)
@@ -19,6 +20,7 @@ class Test (TestCase):
         self.assertNotIn('b', a.variables)
         self.assertRaises(ValueError, M, 1, {'xy': 2})
         self.assertRaises(ValueError, M, 1, {'x': -3})
+        self.assertRaises(TypeError, M, 59, [])
         self.assertIn('x', a.variables)
         self.assertNotIn('X', a.variables)
 
@@ -154,3 +156,17 @@ class Test (TestCase):
         self.assertEqual(repr(a), "Monomial(1, {'x': 1, 'y': 3})")
         self.assertEqual(repr(b), "Monomial(0, {'x': 5, 'y': 7})")
         self.assertEqual(repr(c), "Monomial(1, {})")
+
+    def test_hash(self):
+        a = M(-4, {'x': 1, 'y': 3})
+        b = M(-4, {'X': 1, 'y': 3})
+        c = M(-4, {'x': 1})
+        d = M(4, {'y': 3, 'x': 1})
+        e = M(-4, {'y': 3, 'x': 1})
+
+        # Test __hash__
+        self.assertTrue(hash(a) == hash(b))
+        self.assertFalse(hash(a) == hash(c))
+        self.assertFalse(hash(a) == hash(d))
+        self.assertTrue(hash(a) == hash(e))
+        self.assertTrue(hash(M(9.4)) == hash(9.4))

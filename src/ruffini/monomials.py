@@ -21,28 +21,30 @@ class Monomial:
         where the keys are the variable name and the
         values the degrees
 
-        >>> print(Monomial(15*3, {'x': 1, 'z': 2}))
-        45xz^2
-
-        NB: The variables are always in lowercase:
-        >>> print(Monomial(5, {'X': 1}))
-        5x
+        NB: The variables are always in lowercase
 
         The __init__ method also calculate the total
-        degree of the monomial:
-        >>> Monomial(15*3, {'x': 1, 'z': 2}).degree
-        3
+        degree of the monomial
 
 
-        :param coefficient: The coefficient of the monomial
         :type coefficient: int, float
-        :param variables: The variables of the monomial
-        :type coefficient: dict
+        :type coefficient: dict, VariablesDict
+        :raise: ValueError, TypeError
         """
 
         # Initialize the monomial
-        self.coefficient = coefficient
-        self.variables = VariablesDict(**variables)
+        if isinstance(coefficient, (int, float)):
+            self.coefficient = coefficient
+        else:
+            raise TypeError("Coefficient must be int or float")
+
+        if isinstance(variables, VariablesDict):
+            self.variables = variables
+        elif isinstance(variables, dict):
+            self.variables = VariablesDict(**variables)
+        else:
+            raise TypeError("Variables mut be stored in a dict")
+
         self.degree = sum(self.variables.values())
 
         # Check if the variables are ok
@@ -71,17 +73,16 @@ class Monomial:
         Calculate the greatest common divisor
         of two or more monomials (*others):
 
-        :param others: Others monomial 
-        :type others: Monomial
+        :type others: Monomial, int, float
         :rtype: Monomial
         :raise: TypeError
         """
 
         # Check types of the arguments
         for i in range(len(others)):
-            if type(others[i]) in [int, float]:
+            if isinstance(others[i], (int, float)):
                 others[i] = Monomial(others[i])
-            elif not type(others[i]) == type(self):
+            elif not isinstance(others[i], Monomial):
                 raise TypeError("Can't calculate gcd between Monomials"
                                 f" and {type(others[i])}")
 
@@ -105,17 +106,16 @@ class Monomial:
         Calculate the least common multiple
         of two or more monomials (*others):
 
-        :param others: Others monomial 
-        :type others: Monomial
+        :type others: Monomial, int, float
         :rtype: Monomial
         :raise: TypeError
         """
 
         # Check types of the arguments
         for i in range(len(others)):
-            if type(others[i]) in [int, float]:
+            if isinstance(others[i], (int, float)):
                 others[i] = Monomial(others[i])
-            elif not type(others[i]) == type(self):
+            elif not isinstance(others[i], Monomial):
                 raise TypeError("Can't calculate lcm between Monomials"
                                 f" and {type(others[i])}")
 
@@ -127,10 +127,9 @@ class Monomial:
 
         # Calculate the lcm of the variables
         vars_lcm = {}
-        variables = [m.variables for m in monomials]
         letters = set()
-        for v in variables:
-            letters |= v.keys()
+        for m in monomials:
+            letters |= m.variables.keys()
 
         vars_lcm = {l: max([m.variables[l] for m in monomials])
                     for l in letters}
@@ -141,8 +140,7 @@ class Monomial:
 
     def __add__(self, other):
         """
-        Return the sum of this monomial
-        and another one
+        Return the sum of this monomial and another one
 
         If the monomials are not similar or the second
         operator is a polynomial, the result will be
@@ -160,7 +158,7 @@ class Monomial:
                 return 0
             else:
                 return r
-        elif type(other) == type(self):
+        elif isinstance(other, Monomial):
             from .polynomials import Polynomial
             return Polynomial(self, other)
         elif other == 0:
@@ -170,12 +168,12 @@ class Monomial:
 
     def __sub__(self, other):
         """
-        Return the subtraction between this
-        monomial and another one
+        Return the subtraction between this monomial
+        and another one
 
         If the monomials are not similar or the second
         operator is a polynomial, the result will be
-        a polynomial (see Polynomial.__radd__ for more)
+        a polynomial
 
         :type other: Monomial, 0
         :rtype: Monomial, Polynomial, NotImplemented, 0
@@ -184,7 +182,7 @@ class Monomial:
 
         if self.similar_to(other):
             return self + (-other)
-        elif type(other) == type(self):
+        elif isinstance(other, Monomial):
             from .polynomials import Polynomial
             return Polynomial(self, -other)
         elif other == 0:
@@ -194,7 +192,7 @@ class Monomial:
 
     def __mul__(self, other):
         """
-        Multiplicate this monomial and another monomial
+        Multiplicate this monomial for another monomial
         or a number (inf / float)
 
         :type other: Monomial, int, float
@@ -202,16 +200,15 @@ class Monomial:
         :raise: TypeError
         """
 
-        if type(other) in [int, float]:
+        if isinstance(other, (int, float)):
             other = Monomial(other)
 
-        if type(other) == type(self):
+        if isinstance(other, Monomial):
             coefficient = self.coefficient * other.coefficient
             letters = set(list(self.variables) + list(other.variables))
-            variables = {}
+            variables = VariablesDict()
             for l in letters:
-                if self.variables[l] + other.variables[l] != 0:
-                    variables[l] = self.variables[l] + other.variables[l]
+                variables[l] = self.variables[l] + other.variables[l]
             return Monomial(coefficient, variables)
         else:
             return NotImplemented
@@ -226,16 +223,15 @@ class Monomial:
         :raise: ValueError, TypeError
         """
 
-        if type(other) in [int, float]:
+        if isinstance(other, (int, float)):
             other = Monomial(other)
 
-        if type(other) == type(self):
+        if isinstance(other, Monomial):
             coefficient = self.coefficient / other.coefficient
             letters = set(list(self.variables) + list(other.variables))
-            variables = {}
+            variables = VariablesDict()
             for l in letters:
-                if self.variables[l] - other.variables[l] != 0:
-                    variables[l] = self.variables[l] - other.variables[l]
+                variables[l] = self.variables[l] - other.variables[l]
             if coefficient == 1 and variables == {}:
                 return 1
             else:
@@ -243,33 +239,33 @@ class Monomial:
         else:
             return NotImplemented
 
-    def __pow__(self, n):
+    def __pow__(self, exp):
         """
         Raise a monomial to power
 
-        :type n: int
+        :type exp: int
         :rtype: Monomial, NotImplemented
         :raise: ValueError, TypeError
         """
 
         # Raise an error if the exponent is not an integer
-        if not isinstance(n, int):
+        if not isinstance(exp, int):
             return NotImplemented
 
         # Raise an error if exponent is negative
-        if not abs(n) == n:
+        if not abs(exp) == exp:
             raise ValueError("Exponent can't be negative")
 
         # Raise the variables to power
-        variables = {}
+        variables = VariablesDict()
         for var in self.variables:
-            variables[var] = self.variables[var] * n
+            variables[var] = self.variables[var] * exp
 
-        return Monomial(self.coefficient ** n, variables)
+        return Monomial(self.coefficient ** exp, variables)
 
     def __rmul__(self, other):
         """
-        Multiply a number (int / float) for amonomial
+        Multiply a number (int / float) for a monomial
 
         :type other: int, float
         :rtype: Monomial, NotImplemented
@@ -296,6 +292,7 @@ class Monomial:
         :raise: KeyError, TypeError
         """
 
+        # Make the values keys lowercase
         values = dict(
             zip(map(lambda v: v.casefold(), values), values.values()))
 
@@ -304,19 +301,9 @@ class Monomial:
             result *= (values[var]**self.variables[var])
         return result
 
-    def __hash__(self):
-        """
-        Thanks to this method you can create a set of
-        monomials, for example.
-
-        :rtype: int
-        """
-        return hash(repr(self))
-
     def __str__(self):
         """
-        Return the monomial as a string (without *
-        operator):
+        Return the monomial as a string (without *)
 
         :rtype: str
         """
@@ -377,8 +364,24 @@ class Monomial:
 
     def __repr__(self):
         """
-        Return the monomial as a string, but
-        like this
+        Return the monomial as a string
+
+        :rtype: str
         """
 
         return f"Monomial({self.coefficient}, {self.variables})"
+
+    def __hash__(self):
+        """
+        Return the hash for the Monomial
+
+        :rtype: int
+        """
+
+        if self.variables == {}:
+            return hash(self.coefficient)
+
+        variables = map(lambda l: f"{l}{self.variables[l]}",
+                        set(self.variables.elements()))
+
+        return hash((self.coefficient, ) + tuple(variables))
