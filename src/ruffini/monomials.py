@@ -43,7 +43,7 @@ class Monomial:
         elif isinstance(variables, dict):
             self.variables = VariablesDict(**variables)
         else:
-            raise TypeError("Variables mut be stored in a dict")
+            raise TypeError("Variables must be stored in a dict")
 
         self.degree = sum(self.variables.values())
 
@@ -246,8 +246,8 @@ class Monomial:
             variables = VariablesDict()
             for l in letters:
                 variables[l] = self.variables[l] - other.variables[l]
-            if coefficient == 1 and variables == {}:
-                return 1
+            if isinstance(coefficient, (int, float)) and variables == {}:
+                return coefficient
             else:
                 return Monomial(coefficient, variables)
         else:
@@ -347,7 +347,8 @@ class Monomial:
         comparing coefficients and variables
 
         :type other: Monomial, int, float
-        :rtype: bool
+        :rtype: bool, NotImplemented
+        :raise: TypeError
         """
         if isinstance(other, Monomial):
             return self.coefficient == other.coefficient \
@@ -355,7 +356,7 @@ class Monomial:
         elif self.variables == {}:
             return self.coefficient == other
         else:
-            return False
+            return NotImplemented
 
     def __neg__(self):
         """

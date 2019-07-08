@@ -32,7 +32,7 @@ class VariablesDict (Counter):
         if value == 0:
             self.__delitem__(key)
         elif not isinstance(key, str):
-            raise TypeError(f"Variable name not valid ({key}")
+            raise TypeError(f"Variable name not valid ({key})")
         elif len(key) > 1 or not key.isalpha():
             raise ValueError(f"Variable name not valid ({key})")
         elif isinstance(value, float) and not value.is_integer():

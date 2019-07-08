@@ -2,4 +2,5 @@
 *.sublime-*
 *.pyc
 env
-**coverage
+**coverage**
+src/codacy.sh

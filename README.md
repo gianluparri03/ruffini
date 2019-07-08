@@ -1,5 +1,7 @@
 <p align="center">
     <img src="banner.svg" width=800>
+    <img src="https://img.shields.io/codacy/grade/8bf3533a27104f44bdc0dad621d0de73.svg">
+    <img src="https://img.shields.io/codacy/coverage/8bf3533a27104f44bdc0dad621d0de73.svg">
     <img src="https://img.shields.io/github/languages/code-size/gianluparri03/ruffini.svg">
     <img src="https://img.shields.io/github/languages/top/gianluparri03/ruffini.svg">
     <img src="https://img.shields.io/pypi/v/ruffini.svg?color=success">
