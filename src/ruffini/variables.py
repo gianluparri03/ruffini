@@ -1,7 +1,7 @@
 from collections import Counter
 
 
-class VariablesDict (Counter):
+class VariablesDict(Counter):
     def __init__(self, **kwargs):
         """
         Initialize the VariablesDict.

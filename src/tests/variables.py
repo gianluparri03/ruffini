@@ -11,5 +11,7 @@ class Test (TestCase):
         self.assertEqual(VD(y=3), VD(y=3.0))
         self.assertRaises(TypeError, VD, c=3.5)
         self.assertRaises(ValueError, VD, foo=78)
+        self.assertRaises(ValueError, VD, g2f=78)
+        self.assertRaises(TypeError, VD().__setitem__, [], 5)
         self.assertEqual(str(VD(z=2)), str({'z': 2}))
         self.assertEqual(repr(VD(k=7)), repr({'k': 7}))

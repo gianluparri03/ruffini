@@ -1,5 +1,4 @@
 from setuptools import setup
-from json import load
 
 with open("../README.md") as f:
     readme = f.read().split("</p>\n\n")[1]

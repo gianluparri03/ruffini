@@ -24,10 +24,11 @@ class Polynomial:
         # Calculate the degree for each letter
         self.variables = {}
         letters = set()
-        for m in self.terms:  # Find all the letters
-            letters |= set(list(m.variables))
-        for l in letters:  # Calculate its degree
-            self.variables[l] = max(m.variables[l] for m in self.terms)
+        for term in self.terms:  # Find all the letters
+            letters |= set(list(term.variables))
+        for letter in letters:  # Calculate its degree
+            self.variables[letter] = max(
+                term.variables[letter] for term in self.terms)
 
     ### Utility Methods ###
 
@@ -48,9 +49,9 @@ class Polynomial:
 
             # If there are some, sum them
             counter = Counter()
-            for t in self.terms:
-                v_id = variables.index(str(dict(t.variables)))
-                counter[v_id] += t.coefficient
+            for term in self.terms:
+                v_id = variables.index(str(dict(term.variables)))
+                counter[v_id] += term.coefficient
 
             # And rewrite the terms
             self.terms.clear()
@@ -64,7 +65,7 @@ class Polynomial:
         Add a polynomial with
         - another polynomial
         - a monomial
-        - an integer / a float 
+        - an integer / a float
 
         :type other: Monomial, Polynomial, int, float
         :rtype: Polynomial, NotImplemented
@@ -74,7 +75,7 @@ class Polynomial:
         if isinstance(other, (int, float)):
             other = Monomial(other)
 
-        if type(self) == type(other):
+        if isinstance(other, Polynomial):
             return Polynomial(*self.terms, *other.terms)
         elif isinstance(other, Monomial):
             return Polynomial(*self.terms, other)
@@ -157,12 +158,12 @@ class Polynomial:
 
         :type other: Monomial, int, float
         :rtype: Polynomial, NotImplemented
-        :raise: TypeError   
+        :raise: TypeError
         """
 
         try:
             return self.__mul__(other)
-        except:
+        except TypeError:
             return NotImplemented
 
     ### Magic Methods ###
@@ -174,11 +175,11 @@ class Polynomial:
 
         """
         result = str(self.terms[0])
-        for t in self.terms[1:]:
-            if t.coefficient > 0:
-                result += f" +{t}"
-            elif t.coefficient < 0:
-                result += f" {t}"
+        for term in self.terms[1:]:
+            if term.coefficient > 0:
+                result += f" +{term}"
+            elif term.coefficient < 0:
+                result += f" {term}"
         return result
 
     def __iter__(self):
@@ -232,10 +233,11 @@ class Polynomial:
             if not len(self) == len(other):
                 return False
             else:
-                def _sort(p): return sorted(p, key=lambda m: m.coefficient)
-                p1 = _sort(self)
-                p2 = _sort(other)
-                return all(p1[i] == p2[i] for i in range(len(p1)))
+                def _sort(to_sort): return sorted(
+                    to_sort, key=lambda term: term.coefficient)
+                first = _sort(self)
+                second = _sort(other)
+                return all(first[i] == second[i] for i in range(len(p1)))
         elif isinstance(other, Monomial) and len(self) == 1:
             return self[0] == other
         else:
