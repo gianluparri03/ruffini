@@ -21,3 +21,13 @@ ruffini.polynomials module
     :show-inheritance:
     :special-members:
     :exclude-members: __dict__,__module__,__weakref__,__hash__
+
+ruffini.variables module
+------------------------
+
+.. automodule:: ruffini.variables
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :special-members:
+    :exclude-members: __dict__,__module__,__weakref__

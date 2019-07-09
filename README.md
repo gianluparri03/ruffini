@@ -1,3 +1,5 @@
+# Ruffini
+
 ![](banner.svg)
 ![](https://img.shields.io/codacy/grade/8bf3533a27104f44bdc0dad621d0de73.svg)
 ![](https://img.shields.io/codacy/coverage/8bf3533a27104f44bdc0dad621d0de73.svg)
@@ -30,14 +32,15 @@ python3 setup.py install
 ```
 
 ### Documentations
+
 The documentations for this project can be find in [Read the Docs website](https://ruffini.rtfd.com) in the two versions:
 
-  - **latest:** the docs for this branch, updated at every commit in the branch `master`
-  - **stable:** the docs for the latest relase of ruffini (see `relase` branch)
+- **latest:** the docs for this branch, updated at every commit in the branch `master`
+- **stable:** the docs for the latest relase of ruffini (see `relase` branch)
 
 ## Authors
 
-  * **Parri Gianluca** - *Creator and main developer* - [@gianluparri03](https://github.com/gianluparri03)
+- **Parri Gianluca** - *Creator and main developer* - [@gianluparri03](https://github.com/gianluparri03)
 
 See also the list of [contributors](https://github.com/your/project/contributors)
 who participated in this project.
