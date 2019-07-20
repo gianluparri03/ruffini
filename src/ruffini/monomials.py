@@ -3,40 +3,56 @@ from functools import reduce
 from math import gcd
 
 
-def lcm(x, y): return int((x*y) / gcd(x, y))
-
-
 class Monomial:
+    """
+    A Monomial object is composed by variables
+    and coefficient; the coefficient can be
+    whathever you want, but it has to be numerical
+    (instance of int or float). The variables
+    instead must have three features:
+    - positive and integer exponent
+    - all the variables names must be a letter
+    of the alphabet (a, b, c, d, e, f...)
+
+    Monomials can be added, subtracted, multiplied
+    and divided togheter (multiplication and division
+    can be done also between monomials and numbers).
+    You can also calculate lcmd and gcd between
+    monomials (and numbers).
+
+    You can also assign a value to the variables and
+    calculate the value of that monomial with the
+    value you assigned.
+    """
+
     def __init__(self, coefficient, variables):
         """
-        Create a Monomial object, made by an integer
-        or floating coefficient (1 for default) and
-        a dict representing the variables, empty for
-        default.
+        Create a Monomial object by giving the
+        numerical coefficient and the variables,
+        stored in a dict (the keys are the letters
+        and the values the degrees).
 
-        For example, if you want to create a monomial
-        like 5xy^3, the variables dict will be
-        {'x': 1, 'y': 3}
-        where the keys are the variable name and the
-        values the degrees
+        The variables will be stored in a VariableDict, so:
+        - all the letters will be made lowercase
+        - the letters can be only alphabetical and
+          with a lenght of one
+        - the exponent must be positive and integer
 
-        NB: The variables are always in lowercase
-
-        The __init__ method also calculate the total
-        degree of the monomial
-
+        When initialized the monomial, this method calculates
+        the monomial's total degree (the sum of all the degrees)
 
         :type coefficient: int, float
         :type coefficient: dict, VariablesDict
         :raise: ValueError, TypeError
         """
 
-        # Initialize the monomial
+        # Check the coefficient
         if isinstance(coefficient, (int, float)):
             self.coefficient = coefficient
         else:
             raise TypeError("Coefficient must be int or float")
 
+        # Check the variables
         if isinstance(variables, VariablesDict):
             self.variables = variables
         elif isinstance(variables, dict):
@@ -44,170 +60,183 @@ class Monomial:
         else:
             raise TypeError("Variables must be stored in a dict")
 
+        # Calculate the degree
         self.degree = sum(self.variables.values())
-
-        # Check if the variables are ok
-        for var in self.variables:
-            if self.variables[var] < 0:
-                raise ValueError("Not a monomial: negative exponent"
-                                 f"'({var}')")
 
     ### Utility Methods ###
 
     def similar_to(self, other):
         """
-        Check if two monomials are similar,
-        so if they've got the same variables:
+        Check if two monomials are similar (if
+        the have the same variables).
 
-        :type other: Monomial
+        >>> m1 = Monomial(3, {'x': 1, 'x': 1}))
+        >>> m2 = Monomial(-6, {'x': 1, 'x': 3}))
+        >>> m3 = Monomial(2.6, {'x': 1, 'x': 1}))
+        >>> m4 = Monomial(3.14, {}))
+        >>> m1.similar_to(m4)
+        True
+        >>> m1.similar_to(m2)
+        False
+
+        If 'other' is not a monomial the result
+        will always be False
+
+        >>> m3.similar_to("")
+        False
+        >>> m4.similar_to({})
+        False
+
+        The only one exception: is when the
+        monomial has no variables and it's
+        compared to an int or a float; in this
+        case, the result will be positive
+
+        >>> m4.similar_to(6.28)
+        True
+
+        :type other: Monomial, int, float
         :rtype: bool
         """
 
-        if isinstance(other, Monomial):
-            return self.variables == other.variables
-        else:
+        if self.variables.empty and isinstance(other, (int, float)):
+            return True
+        elif not isinstance(other, Monomial):
             return False
 
-    def gcd(self, *others):
+        return self.variables == other.variables
+
+    def gcd(self, other):
         """
         Calculate the greatest common divisor
-        of two or more monomials (*others)
+        of two monomials (or numbers)
 
-        Also with number is supported
+        >>> a = Monomial(5, {'x': 1, 'y': 1})
+        >>> b = Monomial(15, {'x': 1})
+        >>> a.gcd(b)
+        Monomial(5, {'x': 1})
+
+        It works only with integer coefficient/numbers
+        different from zero
+
+        >>> a.gcd(3.14)
+        Traceback: (most recent call last)
+        ...
+        ValueError: Monomial coefficient must be int
+        >>> b.gcd(0)
+        Traceback: (most recent call last)
+        ...
+        ValueError: Value can't be equal to zero
+
+        NB. the result will be always positive
+
+        >>> c = Monomial(-30, {'x': 1, 'y': 1})
+        >>> b.gcd(c)
+        Monomial(15, {'x': 1})
+
+        If you want to calculate the gcd with more
+        operators, you can just do
+
+        >>> from functools import reduce
+        >>> monomials = (a, b, c)
+        >>> reduce(lambda m1, m2: m1.gcd(m2), monomials)
+        Monomial(30, {'x': 1})
 
         :type others: Monomial, int, float
-        :rtype: Monomial, int, float
-        :raise: TypeError
+        :rtype: Monomial, int
+        :raise: TypeError, ValueError
         """
 
-        monomials = [self]
+        # Check types of the operators
+        if isinstance(other, int):
+            other = Monomial(other, {})
+        elif isinstance(other, Monomial):
+            if any(isinstance(m.coefficient, float) for m in [self, other]):
+                raise ValueError("Monomial coefficient must be int")
+        else:
+            raise TypeError("Can't calculate gcd between Monomials " + \
+                            f" and {type(other)}")
 
-        # Check types of the arguments
-        for value in others:
-            if isinstance(value, (int, float)):
-                monomials.append(Monomial(value, {}))
-            elif isinstance(value, Monomial):
-                monomials.append(value)
-            else:
-                raise TypeError("Can't calculate gcd between Monomials"
-                                f" and {type(value)}")
+        # Check value of the operators
+        if self.coefficient == 0 or other.coefficient == 0:
+            raise ValueError("Value can't be equal to zero")
 
         # Calculate the gcd of the coefficients
-        coefficients = [m.coefficient for m in monomials]
-        coefficient_gcd = abs(reduce(gcd, coefficients))
+        coefficient = int(gcd(self.coefficient, other.coefficient))
 
         # Calculate the gcd of the variables
-        vars_gcd = {}
-        variables = [m.variables for m in monomials]
-        for letter in variables[0]:
-            if all(letter in v for v in variables):
-                vars_gcd[letter] = max(v[letter] for v in variables)
+        variables = VariablesDict()
+        for variable in self.variables:
+            if variable in other.variables:
+                variables[variable] = min(self.variables[variable],
+                                          other.variables[variable])
 
-        if vars_gcd == {}:
-            return coefficient_gcd
-        else:
-            return Monomial(coefficient_gcd, vars_gcd)
+        return Monomial(coefficient, variables)
 
-    def lcm(self, *others):
+    def lcm(self, other):
         """
         Calculate the least common multiple
-        of two or more monomials (*others)
+        of two or monomials (or numbers)
 
-        Also with number is supported
+        >>> a = Monomial(2, {'x': 1, 'y': 1})
+        >>> b = Monomial(-9, {'y': 3})
+        >>> a.lcm(b)
+        Monomial(18, {'x': 1, 'y': 3})
+
+        If you want to know others informations
+        like errors and limits, please check the
+        documentation of Monomial().gcd()
 
         :type others: Monomial, int, float
         :rtype: Monomial, int, float
-        :raise: TypeError
+        :raise: TypeError, ValueError
         """
 
-        monomials = [self]
-
-        # Check types of the arguments
-        for value in others:
-            if isinstance(value, (int, float)):
-                monomials.append(Monomial(value, {}))
-            elif isinstance(value, Monomial):
-                monomials.append(value)
-            else:
-                raise TypeError("Can't calculate lcm between Monomials"
-                                f" and {type(value)}")
-
-        # Calculate the lcm of the coefficients
-        coefficients = [m.coefficient for m in monomials]
-        coefficient_lcm = abs(reduce(lcm, coefficients))
-
-        # Calculate the lcm of the variables
-        vars_lcm = {}
-        letters = set()
-        for monomial in monomials:
-            letters |= monomial.variables.keys()
-
-        vars_lcm = {l: max([m.variables[l] for m in monomials])
-                    for l in letters}
-
-        if vars_lcm == {}:
-            return coefficient_lcm
-        else:
-            return Monomial(coefficient_lcm, vars_lcm)
+        return abs(self * other) / self.gcd(other)
 
     ### Operations Methods ###
 
     def __add__(self, other):
         """
         Return the sum of this monomial and another one
-
-        If the monomials are not similar or the second
-        operator is a polynomial, the result will be
-        a polynomial
+        If the monomials are not similar, the result
+        will be a polynomial.
 
         :type other: Monomial, 0
         :rtype: Monomial, Polynomial, NotImplemented, 0
         :raise: TypeError
         """
 
-        if self.similar_to(other):
-            result = Monomial(self.coefficient + other.coefficient,
-                              self.variables)
-            if result.coefficient == 0:
-                return 0
-            else:
-                return result
+        if other == (-self):
+            return 0
+        elif other == 0:
+            return self
+        elif self.similar_to(other):
+            return Monomial(self.coefficient + other.coefficient,
+                            self.variables)
         elif isinstance(other, Monomial):
             from .polynomials import Polynomial
             return Polynomial(self, other)
-        elif other == 0:
-            return self
         else:
             return NotImplemented
 
     def __sub__(self, other):
         """
         Return the subtraction between this monomial
-        and another one
-
-        If the monomials are not similar or the second
-        operator is a polynomial, the result will be
-        a polynomial
+        and another one. If the monomials are not
+        similar , the result will be a polynomial
 
         :type other: Monomial, 0
         :rtype: Monomial, Polynomial, NotImplemented, 0
         :raise: TypeError
         """
 
-        if self.similar_to(other):
-            return self + (-other)
-        elif isinstance(other, Monomial):
-            from .polynomials import Polynomial
-            return Polynomial(self, -other)
-        elif other == 0:
-            return self
-        else:
-            return NotImplemented
+        return self + (-other)
 
     def __mul__(self, other):
         """
-        Multiplicate this monomial for another monomial
-        or a number (inf / float)
+        Multiplicate this monomial for another
+        monomial or for a number (int / float)
 
         :type other: Monomial, int, float
         :rtype: Monomial, NotImplemented
@@ -219,10 +248,7 @@ class Monomial:
 
         if isinstance(other, Monomial):
             coefficient = self.coefficient * other.coefficient
-            letters = set(list(self.variables) + list(other.variables))
-            variables = VariablesDict()
-            for l in letters:
-                variables[l] = self.variables[l] + other.variables[l]
+            variables = self.variables + other.variables
             return Monomial(coefficient, variables)
         else:
             return NotImplemented
@@ -238,16 +264,14 @@ class Monomial:
         """
 
         if isinstance(other, (int, float)):
-            other = Monomial(other)
+            other = Monomial(other, {})
 
         if isinstance(other, Monomial):
             coefficient = self.coefficient / other.coefficient
-            letters = set(list(self.variables) + list(other.variables))
-            variables = VariablesDict()
-            for letter in letters:
-                variables[letter] = self.variables[letter] - \
-                    other.variables[letter]
-            if isinstance(coefficient, (int, float)) and variables == {}:
+            if isinstance(coefficient, float) and coefficient.is_integer:
+                coefficient = int(coefficient)
+            variables = self.variables - other.variables
+            if variables == {}:
                 return coefficient
             else:
                 return Monomial(coefficient, variables)
@@ -306,10 +330,6 @@ class Monomial:
         :rtype: int, float
         :raise: KeyError, TypeError
         """
-
-        # Make the values keys lowercase
-        values = dict(
-            zip(map(lambda v: v.casefold(), values), values.values()))
 
         result = self.coefficient
         for var in self.variables:
