@@ -22,11 +22,11 @@ class VariablesDict(Counter):
         Initialize the VariablesDict by giving
         the pairs key:value as keyword-arguments.
 
-        >>> VariablesDict(x=5, y=3)
+        >>> print(VariablesDict(x=5, y=3))
         {'x': 5, 'y': 3}
-        >>> VariablesDict(Y=5)
+        >>> print(VariablesDict(Y=5))
         {'y': 5}
-        >>> VariablesDict(a=2, b=8, c=3)
+        >>> print(VariablesDict(a=2, b=8, c=3))
         {'a': 2, 'b': 8, 'c': 3}
 
         It also check if the dictionary is empty.
@@ -55,29 +55,29 @@ class VariablesDict(Counter):
         >>> vd = VariablesDict(y=3)
         >>> vd['x'] = 18
         >>> vd
-        {'x': 18, 'y': 3}
+        VariablesDict(x=18, y=3)
 
         The keys are automatically made lowercase
 
         >>> vd['S'] = 2
         >>> vd
-        {'x': 18, 'y': 3, 's': 2}
+        VariablesDict(s=2, x=18, y=3)
 
         If the value is 0, it wont be inserted
         into the dictionary
 
         >>> vd['a'] = 0
         >>> vd
-        {'x': 18, 'y': 3, 'S': 2}
+        VariablesDict(s=2, x=18, y=3)
         >>> vd['x'] -= 18 # 18 - 18 = 0
         >>> vd
-        {'x': 18, 'y': 3, 'S': 2}
+        VariablesDict(s=2, y=3)
 
         You can also assign a float to a variable,
         if it represents whole number
         >>> vd['b'] = 9.0
         >>> vd
-        {'x': 18, 'y': 3, 'S': 2, 'b': 9}
+        VariablesDict(b=9, s=2, y=3)
 
         :type key: str
         :type value: int, float
@@ -100,7 +100,9 @@ class VariablesDict(Counter):
         elif value < 0:
             raise ValueError("Exponent must be positive")
 
-        if value != 0:
+        if value == 0:
+            del self[key]
+        else:
             super(VariablesDict, self).__setitem__(key.lower(), int(value))
 
     def __str__(self):
@@ -120,12 +122,13 @@ class VariablesDict(Counter):
         Return the dict as a string (as a normal dict)
 
         >>> repr(VariablesDict(Y=5))
-        "{'y': 5}"
+        'VariablesDict(y=5)'
         >>> repr(VariablesDict(a=2, b=8, c=3))
-        "{'a': 2, 'b': 8, 'c': 3}"
+        'VariablesDict(a=2, b=8, c=3)'
         """
 
-        return repr(dict(self))
+        pairs = [f'{k}={v}' for k, v in sorted(self.items())]
+        return f"VariablesDict({', '.join(pairs)})"
 
     def __add__(self, other):
         """
@@ -134,11 +137,11 @@ class VariablesDict(Counter):
         and the second VariablesDict
 
         >>> VariablesDict(x=5, y=3) + VariablesDict(y=5)
-        "{'x': 5, 'y': 8}"
+        VariablesDict(x=5, y=8)
         >>> VariablesDict(x=18) + VariablesDict(y=4)
-        "{'x': 18, 'y': 4}"
+        VariablesDict(x=18, y=4)
         >>> VariablesDict(a=36) + VariablesDict()
-        "{'a': 36}"
+        VariablesDict(a=36)
 
         :type other: VariablesDict
         :rtype: VariablesDict
@@ -159,11 +162,11 @@ class VariablesDict(Counter):
         dict and the values of the second one
 
         >>> VariablesDict(x=5, y=3) - VariablesDict(x=1, y=2)
-        "{'x': 4, 'y': 1}"
-        >>> VariablesDict(x=18) - VariablesDict(y=18)
-        "{}"
+        VariablesDict(x=4, y=1)
+        >>> VariablesDict(x=18) - VariablesDict(x=18)
+        VariablesDict()
         >>> VariablesDict(c=2) - VariablesDict(c=3)
-        Traceback: (most recent call last)
+        Traceback (most recent call last):
         ...
         ValueError: Exponent must be positive
 

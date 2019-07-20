@@ -35,10 +35,11 @@ class Test (TestCase):
         self.assertTrue(VD(b=0).empty)
         self.assertFalse(VD(c=1).empty)
 
-        # str() and repr() are the same for dict and
-        # VariablesDict
+        # str() work as a normal dict
         self.assertEqual(str(VD(x=2)), str({'x': 2}))
-        self.assertEqual(repr(VD(y=7)), repr({'y': 7}))
+
+        # repr()
+        self.assertEqual(repr(VD(y=7)), 'VariablesDict(y=7)')
 
         # subtraction and sum only between VariablesDict
         self.assertRaises(TypeError, lambda: VD() + {})

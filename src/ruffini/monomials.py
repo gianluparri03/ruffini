@@ -1,5 +1,4 @@
 from .variables import VariablesDict
-from functools import reduce
 from math import gcd
 
 
@@ -17,8 +16,8 @@ class Monomial:
     Monomials can be added, subtracted, multiplied
     and divided togheter (multiplication and division
     can be done also between monomials and numbers).
-    You can also calculate lcmd and gcd between
-    monomials (and numbers).
+    lcm and gcd between monomials (and numbers) is
+    available, too.
 
     You can also assign a value to the variables and
     calculate the value of that monomial with the
@@ -35,7 +34,7 @@ class Monomial:
         The variables will be stored in a VariableDict, so:
         - all the letters will be made lowercase
         - the letters can be only alphabetical and
-          with a lenght of one
+          with a lenght of one character
         - the exponent must be positive and integer
 
         When initialized the monomial, this method calculates
@@ -70,24 +69,24 @@ class Monomial:
         Check if two monomials are similar (if
         the have the same variables).
 
-        >>> m1 = Monomial(3, {'x': 1, 'x': 1}))
-        >>> m2 = Monomial(-6, {'x': 1, 'x': 3}))
-        >>> m3 = Monomial(2.6, {'x': 1, 'x': 1}))
-        >>> m4 = Monomial(3.14, {}))
+        >>> m1 = Monomial(3, {'x': 1, 'y': 1})
+        >>> m2 = Monomial(-6, {'x': 1, 'y': 3})
+        >>> m3 = Monomial(2.6, {'x': 1, 'y': 1})
+        >>> m4 = Monomial(3.14, {})
         >>> m1.similar_to(m4)
-        True
-        >>> m1.similar_to(m2)
         False
+        >>> m1.similar_to(m3)
+        True
 
-        If 'other' is not a monomial the result
-        will always be False
+        If the second operand is not a monomial
+        the result will always be False
 
         >>> m3.similar_to("")
         False
         >>> m4.similar_to({})
         False
 
-        The only one exception: is when the
+        The only one exception is when the
         monomial has no variables and it's
         compared to an int or a float; in this
         case, the result will be positive
@@ -120,11 +119,15 @@ class Monomial:
         different from zero
 
         >>> a.gcd(3.14)
-        Traceback: (most recent call last)
+        Traceback (most recent call last):
+        ...
+        TypeError: Can't calculate gcd between Monomial and float
+        >>> a.gcd(Monomial(3.14, {}))
+        Traceback (most recent call last):
         ...
         ValueError: Monomial coefficient must be int
         >>> b.gcd(0)
-        Traceback: (most recent call last)
+        Traceback (most recent call last):
         ...
         ValueError: Value can't be equal to zero
 
@@ -138,9 +141,8 @@ class Monomial:
         operators, you can just do
 
         >>> from functools import reduce
-        >>> monomials = (a, b, c)
-        >>> reduce(lambda m1, m2: m1.gcd(m2), monomials)
-        Monomial(30, {'x': 1})
+        >>> reduce(lambda m1, m2: m1.gcd(m2), (a, b, c))
+        Monomial(5, {'x': 1})
 
         :type others: Monomial, int, float
         :rtype: Monomial, int
@@ -154,8 +156,8 @@ class Monomial:
             if any(isinstance(m.coefficient, float) for m in [self, other]):
                 raise ValueError("Monomial coefficient must be int")
         else:
-            raise TypeError("Can't calculate gcd between Monomials " + \
-                            f" and {type(other)}")
+            raise TypeError("Can't calculate gcd between Monomial" +
+                            f" and {type(other).__name__}")
 
         # Check value of the operators
         if self.coefficient == 0 or other.coefficient == 0:
@@ -181,7 +183,7 @@ class Monomial:
         >>> a = Monomial(2, {'x': 1, 'y': 1})
         >>> b = Monomial(-9, {'y': 3})
         >>> a.lcm(b)
-        Monomial(18, {'x': 1, 'y': 3})
+        Monomial(18, {'y': 3, 'x': 1})
 
         If you want to know others informations
         like errors and limits, please check the

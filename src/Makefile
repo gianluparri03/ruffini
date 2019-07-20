@@ -1,6 +1,9 @@
 unittest:
 	python3 -m unittest discover -v
 
+doctest:
+	python3 doctests.py
+
 analyze:
 	pylint ruffini
 
