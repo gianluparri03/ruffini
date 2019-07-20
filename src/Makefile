@@ -1,5 +1,8 @@
-test:
+unittest:
 	python3 -m unittest discover -v
+
+analyze:
+	pylint ruffini
 
 coverage:
 	coverage run -m unittest discover

@@ -31,7 +31,22 @@ class Test (TestCase):
         # be inserted into the dictionary
         self.assertEqual(VD(c=0), VD())
 
+        # check empty
+        self.assertTrue(VD(b=0).empty)
+        self.assertFalse(VD(c=1).empty)
+
         # str() and repr() are the same for dict and
         # VariablesDict
         self.assertEqual(str(VD(x=2)), str({'x': 2}))
         self.assertEqual(repr(VD(y=7)), repr({'y': 7}))
+
+        # subtraction and sum only between VariablesDict
+        self.assertRaises(TypeError, lambda: VD() + {})
+        self.assertRaises(TypeError, lambda: VD() - {})
+
+        # test sum
+        self.assertEqual(VD(x=2, y=3) + VD(x=6), VD(x=8, y=3))
+
+        # test subtraction
+        self.assertEqual(VD(x=2, y=3) - VD(x=2), VD(y=3))
+        self.assertRaises(ValueError, lambda: VD(x=2, y=3) - VD(x=3))

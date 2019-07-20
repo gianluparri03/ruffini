@@ -3,10 +3,10 @@
 ![](banner.svg)
 ![](https://img.shields.io/codacy/grade/8bf3533a27104f44bdc0dad621d0de73.svg)
 ![](https://img.shields.io/codacy/coverage/8bf3533a27104f44bdc0dad621d0de73.svg)
+![](https://img.shields.io/readthedocs/ruffini.svg)
+![](https://img.shields.io/pypi/v/ruffini.svg?color=success)
 ![](https://img.shields.io/github/languages/code-size/gianluparri03/ruffini.svg)
 ![](https://img.shields.io/github/languages/top/gianluparri03/ruffini.svg)
-![](https://img.shields.io/pypi/v/ruffini.svg?color=success)
-![](https://img.shields.io/readthedocs/ruffini.svg)
 ![](https://img.shields.io/github/license/gianluparri03/ruffini.svg)
 
 **Ruffini** (/rʊˈfiːni/, reference to [Paolo Ruffini](https://en.wikipedia.org/wiki/Paolo_Ruffini), Italian mathematician)

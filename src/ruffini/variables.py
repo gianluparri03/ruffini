@@ -28,12 +28,22 @@ class VariablesDict(Counter):
         {'y': 5}
         >>> VariablesDict(a=2, b=8, c=3)
         {'a': 2, 'b': 8, 'c': 3}
+
+        It also check if the dictionary is empty.
+
+        >>> VariablesDict(a=2, b=8, c=3).empty
+        False
+        >>> VariablesDict(x=0).empty
+        True
         """
         super(VariablesDict, self).__init__(None)
 
         # Add the values
         for k in kwargs:
             self.__setitem__(k, kwargs[k])
+
+        # Check if it's empty
+        self.empty = not bool(len(self))
 
     def __setitem__(self, key, value):
         """
@@ -74,11 +84,8 @@ class VariablesDict(Counter):
         :raise: TypeError, ValueError
         """
 
-        if value == 0:
-            self.__delitem__(key)
-
         # Check variable name
-        elif not isinstance(key, str):
+        if not isinstance(key, str):
             raise TypeError("Variable name must be str")
         elif len(key) > 1:
             raise ValueError("Variable name lenght must be one")
@@ -93,17 +100,81 @@ class VariablesDict(Counter):
         elif value < 0:
             raise ValueError("Exponent must be positive")
 
-        else:
+        if value != 0:
             super(VariablesDict, self).__setitem__(key.lower(), int(value))
 
     def __str__(self):
         """
         Return the dict as a string (as a normal dict)
+
+        >>> str(VariablesDict(x=5, y=3))
+        "{'x': 5, 'y': 3}"
+        >>> str(VariablesDict(Y=5))
+        "{'y': 5}"
         """
+
         return str(dict(self))
 
     def __repr__(self):
         """
         Return the dict as a string (as a normal dict)
+
+        >>> repr(VariablesDict(Y=5))
+        "{'y': 5}"
+        >>> repr(VariablesDict(a=2, b=8, c=3))
+        "{'a': 2, 'b': 8, 'c': 3}"
         """
+
         return repr(dict(self))
+
+    def __add__(self, other):
+        """
+        Sum two VariablesDict, returning a VariablesDict
+        whose values are the sum of the values of this
+        and the second VariablesDict
+
+        >>> VariablesDict(x=5, y=3) + VariablesDict(y=5)
+        "{'x': 5, 'y': 8}"
+        >>> VariablesDict(x=18) + VariablesDict(y=4)
+        "{'x': 18, 'y': 4}"
+        >>> VariablesDict(a=36) + VariablesDict()
+        "{'a': 36}"
+
+        :type other: VariablesDict
+        :rtype: VariablesDict
+        """
+        if not isinstance(other, VariablesDict):
+            return NotImplemented
+
+        result = VariablesDict()
+        for letter in set(self) | set(other):
+            result[letter] = self[letter] + other[letter]
+        return result
+
+    def __sub__(self, other):
+        """
+        Subtract two VariablesDict, returning a
+        VariablesDict whose values are the
+        subtraction between the values of this
+        dict and the values of the second one
+
+        >>> VariablesDict(x=5, y=3) - VariablesDict(x=1, y=2)
+        "{'x': 4, 'y': 1}"
+        >>> VariablesDict(x=18) - VariablesDict(y=18)
+        "{}"
+        >>> VariablesDict(c=2) - VariablesDict(c=3)
+        Traceback: (most recent call last)
+        ...
+        ValueError: Exponent must be positive
+
+        :type other: VariablesDict
+        :rtype: VariablesDict
+        :raise: ValueError
+        """
+        if not isinstance(other, VariablesDict):
+            return NotImplemented
+
+        result = VariablesDict()
+        for letter in set(self) | set(other):
+            result[letter] = self[letter] - other[letter]
+        return result
