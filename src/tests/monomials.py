@@ -1,6 +1,7 @@
 from unittest import TestCase
 
 from ruffini import Monomial as M
+from ruffini import Polynomial as P
 from ruffini import VariablesDict as VD
 
 
@@ -74,3 +75,26 @@ class Test (TestCase):
         # commutative property
         self.assertEqual(self.m0.gcd(self.m2), self.m2.gcd(self.m0))
         self.assertEqual(self.m0.lcm(self.m2), self.m2.lcm(self.m0))
+
+    def test_add_sub(self):
+        # M + (-M) = 0
+        self.assertIsInstance(self.m5 + (-self.m5), int)
+
+        # M + 0 = M
+        self.assertEqual(self.m3 + 0, self.m3)
+
+        # The sum of two similar monomials is a monomial
+        self.assertEqual(self.m0 + self.m2, M(10, {'x': 1, 'y': 1}))
+
+        # The sum of two NON similar monomials is a polynomial
+        self.assertEqual(self.m1 + self.m3, P(self.m1, self.m3))
+
+        # The sum of a monomial and a number is a polynomial
+        self.assertEqual(self.m4 + 6.28, P(self.m4, M(6.28, {})))
+
+        # m1 - m2 = m1 + (-m2)
+        self.assertEqual(self.m0 - self.m3, self.m0 + (-self.m3))
+
+        # only works with monomials and numbers
+        self.assertRaises(TypeError, lambda: self.m1 + [])
+        self.assertRaises(TypeError, lambda: self.m4 - "")

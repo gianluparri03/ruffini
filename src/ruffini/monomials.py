@@ -156,7 +156,7 @@ class Monomial:
             if any(isinstance(m.coefficient, float) for m in [self, other]):
                 raise ValueError("Monomial coefficient must be int")
         else:
-            raise TypeError("Can't calculate gcd between Monomial" +
+            raise TypeError("Can't calculate gcd between Monomial"
                             f" and {type(other).__name__}")
 
         # Check value of the operators
@@ -183,7 +183,7 @@ class Monomial:
         >>> a = Monomial(2, {'x': 1, 'y': 1})
         >>> b = Monomial(-9, {'y': 3})
         >>> a.lcm(b)
-        Monomial(18, {'y': 3, 'x': 1})
+        Monomial(18, {'x': 1, 'y': 3})
 
         If you want to know others informations
         like errors and limits, please check the
@@ -198,42 +198,86 @@ class Monomial:
 
     ### Operations Methods ###
 
-    def __add__(self, other):
+    def __add__(self, other, strict=False):
         """
-        Return the sum of this monomial and another one
-        If the monomials are not similar, the result
-        will be a polynomial.
+        As the name say, this method is used
+        to sum two monomials, or a number , too
+        >>> Monomial(5, {'x': 1, 'y':3}) + Monomial(-1.52, {'x':1, 'y':3})
+        Monomial(3.48, {'x': 1, 'y': 3})
 
-        :type other: Monomial, 0
+        >>> Monomial(1, {'z': 1}) + 17
+        Polynomial(Monomial(1, {'z': 1}), Monomial(17, {}))
+
+        Otherwise, it will return NotImplemented, which will become
+        a TypeError
+        >>> Monomial(2, {'z': 1}) - ""
+        Traceback (most recent call last):
+        ...
+        TypeError: unsupported operand type(s) for -: 'Monomial' and 'str'
+
+        :type other: Monomial, int, float
         :rtype: Monomial, Polynomial, NotImplemented, 0
         :raise: TypeError
         """
 
+        # M + (-M) = 0
         if other == (-self):
             return 0
+
+        # M + 0 = M
         elif other == 0:
-            return self
-        elif self.similar_to(other):
+            return Monomial(self.coefficient, self.variables)
+
+        # Simil monomials
+        elif self.similar_to(other) and isinstance(other, Monomial):
             return Monomial(self.coefficient + other.coefficient,
                             self.variables)
+
+        # Generic monomials
         elif isinstance(other, Monomial):
             from .polynomials import Polynomial
             return Polynomial(self, other)
+
+        # Monomial + Number
+        elif isinstance(other, (int, float)):
+            from .polynomials import Polynomial
+            return Polynomial(self, Monomial(other, {}))
+
         else:
             return NotImplemented
 
     def __sub__(self, other):
         """
         Return the subtraction between this monomial
-        and another one. If the monomials are not
-        similar , the result will be a polynomial
+        and another one
 
-        :type other: Monomial, 0
+        >>> Monomial(5, {'x': 1}) - Monomial(3, {'x': 1})
+        Monomial(2, {'x': 1})
+
+        If the monomials are not similar or the second
+        operator is a number, the result will be a
+        polynomial
+
+        >>> Monomial(5, {'x': 1, 'y': 3}) - Monomial(3, {'x': 1})
+        Polynomial(Monomial(5, {'x': 1, 'y': 3}), Monomial(-3, {'x': 1}))
+        >>> Monomial(17, {'a': 1, 'b': 1}) - 2.5
+        Polynomial(Monomial(17, {'a': 1, 'b': 1}), Monomial(-2.5, {}))
+
+        Otherwise, it will return NotImplemented, which will become
+        a TypeError
+        >>> Monomial(2, {'z': 1}) - ""
+        Traceback (most recent call last):
+        ...
+        TypeError: unsupported operand type(s) for -: 'Monomial' and 'str'
+
+        :type other: Monomial, int, float
         :rtype: Monomial, Polynomial, NotImplemented, 0
         :raise: TypeError
         """
-
-        return self + (-other)
+        if isinstance(other, (Monomial, int, float)):
+            return self + (-other)
+        else:
+            return NotImplemented
 
     def __mul__(self, other):
         """

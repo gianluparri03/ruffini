@@ -127,7 +127,7 @@ class VariablesDict(Counter):
         'VariablesDict(a=2, b=8, c=3)'
         """
 
-        pairs = [f'{k}={v}' for k, v in sorted(self.items())]
+        pairs = [f'{k}={self[k]}' for k in sorted(self.keys())]
         return f"VariablesDict({', '.join(pairs)})"
 
     def __add__(self, other):

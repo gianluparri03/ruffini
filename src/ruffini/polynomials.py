@@ -233,11 +233,9 @@ class Polynomial:
             if not len(self) == len(other):
                 return False
             else:
-                def _sort(to_sort): return sorted(
-                    to_sort, key=lambda term: term.coefficient)
-                first = _sort(self)
-                second = _sort(other)
-                return all(first[i] == second[i] for i in range(len(p1)))
+                sort = lambda l: sorted(l, key=lambda term: term.coefficient)
+                first, second = sort(self), sort(other)
+                return all(first[i] == second[i] for i in range(len(first)))
         elif isinstance(other, Monomial) and len(self) == 1:
             return self[0] == other
         else:
@@ -266,7 +264,6 @@ class Polynomial:
         Return the polynomial as a string
 
         """
-        terms = [repr(t) for t in self.terms]
-        terms = tuple(terms)
+        terms = ', '.join([repr(t) for t in self.terms])
 
-        return f"Polynomial{terms}"
+        return f"Polynomial({terms})"
