@@ -98,3 +98,30 @@ class Test (TestCase):
         # only works with monomials and numbers
         self.assertRaises(TypeError, lambda: self.m1 + [])
         self.assertRaises(TypeError, lambda: self.m4 - "")
+
+    def test_mul_div (self):
+        # only works with monomials and numbers
+        self.assertRaises(TypeError, lambda: self.m2 * [])
+        self.assertRaises(TypeError, lambda: self.m3 / {})
+
+        # monomial * monomial
+        self.assertEqual(self.m5 * self.m1, M(54, {'x': 1, 'y': 6}))
+
+        # monomial * number
+        self.assertEqual(self.m0 * self.m3, self.m0 * 3)
+
+        # monomial / monomial
+        self.assertEqual(self.m1 / self.m5, M(2/3, {'x': 1}))
+
+        # monomial / number
+        self.assertEqual(self.m0 / 2, M(1, {'x': 1, 'y': 1}))
+
+        # if the first operator is a multiple of the
+        # second, the result is a number
+        self.assertIsInstance(self.m2 / self.m0, int)
+
+        # the coefficient is automatically converted to int
+        self.assertIsInstance((self.m1 / self.m0).coefficient, int)
+
+        # second operator's exponent must be lower than first's
+        self.assertRaises(ValueError, lambda: self.m3 / self.m4)

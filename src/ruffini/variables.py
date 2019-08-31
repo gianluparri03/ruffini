@@ -102,6 +102,7 @@ class VariablesDict(Counter):
 
         if value == 0:
             del self[key]
+
         else:
             super(VariablesDict, self).__setitem__(key.lower(), int(value))
 
@@ -115,7 +116,9 @@ class VariablesDict(Counter):
         "{'y': 5}"
         """
 
-        return str(dict(self))
+        pairs = [f"'{k}': {self[k]}" for k in sorted(self.keys())]
+
+        return "{" + ", ".join(pairs) + "}"
 
     def __repr__(self):
         """

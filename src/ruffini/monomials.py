@@ -284,6 +284,20 @@ class Monomial:
         Multiplicate this monomial for another
         monomial or for a number (int / float)
 
+        >>> Monomial(5, {'x': 1, 'y': 2}) * Monomial(2, {'a': 1, 'b': 1})
+        Monomial(10, {'a': 1, 'b': 1, 'x': 1, 'y': 2})
+        >>> Monomial(3, {'c': 2}) * 5
+        Monomial(15, {'c': 2})
+        >>> Monomial(1, {'k': 3}) * Monomial(1, {'k': 3})
+        Monomial(1, {'k': 6})
+
+        If the second operator isn't a monomial or
+        a number, it will raise a TypeError
+        >>> Monomial(4, {}) * {}
+        Traceback (most recent call last):
+        ...
+        TypeError: unsupported operand type(s) for *: 'Monomial' and 'dict'
+
         :type other: Monomial, int, float
         :rtype: Monomial, NotImplemented
         :raise: TypeError
@@ -301,8 +315,42 @@ class Monomial:
 
     def __truediv__(self, other):
         """
-        Divide this monomial per another monomial or
-        per a number (int / float)
+        Divide this monomial by another monomial or
+        by a number (int / float)
+
+        >>> Monomial(6, {'a': 3}) / Monomial(3, {'a': 1})
+        Monomial(2, {'a': 2})
+        >>> Monomial(18, {'k': 3}) / 6
+        Monomial(3, {'k': 3})
+
+        If the two monomials are similar (so if they
+        have the same variables) the result will be
+        an int of a float (3.0 will be taken to 3)
+
+        >>> Monomial(27, {'x': 6}) / Monomial(3, {'x': 6})
+        9
+
+        The coefficient is converted to int too, if
+        it's a whole number
+        >>> 6 / 3
+        2.0
+        >>> Monomial(6, {}) / Monomial(3, {})
+        2
+
+        If second monomial's variable's exponent
+        are higher than first's, it will raise a
+        ValueError
+        >>> Monomial(5, {}) / Monomial(4, {'x': 1})
+        Traceback (most recent call last):
+        ...
+        ValueError: Exponent must be positive
+
+        Otherwise, if the second operator isn't a monomial
+        or a number, it will raise a TypeError
+        >>> Monomial(30, {}) / {}
+        Traceback (most recent call last):
+        ...
+        TypeError: unsupported operand type(s) for /: 'Monomial' and 'dict'
 
         :type other: Monomial, int, float
         :rtype: Monomial, NotImplemented, int, float
@@ -314,7 +362,7 @@ class Monomial:
 
         if isinstance(other, Monomial):
             coefficient = self.coefficient / other.coefficient
-            if isinstance(coefficient, float) and coefficient.is_integer:
+            if isinstance(coefficient, float) and coefficient.is_integer():
                 coefficient = int(coefficient)
             variables = self.variables - other.variables
             if variables == {}:

@@ -3,4 +3,4 @@
 *.pyc
 env
 **coverage**
-src/codacy.sh
+src/codacy_project_token
