@@ -32,6 +32,7 @@ class Monomial:
         and the values the degrees).
 
         The variables will be stored in a VariableDict, so:
+
         - all the letters will be made lowercase
         - the letters can be only alphabetical and
           with a lenght of one character
@@ -202,6 +203,7 @@ class Monomial:
         """
         As the name say, this method is used
         to sum two monomials, or a number , too
+
         >>> Monomial(5, {'x': 1, 'y':3}) + Monomial(-1.52, {'x':1, 'y':3})
         Monomial(3.48, {'x': 1, 'y': 3})
 
@@ -210,6 +212,7 @@ class Monomial:
 
         Otherwise, it will return NotImplemented, which will become
         a TypeError
+
         >>> Monomial(2, {'z': 1}) - ""
         Traceback (most recent call last):
         ...
@@ -265,6 +268,7 @@ class Monomial:
 
         Otherwise, it will return NotImplemented, which will become
         a TypeError
+
         >>> Monomial(2, {'z': 1}) - ""
         Traceback (most recent call last):
         ...
@@ -293,6 +297,7 @@ class Monomial:
 
         If the second operator isn't a monomial or
         a number, it will raise a TypeError
+
         >>> Monomial(4, {}) * {}
         Traceback (most recent call last):
         ...
@@ -332,6 +337,7 @@ class Monomial:
 
         The coefficient is converted to int too, if
         it's a whole number
+
         >>> 6 / 3
         2.0
         >>> Monomial(6, {}) / Monomial(3, {})
@@ -340,6 +346,7 @@ class Monomial:
         If second monomial's variable's exponent
         are higher than first's, it will raise a
         ValueError
+
         >>> Monomial(5, {}) / Monomial(4, {'x': 1})
         Traceback (most recent call last):
         ...
@@ -347,6 +354,7 @@ class Monomial:
 
         Otherwise, if the second operator isn't a monomial
         or a number, it will raise a TypeError
+        
         >>> Monomial(30, {}) / {}
         Traceback (most recent call last):
         ...
