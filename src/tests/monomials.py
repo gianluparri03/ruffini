@@ -92,6 +92,10 @@ class Test (TestCase):
         # The sum of a monomial and a number is a polynomial
         self.assertEqual(self.m4 + 6.28, P(self.m4, M(6.28, {})))
 
+        # The sum of a number and a monomial with no variables
+        # is a number
+        self.assertIsInstance(M(18, {}) + 3, int)
+
         # m1 - m2 = m1 + (-m2)
         self.assertEqual(self.m0 - self.m3, self.m0 + (-self.m3))
 
@@ -99,7 +103,7 @@ class Test (TestCase):
         self.assertRaises(TypeError, lambda: self.m1 + [])
         self.assertRaises(TypeError, lambda: self.m4 - "")
 
-    def test_mul_div (self):
+    def test_mul_div(self):
         # only works with monomials and numbers
         self.assertRaises(TypeError, lambda: self.m2 * [])
         self.assertRaises(TypeError, lambda: self.m3 / {})
@@ -125,3 +129,24 @@ class Test (TestCase):
 
         # second operator's exponent must be lower than first's
         self.assertRaises(ValueError, lambda: self.m3 / self.m4)
+
+    def test_pow(self):
+        # works only with whole positive exponents
+        self.assertRaises(ValueError, lambda: M(5, {}) ** (-3))
+        self.assertRaises(TypeError, lambda: M(17, {}) ** 2.14)
+
+        # test result
+        self.assertEqual(self.m5 ** 3, M(-729, {'y': 9}))
+
+    def test_reverses(self):
+        # reverse add
+        self.assertEqual(19 + self.m3, 22)
+
+        # reverse sub
+        self.assertEqual(8 - self.m3, 5)
+
+        # reverse mul
+        self.assertEqual(18 * self.m3, 54)
+
+        # reverse div
+        self.assertEqual(21 / self.m3, 7)

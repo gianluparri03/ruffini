@@ -199,7 +199,7 @@ class Monomial:
 
     ### Operations Methods ###
 
-    def __add__(self, other, strict=False):
+    def __add__(self, other):
         """
         As the name say, this method is used
         to sum two monomials, or a number , too
@@ -219,7 +219,7 @@ class Monomial:
         TypeError: unsupported operand type(s) for -: 'Monomial' and 'str'
 
         :type other: Monomial, int, float
-        :rtype: Monomial, Polynomial, NotImplemented, 0
+        :rtype: Monomial, Polynomial, NotImplemented, int, float
         :raise: TypeError
         """
 
@@ -240,6 +240,10 @@ class Monomial:
         elif isinstance(other, Monomial):
             from .polynomials import Polynomial
             return Polynomial(self, other)
+
+        # Monomial with no variables + Number
+        elif isinstance(other, (int, float)) and not self.variables:
+            return self.coefficient + other
 
         # Monomial + Number
         elif isinstance(other, (int, float)):
@@ -275,7 +279,7 @@ class Monomial:
         TypeError: unsupported operand type(s) for -: 'Monomial' and 'str'
 
         :type other: Monomial, int, float
-        :rtype: Monomial, Polynomial, NotImplemented, 0
+        :rtype: Monomial, Polynomial, NotImplemented, int, float
         :raise: TypeError
         """
         if isinstance(other, (Monomial, int, float)):
@@ -304,7 +308,7 @@ class Monomial:
         TypeError: unsupported operand type(s) for *: 'Monomial' and 'dict'
 
         :type other: Monomial, int, float
-        :rtype: Monomial, NotImplemented
+        :rtype: Monomial, NotImplemented, int, float
         :raise: TypeError
         """
 
@@ -314,6 +318,12 @@ class Monomial:
         if isinstance(other, Monomial):
             coefficient = self.coefficient * other.coefficient
             variables = self.variables + other.variables
+
+            # return only the coefficent if there
+            # are no variables
+            if not variables:
+                return coefficient
+
             return Monomial(coefficient, variables)
         else:
             return NotImplemented
@@ -354,7 +364,7 @@ class Monomial:
 
         Otherwise, if the second operator isn't a monomial
         or a number, it will raise a TypeError
-        
+
         >>> Monomial(30, {}) / {}
         Traceback (most recent call last):
         ...
@@ -384,6 +394,23 @@ class Monomial:
         """
         Raise a monomial to power
 
+        >>> Monomial(5, {'x': 1}) ** 2
+        Monomial(25, {'x': 2})
+        >>> Monomial(4, {'c': 6}) ** 3
+        Monomial(64, {'c': 18})
+
+        NB. the exponent can be only positive
+        and integer
+
+        >>> Monomial(17, {'k': 1}) ** (-1)
+        Traceback (most recent call last):
+        ...
+        ValueError: Exponent can't be negative
+        >>> Monomial(3.14, {'a': 3}) ** 2.5
+        Traceback (most recent call last):
+        ...
+        TypeError: unsupported operand type(s) for ** or pow(): 'Monomial' and 'float'
+
         :type exp: int
         :rtype: Monomial, NotImplemented
         :raise: ValueError, TypeError
@@ -404,17 +431,98 @@ class Monomial:
 
         return Monomial(self.coefficient ** exp, variables)
 
-    def __rmul__(self, other):
+    ### Reversed Operations Method ###
+
+    def __radd__(self, other):
         """
-        Multiply a number (int / float) for a monomial
+        This function is the reverse for Monomial.__add__().
+        With this function, you can swap the two operands
+        of the addition:
+
+        >>> 18 + Monomial(3, {})
+        21
+
+        For more informations, see Monomial.__add__() docs.
 
         :type other: int, float
-        :rtype: Monomial, NotImplemented
+        :rtype: Monomial, Polynomial, NotImplemented, int, float
         :raise: TypeError
         """
 
         try:
-            return self.__mul__(other)
+            return self + other
+        except TypeError:
+            return NotImplemented
+
+    def __rsub__(self, other):
+        """
+        This function is the reverse for Monomial.__sub__().
+        With this function, you can swap the two operands
+        of the subtraction:
+
+        >>> 9 - Monomial(4, {})
+        5
+
+        For more informations, see Monomial.__sub__() docs.
+
+        :type other: int, float
+        :rtype: Monomial, NotImplemented, int, float
+        :raise: TypeError
+        """
+
+        try:
+            return (- self) + other
+        except TypeError:
+            return NotImplemented
+
+    def __rmul__(self, other):
+        """
+        This function is the reverse for Monomial.__mul__().
+        With this function, you can swap the two operands
+        of the multiplication:
+
+        >>> 5 * Monomial(2, {'x': 2})
+        Monomial(10, {'x': 2})
+
+        For more informations, see Monomial.__mul__() docs.
+
+        :type other: int, float
+        :rtype: Monomial, NotImplemented, int, float
+        :raise: TypeError
+        """
+
+        try:
+            return self * other
+        except TypeError:
+            return NotImplemented
+
+    def __rtruediv__(self, other):
+        """
+        This function is the reverse for Monomial.__truediv__().
+        With this function, you can swap the two operands
+        of the division:
+
+        >>> 8 / Monomial(4, {})
+        2
+
+        For more informations, see Monomial.__truediv__() docs.
+
+        :type other: int, float
+        :rtype: Monomial, NotImplemented, int, float
+        :raise: TypeError
+        """
+
+        try:
+            if self.variables:
+                raise ValueError("Exponent must be positive")
+
+            result = (1 / self.coefficient) * other
+
+            if isinstance(result, float) and result.is_integer():
+                result = int(result)
+
+            return result
+
         except TypeError:
             return NotImplemented
 

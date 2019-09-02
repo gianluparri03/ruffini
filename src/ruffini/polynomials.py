@@ -40,23 +40,17 @@ class Polynomial:
         polynomial is initialized.
         """
 
-        variables = [str(dict(m.variables)) for m in self.terms]
+        terms = []
 
-        # Check if there are simil monomial
-        if not len(set(variables)) == len(variables):
+        # If there are some, sum them
+        counter = Counter()
+        for term in self.terms:
+            counter[term.variables] += term.coefficient
 
-            variables = list(set(variables))
-
-            # If there are some, sum them
-            counter = Counter()
-            for term in self.terms:
-                v_id = variables.index(str(dict(term.variables)))
-                counter[v_id] += term.coefficient
-
-            # And rewrite the terms
-            self.terms.clear()
-            for v_id in counter:
-                self.terms.append(Monomial(counter[v_id], variables[v_id]))
+        # And rewrite the terms
+        self.terms.clear()
+        for variables, coefficient in counter.items():
+            self.terms.append(Monomial(coefficient, variables))
 
     # Operations Methods ###
 
@@ -233,7 +227,8 @@ class Polynomial:
             if not len(self) == len(other):
                 return False
             else:
-                sort = lambda l: sorted(l, key=lambda term: term.coefficient)
+                def sort(l): return sorted(
+                    l, key=lambda term: term.coefficient)
                 first, second = sort(self), sort(other)
                 return all(first[i] == second[i] for i in range(len(first)))
         elif isinstance(other, Monomial) and len(self) == 1:

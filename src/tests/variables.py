@@ -51,3 +51,6 @@ class Test (TestCase):
         # test subtraction
         self.assertEqual(VD(x=2, y=3) - VD(x=2), VD(y=3))
         self.assertRaises(ValueError, lambda: VD(x=2, y=3) - VD(x=3))
+
+        # check hash
+        self.assertEqual(hash(VD(x=2, y=3)), hash((('x', 2), ('y', 3))))

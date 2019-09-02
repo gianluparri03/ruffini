@@ -184,3 +184,10 @@ class VariablesDict(Counter):
         for letter in set(self) | set(other):
             result[letter] = self[letter] - other[letter]
         return result
+
+    def __hash__ (self):
+        """
+        Return the hash for the VariablesDict.
+        It's equal to the tuple of the items.
+        """
+        return hash(tuple(list((k, self[k]) for k in self)))
