@@ -552,7 +552,7 @@ class Monomial:
         # if there are no variables left return an int/float
         if not variables:
             return coefficient
-        
+
         return Monomial(coefficient, variables)
 
     def __str__(self):

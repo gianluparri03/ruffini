@@ -135,12 +135,12 @@ class Polynomial:
 
         :type other: Monomial, int, float
         :rtype: Polynomial, NotImplemented
-        :raise: TypeError   
+        :raise: TypeError
         """
 
         try:
             return (-self).__add__(other)
-        except:
+        except TypeError:
             return NotImplemented
 
     def __rmul__(self, other):

@@ -4,9 +4,6 @@ unittest:
 doctest:
 	python3 doctests.py
 
-analyze:
-	pylint ruffini
-
 coverage:
 	coverage run -m unittest discover
 	coverage report -m
