@@ -103,6 +103,12 @@ class Test (TestCase):
         self.assertRaises(TypeError, lambda: self.m1 + [])
         self.assertRaises(TypeError, lambda: self.m4 - "")
 
+        # the monomial remain equal after the operation
+        self.m2 + self.m0
+        self.assertEqual(self.m2, M(8, {'x': 1, 'y': 1}))
+        self.m2 - self.m0
+        self.assertEqual(self.m2, M(8, {'x': 1, 'y': 1}))
+
     def test_mul_div(self):
         # only works with monomials and numbers
         self.assertRaises(TypeError, lambda: self.m2 * [])
@@ -130,6 +136,12 @@ class Test (TestCase):
         # second operator's exponent must be lower than first's
         self.assertRaises(ValueError, lambda: self.m3 / self.m4)
 
+        # the monomial remain equal after the operation
+        self.m2 * 5
+        self.assertEqual(self.m2, M(8, {'x': 1, 'y': 1}))
+        self.m2 / 7
+        self.assertEqual(self.m2, M(8, {'x': 1, 'y': 1}))
+
     def test_pow(self):
         # works only with whole positive exponents
         self.assertRaises(ValueError, lambda: M(5, {}) ** (-3))
@@ -138,15 +150,47 @@ class Test (TestCase):
         # test result
         self.assertEqual(self.m5 ** 3, M(-729, {'y': 9}))
 
+        # the monomial remain equal after the operation
+        self.m2 ** 2
+        self.assertEqual(self.m2, M(8, {'x': 1, 'y': 1}))
+
     def test_reverses(self):
         # reverse add
         self.assertEqual(19 + self.m3, 22)
+        self.assertEqual(self.m2.__radd__(""), NotImplemented)
 
         # reverse sub
         self.assertEqual(8 - self.m3, 5)
+        self.assertEqual(self.m2.__rsub__(""), NotImplemented)
 
         # reverse mul
         self.assertEqual(18 * self.m3, 54)
+        self.assertEqual(self.m2.__rmul__(""), NotImplemented)
 
         # reverse div
         self.assertEqual(21 / self.m3, 7)
+        self.assertEqual(self.m2.__rtruediv__(""), NotImplemented)
+
+    def test_call(self):
+        # test value
+        self.assertEqual(self.m5(y=2), -72)
+
+        # if a variable value isn't specified
+        # it will stay there
+        self.assertEqual(self.m0(x=5), M(10, {'y': 1}))
+
+        # if there are no variables left returns an int/float
+        self.assertIsInstance(self.m5(y=2), int)
+
+        # otherwise it return a monomial
+        self.assertIsInstance(self.m2(x=3), M)
+
+        # if a variable isn't in the monomial, nothing change
+        self.assertEqual(self.m4(b=7), self.m4)
+
+        # works only with number
+        self.assertRaises(TypeError, self.m0, x="")
+
+        # the monomial remain equal after evaluating it
+        self.m2(x=2)
+        self.assertEqual(self.m2, M(8, {'x': 1, 'y': 1}))

@@ -1,5 +1,5 @@
 unittest:
-	python3 -m unittest discover -v
+	python3 -m unittest discover
 
 doctest:
 	python3 doctests.py

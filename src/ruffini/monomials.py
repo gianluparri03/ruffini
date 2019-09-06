@@ -512,19 +512,18 @@ class Monomial:
         :raise: TypeError
         """
 
-        try:
-            if self.variables:
-                raise ValueError("Exponent must be positive")
-
-            result = (1 / self.coefficient) * other
-
-            if isinstance(result, float) and result.is_integer():
-                result = int(result)
-
-            return result
-
-        except TypeError:
+        if not isinstance(other, (int, float)):
             return NotImplemented
+
+        if self.variables:
+            raise ValueError("Exponent must be positive")
+
+        result = (1 / self.coefficient) * other
+
+        if isinstance(result, float) and result.is_integer():
+            result = int(result)
+
+        return result
 
     ### Magic Methods ###
 
@@ -533,18 +532,28 @@ class Monomial:
         Evaluate the monomial, giving the values
         of the variables to the method
 
-        If a value isn't specified, the method
-        will raise an error
-
         :type values: int, float
-        :rtype: int, float
-        :raise: KeyError, TypeError
+        :rtype: int, float, Monomial
+        :raise: TypeError
         """
 
-        result = self.coefficient
+        coefficient = self.coefficient
+        variables = VariablesDict()
+
+        # substitute values
         for var in self.variables:
-            result *= (values[var]**self.variables[var])
-        return result
+            if var in values and isinstance(values[var], (int, float)):
+                coefficient *= (values[var] ** self.variables[var])
+            elif var in values:
+                raise TypeError(f"{var}'s value can't be set to {values[var]}")
+            else:
+                variables[var] = self.variables[var]
+
+        # if there are no variables left return an int/float
+        if not variables:
+            return coefficient
+        
+        return Monomial(coefficient, variables)
 
     def __str__(self):
         """

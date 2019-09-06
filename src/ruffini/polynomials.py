@@ -40,8 +40,6 @@ class Polynomial:
         polynomial is initialized.
         """
 
-        terms = []
-
         # If there are some, sum them
         counter = Counter()
         for term in self.terms:
