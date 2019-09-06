@@ -583,29 +583,103 @@ class Monomial:
 
     def __str__(self):
         """
-        Return the monomial as a string (without *)
+        Return the monomial as a string. Normally,
+        it will return the coefficient and the variables
+        without spaces or *. The power is indicated with ^.
+
+        Examples:
+
+        Normal monomial:
+
+        >>> print(Monomial(5, {'x': 1, 'y': 1}))
+        5xy
+
+        coefficient = 1 and there are variables
+
+        >>> print(Monomial(1, {'a': 2}))
+        a^2
+
+        coefficient = -1 and there are variables
+
+        >>> print(Monomial(-1, {'k': 3}))
+        -k^3
+
+        coefficient = 0
+
+        >>> print(Monomial(0, {'s': 5}))
+        0
+
+        coefficient = 1 and there aren't variables
+
+        >>> print(Monomial(1, {}))
+        1
+
+        coefficient = -1 and there aren't variables
+
+        >>> print(Monomial(-1, {}))
+        -1
+
+        NB the variables are displayed in
+        alphabetical order
+
+        >>> print(Monomial(5, {'k': 2, 'b': 3}))
+        5b^3k^2
 
         :rtype: str
         """
+
         variables = ""
+
+        # order the variables
         for letter in sorted(self.variables.keys()):
             if self.variables[letter] > 1:
                 variables += f"{letter}^{self.variables[letter]}"
             else:
                 variables += letter
 
+        # coefficient == 1 w/ variables
         if self.coefficient == 1 and variables:
             return variables
+
+        # coefficient == -1 and w/ variables
         elif self.coefficient == -1 and self.variables:
             return '-' + variables
+
+        # coefficient == 0
         elif self.coefficient == 0:
             return '0'
+
+        # coefficient == 1 w/o variables
         elif self.coefficient == 1 and not self.variables:
             return '1'
+
+        # coefficient == -1 w/o variables
         elif self.coefficient == -1 and not self.variables:
             return '-1'
+
+        # normal monomial
         else:
             return str(self.coefficient) + variables
+
+    def __repr__(self):
+        """
+        Return the monomial as a string
+
+        >>> Monomial(5, {'x': 5})
+        Monomial(5, {'x': 5})
+        >>> Monomial(-1, {'a': 2, 'c': 3})
+        Monomial(-1, {'a': 2, 'c': 3})
+
+        NB the variables are displayed in
+        alphabetical order
+
+        >>> Monomial(5, {'k': 2, 'b': 3})
+        Monomial(5, {'b': 3, 'k': 2})
+
+        :rtype: str
+        """
+
+        return f"Monomial({self.coefficient}, {self.variables})"
 
     def __eq__(self, other):
         """
@@ -642,15 +716,6 @@ class Monomial:
         :rtype: Monomial
         """
         return Monomial(abs(self.coefficient), self.variables)
-
-    def __repr__(self):
-        """
-        Return the monomial as a string
-
-        :rtype: str
-        """
-
-        return f"Monomial({self.coefficient}, {self.variables})"
 
     def __hash__(self):
         """

@@ -192,3 +192,25 @@ class Test (TestCase):
 
         # it's not case sensitive
         self.assertEqual(self.m0(x=2), self.m0(X=2))
+
+    def test_str_repr(self):
+        # normal monomial
+        self.assertEqual(str(M(5, {'x': 1, 'y': 1})), '5xy')
+
+        # coefficient == 1 w/ variables
+        self.assertEqual(str(M(1, {'a': 2})), 'a^2')
+
+        # coefficient == -1 and w/ variables
+        self.assertEqual(str(M(-1, {'k': 3})), '-k^3')
+
+        # coefficient == 0
+        self.assertEqual(str(M(0, {'s': 5})), '0')
+
+        # coefficient == 1 w/o variables
+        self.assertEqual(str(M(1, {})), '1')
+
+        # coefficient == -1 w/o variables
+        self.assertEqual(str(M(-1, {})), '-1')
+
+        # repr
+        self.assertEqual(repr(M(5, {'b': 2, 'k': 3})), "Monomial(5, {'b': 2, 'k': 3})")

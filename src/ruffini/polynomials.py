@@ -71,7 +71,7 @@ class Polynomial:
             return Polynomial(*self.terms, *other.terms)
         elif isinstance(other, Monomial):
             return Polynomial(*self.terms, other)
-        else TypeError:
+        else:
             return NotImplemented
 
     def __sub__(self, other):
@@ -93,7 +93,7 @@ class Polynomial:
             return Polynomial(*self.terms, *(-other))
         elif isinstance(other, Monomial):
             return Polynomial(*self.terms, -other)
-        else TypeError:
+        else:
             return NotImplemented
 
     def __mul__(self, other):
@@ -110,7 +110,7 @@ class Polynomial:
             return Polynomial(*(t*other for t in self.terms))
         elif isinstance(other, Polynomial):
             return Polynomial(*(a*b for a in self.terms for b in other.terms))
-        else TypeError:
+        else:
             return NotImplemented
 
     def __radd__(self, other):
