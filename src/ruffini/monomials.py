@@ -563,7 +563,8 @@ class Monomial:
 
         coefficient = self.coefficient
         variables = VariablesDict()
-        values = dict(zip(map(lambda v: v.lower(), values.keys()), values.values()))
+        values = dict(
+            zip(map(lambda v: v.lower(), values.keys()), values.values()))
 
         # substitute values
         for var in self.variables:
@@ -686,15 +687,34 @@ class Monomial:
         Check if two monomials are equivalent,
         comparing coefficients and variables
 
+        >>> Monomial(5, {'x': 1}) == Monomial(5, {'x': 1})
+        True
+
+        If there are no variables, it can be
+        compared also to a number
+
+        >>> Monomial(4, {}) == 4
+        True
+
+        If the second operator isn't a monomial or
+        a number, it will return NotImplemented, which
+        will return False most of the times.
+
         :type other: Monomial, int, float
         :rtype: bool, NotImplemented
         :raise: TypeError
         """
+
+        # monomial == monomial
         if isinstance(other, Monomial):
             return self.coefficient == other.coefficient \
                 and self.variables == other.variables
-        elif self.variables == {}:
+
+        # monomial == int, float
+        elif isinstance(other, (int, float)) and self.variables.empty:
             return self.coefficient == other
+
+        # monomial == *
         else:
             return NotImplemented
 

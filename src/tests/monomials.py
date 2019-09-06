@@ -165,6 +165,7 @@ class Test (TestCase):
         # reverse div
         self.assertEqual(21 / self.m3, 7)
         self.assertEqual(self.m2.__rtruediv__(""), NotImplemented)
+        self.assertRaises(ValueError, lambda: 5 / self.m5)
 
     def test_call(self):
         # test value
@@ -214,3 +215,24 @@ class Test (TestCase):
 
         # repr
         self.assertEqual(repr(M(5, {'b': 2, 'k': 3})), "Monomial(5, {'b': 2, 'k': 3})")
+
+    def test_eq(self):
+        # same coefficient, same variables
+        self.assertTrue(self.m4 == self.m4)
+
+        # same variables, different coefficient
+        self.assertFalse(self.m0 == self.m2)
+
+        # same coefficient, different variables
+        self.assertFalse(self.m1 == M(-6, {'a': 2}))
+
+        # different coefficient, different variables
+        self.assertFalse(self.m4 == self.m3)
+
+        # if there aren't variables, it can be compared
+        # to a number
+        self.assertTrue(self.m3 == 3)
+        self.assertFalse(self.m3 == 17)
+
+        # can compare only to monomials and numbers
+        self.assertEqual(self.m4.__eq__({}), NotImplemented)
