@@ -104,10 +104,8 @@ class Test (TestCase):
         self.assertRaises(TypeError, lambda: self.m4 - "")
 
         # the monomial remain equal after the operation
-        self.m2 + self.m0
-        self.assertEqual(self.m2, M(8, {'x': 1, 'y': 1}))
-        self.m2 - self.m0
-        self.assertEqual(self.m2, M(8, {'x': 1, 'y': 1}))
+        self.assertEqual(self.m0, M(2, {'x': 1, 'y': 1}))
+        self.assertEqual(self.m4, M(1.16, {'a': 4}))
 
     def test_mul_div(self):
         # only works with monomials and numbers
@@ -137,10 +135,8 @@ class Test (TestCase):
         self.assertRaises(ValueError, lambda: self.m3 / self.m4)
 
         # the monomial remain equal after the operation
-        self.m2 * 5
-        self.assertEqual(self.m2, M(8, {'x': 1, 'y': 1}))
-        self.m2 / 7
-        self.assertEqual(self.m2, M(8, {'x': 1, 'y': 1}))
+        self.assertEqual(self.m1, M(-6, {'x': 1, 'y': 3}))
+        self.assertEqual(self.m0, M(2, {'x': 1, 'y': 1}))
 
     def test_pow(self):
         # works only with whole positive exponents
@@ -151,8 +147,7 @@ class Test (TestCase):
         self.assertEqual(self.m5 ** 3, M(-729, {'y': 9}))
 
         # the monomial remain equal after the operation
-        self.m2 ** 2
-        self.assertEqual(self.m2, M(8, {'x': 1, 'y': 1}))
+        self.assertEqual(self.m5, M(-9, {'y': 3}))
 
     def test_reverses(self):
         # reverse add
@@ -194,3 +189,6 @@ class Test (TestCase):
         # the monomial remain equal after evaluating it
         self.m2(x=2)
         self.assertEqual(self.m2, M(8, {'x': 1, 'y': 1}))
+
+        # it's not case sensitive
+        self.assertEqual(self.m0(x=2), self.m0(X=2))

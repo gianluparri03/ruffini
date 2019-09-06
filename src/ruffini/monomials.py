@@ -532,6 +532,30 @@ class Monomial:
         Evaluate the monomial, giving the values
         of the variables to the method
 
+        >>> m = Monomial(5, {'x': 1, 'y': 1})
+        >>> m(x=2, y=3)
+        30
+
+        If you omit some variables values, the
+        variables will remain there
+
+        >>> m(x=2)
+        Monomial(10, {'y': 1})
+
+        You can declare some variables values
+        which aren't in the monomial and the
+        result won't change
+
+        >>> m(b=7)
+        Monomial(5, {'x': 1, 'y': 1})
+
+        NB: as for the initialization, the variable
+        isn't case sensitive
+
+        >>> m(x=2) == m(X=2)
+        True
+
+
         :type values: int, float
         :rtype: int, float, Monomial
         :raise: TypeError
@@ -539,9 +563,11 @@ class Monomial:
 
         coefficient = self.coefficient
         variables = VariablesDict()
+        values = dict(zip(map(lambda v: v.lower(), values.keys()), values.values()))
 
         # substitute values
         for var in self.variables:
+
             if var in values and isinstance(values[var], (int, float)):
                 coefficient *= (values[var] ** self.variables[var])
             elif var in values:
