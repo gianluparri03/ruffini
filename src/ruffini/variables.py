@@ -130,7 +130,7 @@ class VariablesDict(Counter):
         'VariablesDict(a=2, b=8, c=3)'
         """
 
-        pairs = [f'{k}={self[k]}' for k in sorted(self.keys())]
+        pairs = [f"{k}={self[k]}" for k in sorted(self.keys())]
         return f"VariablesDict({', '.join(pairs)})"
 
     def __add__(self, other):
@@ -185,7 +185,7 @@ class VariablesDict(Counter):
             result[letter] = self[letter] - other[letter]
         return result
 
-    def __hash__ (self):
+    def __hash__(self):
         """
         Return the hash for the VariablesDict.
         It's equal to the tuple of the items.

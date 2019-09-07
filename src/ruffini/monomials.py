@@ -14,8 +14,7 @@ class Monomial:
     of the alphabet (a, b, c, d, e, f...)
 
     Monomials can be added, subtracted, multiplied
-    and divided togheter (multiplication and division
-    can be done also between monomials and numbers).
+    and divided togheter (and with numbers).
     lcm and gcd between monomials (and numbers) is
     available, too.
 
@@ -31,6 +30,9 @@ class Monomial:
         stored in a dict (the keys are the letters
         and the values the degrees).
 
+        >>> print(Monomial(17, {'k': 3}))
+        17k^3
+
         The variables will be stored in a VariableDict, so:
 
         - all the letters will be made lowercase
@@ -38,8 +40,14 @@ class Monomial:
           with a lenght of one character
         - the exponent must be positive and integer
 
+        >>> type(Monomial(3, {'a': 5}).variables)
+        <class 'ruffini.variables.VariablesDict'>
+
         When initialized the monomial, this method calculates
         the monomial's total degree (the sum of all the degrees)
+
+        >>> Monomial(-2, {'a': 2, 'b': 1, 'c': 3}).degree
+        6
 
         :type coefficient: int, float
         :type coefficient: dict, VariablesDict
@@ -721,7 +729,12 @@ class Monomial:
     def __neg__(self):
         """
         Return the opposite of the monomial,
-        inverting the coefficient:
+        inverting the coefficient
+
+        >>> - Monomial(5, {'x': 1, 'y': 1})
+        Monomial(-5, {'x': 1, 'y': 1})
+        >>> - Monomial(-3, {'a': 1, 'b': 4})
+        Monomial(3, {'a': 1, 'b': 4})
 
         :rtype: Monomial
         """
@@ -729,9 +742,13 @@ class Monomial:
 
     def __abs__(self):
         """
-        Return the absolute value of the monomial
-        (the monomial without the sign) calculating
-        the absolute value of the coefficient:
+        Return the absolute value of the monomial,
+        calculating the absolute value of the coefficient
+        
+        >>> abs(Monomial(-3, {'a': 1, 'b': 4}))
+        Monomial(3, {'a': 1, 'b': 4})
+        >>> abs(Monomial(5, {'x': 1, 'y': 1}))
+        Monomial(5, {'x': 1, 'y': 1})
 
         :rtype: Monomial
         """
@@ -741,13 +758,24 @@ class Monomial:
         """
         Return the hash for the Monomial
 
+        >>> hash(Monomial(1, {'a': 1})) == hash(Monomial(1, {'a': 1}))
+        True
+
+        The hash for 8xy, for example, is equal
+        to the hash of (8, ('x', 1), ('y', 1)).
+
+        If the monomial has no variables, its hash
+        will be equal to the coefficient's hash
+
+        >>> hash(Monomial(3, {})) == hash(3)
+        True
+
         :rtype: int
         """
 
         if self.variables == {}:
             return hash(self.coefficient)
 
-        variables = map(lambda l: f"{l}{self.variables[l]}",
-                        set(self.variables.elements()))
+        variables = ((k, self.variables[k]) for k in self.variables)
 
-        return hash((self.coefficient, ) + tuple(variables))
+        return hash((self.coefficient, ) + tuple(list(variables)))

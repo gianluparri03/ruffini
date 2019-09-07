@@ -236,3 +236,17 @@ class Test (TestCase):
 
         # can compare only to monomials and numbers
         self.assertEqual(self.m4.__eq__({}), NotImplemented)
+
+    def test_neg_abs(self):
+        # neg
+        self.assertEqual(-self.m0, M(-self.m0.coefficient, self.m0.variables))
+
+        # abs
+        self.assertEqual(abs(self.m1), M(abs(self.m1.coefficient), self.m1.variables))
+
+    def test_hash(self):
+        # w/ variables
+        self.assertEqual(hash(self.m2), hash((8, ('x', 1), ('y', 1))))
+
+        # w/o variables
+        self.assertEqual(hash(self.m3), hash(3))
