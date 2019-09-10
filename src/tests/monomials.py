@@ -14,7 +14,7 @@ class Test (TestCase):
         self.m4 = M(1.16, {'a': 4})
         self.m5 = M(-9, {'y': 3})
 
-    def test_initializing(self):
+    def test_init (self):
         # Coefficient must be int or float
         self.assertRaises(TypeError, M, "3", {})
 

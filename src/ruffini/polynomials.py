@@ -1,56 +1,84 @@
 from .monomials import Monomial
+from .variables import VariablesDict
+
 from collections import Counter
 
 
-class Polynomial:
-    def __init__(self, *terms):
-        """
-        Initialize the polynomial
+class Polynomial (tuple):
+    """
+    A Polynomial object is the sum of two or more
+    monomials and/or numbers.
 
-        This method calculate also the degree of the
-        polynomial and the degree for each letter
+    With a Polynomial() instance, you can do sums,
+    subtractions, multiplications and divisions.
+
+    You can also assign a value to the variables and
+    calculate the value of that polynomial with the
+    value you assigned.
+    """
+
+    def __new__ (cls, *terms):
+        """
+        Create the polynomial giving it a list
+        of terms (a term can be a Monomial or a
+        number); if two or more terms have the
+        same variablesm, it will sum them toghether
 
         :param *terms: Terms of the polynomial
-        :type *terms: Monomials
+        :type *terms: Monomials, int, float
         :raise: TypeError
         """
 
-        self.terms = [*terms]
-        self.__reduce()
+        counter = Counter()
+
+        # Sum the simil terms
+        for term in terms:
+            if isinstance(term, (int, float)):
+                term = Monomial(term, {})
+            elif isinstance(term, Monomial):
+                pass
+            else:
+                raise TypeError(f"{term} is not a valid term")
+
+            counter[term.variables] += term.coefficient
+
+        # Rewrite them
+        terms = [Monomial(c, v) for v, c in counter.items()]
+
+        return super().__new__(cls, terms)
+
+    def __init__ (self, *terms):
+        """
+        Initialize the polynomial, then calculate
+        the polynomial degree (the highest degree
+        of the terms)
+        """
 
         # Add polynomial degree
-        self.degree = max(m.degree for m in self.terms)
-
-        # Calculate the degree for each letter
-        self.variables = {}
-        letters = set()
-        for term in self.terms:  # Find all the letters
-            letters |= set(list(term.variables))
-        for letter in letters:  # Calculate its degree
-            self.variables[letter] = max(
-                term.variables[letter] for term in self.terms)
+        self.degree = max(m.degree for m in self)
 
     ### Utility Methods ###
 
-    def __reduce(self):
+    def term_coefficient(self, variables):
         """
-        Sum all the simil monomials, so reduce
-        the polynomial.
-        It is automatically called when the
-        polynomial is initialized.
+        Return the coefficient of the term with
+        the given variables. If none is found, the
+        result will be 0.
+
+        :type variables: dict, VariablesDict
+        :rtype: int, float
         """
 
-        # If there are some, sum them
-        counter = Counter()
-        for term in self.terms:
-            counter[term.variables] += term.coefficient
+        variables = VariablesDict(**variables)
 
-        # And rewrite the terms
-        self.terms.clear()
-        for variables, coefficient in counter.items():
-            self.terms.append(Monomial(coefficient, variables))
+        for term in self:
+            if term.variables == variables:
+                return term.coefficient
 
-    # Operations Methods ###
+        # if nothing is found
+        return 0
+
+    ### Operations Methods ###
 
     def __add__(self, other):
         """
@@ -174,39 +202,6 @@ class Polynomial:
                 result += f" {term}"
         return result
 
-    def __iter__(self):
-        """
-        Return the iterator for the polynomial.
-        The iteration will iter over the polynomial's
-        terms. As a magic method, you can access it
-        calling the iter() function with the polynomial
-        as argument
-        """
-        self.__iter_n = -1
-        return self
-
-    def __next__(self):
-        """
-        The next magic method (to use with iter)
-        returns the next terms of the polynomials
-        itered. When it's finished, it raise StopIteration
-        """
-
-        self.__iter_n += 1
-        if self.__iter_n <= len(self.terms) - 1:
-            return self.terms[self.__iter_n]
-        else:
-            raise StopIteration
-
-    def __getitem__(self, key):
-        """
-        Enable the indexing of polynomial's terms.
-        Also negative indexing is enabled
-
-        :raise: IndexError, TypeError
-        """
-        return self.terms[key]
-
     def __eq__(self, other):
         """
         Check if two polynomials are equivalent,
@@ -242,15 +237,6 @@ class Polynomial:
         :rtype: Polynomial
         """
         return Polynomial(*(-m for m in self))
-
-    def __len__(self):
-        """
-        Return the number of terms of the
-        polynomial
-
-        :rtype: int
-        """
-        return len(self.terms)
 
     def __repr__(self):
         """

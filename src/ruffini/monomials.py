@@ -744,7 +744,7 @@ class Monomial:
         """
         Return the absolute value of the monomial,
         calculating the absolute value of the coefficient
-        
+
         >>> abs(Monomial(-3, {'a': 1, 'b': 4}))
         Monomial(3, {'a': 1, 'b': 4})
         >>> abs(Monomial(5, {'x': 1, 'y': 1}))
