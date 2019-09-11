@@ -17,8 +17,9 @@ class VariablesDict(Counter):
       integer (5.0 is allowed) and positive
 
     NB. VariablesDict is a sublass of Counter, so all
-    the methods of an instance of Counter are inherited
-    from VariablesDict.
+    the methods of Counter are inherited
+    from VariablesDict; many of these methods
+    are not in this docs.
     """
 
     def __init__(self, **kwargs):

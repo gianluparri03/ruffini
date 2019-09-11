@@ -210,7 +210,7 @@ class Monomial:
     def __add__(self, other):
         """
         As the name say, this method is used
-        to sum two monomials, or a number , too
+        to sum two monomials, or a number, too
 
         >>> Monomial(5, {'x': 1, 'y':3}) + Monomial(-1.52, {'x':1, 'y':3})
         Monomial(3.48, {'x': 1, 'y': 3})

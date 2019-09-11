@@ -15,6 +15,11 @@ class Polynomial (tuple):
     You can also assign a value to the variables and
     calculate the value of that polynomial with the
     value you assigned.
+
+    NB. the Polynomial class is a subclass of tuple,
+    so all the methods of tuple are automatically
+    inherited from Polynomial; many of these methods
+    are not in this docs.
     """
 
     def __new__ (cls, *terms):
@@ -52,6 +57,9 @@ class Polynomial (tuple):
         Initialize the polynomial, then calculate
         the polynomial degree (the highest degree
         of the terms)
+
+        :param *terms: Terms of the polynomial
+        :type *terms: Monomials, int, float
         """
 
         # Add polynomial degree
@@ -62,10 +70,22 @@ class Polynomial (tuple):
     def term_coefficient(self, variables):
         """
         Return the coefficient of the term with
-        the given variables. If none is found, the
-        result will be 0.
+        the given variables
+
+        >>> m0 = Monomial(2, {'x': 1, 'y': 1})
+        >>> m1 = Monomial(-6, {'x': 1, 'y': 3})
+        >>> m2 = Monomial(8, {'x': 1, 'y': 1})
+        >>> p = Polynomial(m0, m1, m2)
+        >>> p.term_coefficient({'x': 1, 'y': 1})
+        10
+
+        If none is found, the result will be 0
+
+        >>> p.term_coefficient({'k': 1, 'b': 2})
+        0
 
         :type variables: dict, VariablesDict
+        :param variables: The variables of the coefficient you're looking for
         :rtype: int, float
         """
 
@@ -82,34 +102,36 @@ class Polynomial (tuple):
 
     def __add__(self, other):
         """
-        Add a polynomial with
-        - another polynomial
-        - a monomial
-        - an integer / a float
+        As the name say, this method will sum this
+        polynomial with another polynomial, a monomial
+        or a number, too.
+        
+        >>> m0 = Monomial(10, {'a': 4})
+        >>> m1 = Monomial(-4, {'a': 4})
+        >>> m2 = Monomial(7, {'y': 1})
+        >>> m3 = Monomial(9, {'x': 1})
+        >>> m4 = Monomial(-13, {'y': 1})
+        >>> p = Polynomial(m1, m2, m4) # -4a^4 -6y
+        >>>
+        >>> # polynomial + polynomial
+        >>> print(p + Polynomial(m0, m3, m2))
+        6a^4 +y +9x
+        >>> # polynomial + monomial
+        >>> print(p + m3)
+        -4a^4 -6y +9x
+        >>> # polynomial + number
+        >>> print(p + 9)
+        -4a^4 -6y +9
 
-        :type other: Monomial, Polynomial, int, float
-        :rtype: Polynomial, NotImplemented
-        :raise: TypeError
-        """
+        If the second operator isn't in the list above,
+        it will raise a TypeError
 
-        if isinstance(other, (int, float)):
-            other = Monomial(other)
+        >>> p + "placeholder"
+        Traceback (most recent call last):
+        ...
+        TypeError: unsupported operand type(s) for +: 'Polynomial' and 'str'
 
-        if isinstance(other, Polynomial):
-            return Polynomial(*self.terms, *other.terms)
-        elif isinstance(other, Monomial):
-            return Polynomial(*self.terms, other)
-        else:
-            return NotImplemented
-
-    def __sub__(self, other):
-        """
-        Subtract from a polynomial:
-        - another polynomial
-        - a monomial
-        - an integer / a float
-
-        :type other: Monomial, Polynomial, int, float
+        :type other: Polynomial, Monomial, int, float
         :rtype: Polynomial, NotImplemented
         :raise: TypeError
         """
@@ -118,9 +140,55 @@ class Polynomial (tuple):
             other = Monomial(other, {})
 
         if isinstance(other, Polynomial):
-            return Polynomial(*self.terms, *(-other))
+            return Polynomial(*self, *other)
         elif isinstance(other, Monomial):
-            return Polynomial(*self.terms, -other)
+            return Polynomial(*self, other)
+        else:
+            return NotImplemented
+
+    def __sub__(self, other):
+        """
+        As the name say, this method will subtract this
+        polynomial from another polynomial, a monomial
+        or a number, too.
+        
+        >>> m0 = Monomial(10, {'a': 4})
+        >>> m1 = Monomial(-4, {'a': 4})
+        >>> m2 = Monomial(7, {'y': 1})
+        >>> m3 = Monomial(9, {'x': 1})
+        >>> m4 = Monomial(-13, {'y': 1})
+        >>> p = Polynomial(m1, m2, m4) # -4a^4 -6y
+        >>>
+        >>> # polynomial - polynomial
+        >>> print(p - Polynomial(m0, m3, m2))
+        -14a^4 -13y -9x
+        >>> # polynomial - monomial
+        >>> print(p - m3)
+        -4a^4 -6y -9x
+        >>> # polynomial - number
+        >>> print(p - 9)
+        -4a^4 -6y -9
+
+        If the second operator isn't in the list above,
+        it will raise a TypeError
+
+        >>> p - []
+        Traceback (most recent call last):
+        ...
+        TypeError: unsupported operand type(s) for -: 'Polynomial' and 'list'
+
+        :type other: Polynomial, Monomial, int, float
+        :rtype: Polynomial, NotImplemented
+        :raise: TypeError
+        """
+
+        if isinstance(other, (int, float)):
+            other = Monomial(other, {})
+
+        if isinstance(other, Polynomial):
+            return Polynomial(*self, *(-other))
+        elif isinstance(other, Monomial):
+            return Polynomial(*self, -other)
         else:
             return NotImplemented
 
@@ -194,8 +262,8 @@ class Polynomial (tuple):
         a space between each term
 
         """
-        result = str(self.terms[0])
-        for term in self.terms[1:]:
+        result = str(self[0])
+        for term in self[1:]:
             if term.coefficient > 0:
                 result += f" +{term}"
             elif term.coefficient < 0:
@@ -243,6 +311,6 @@ class Polynomial (tuple):
         Return the polynomial as a string
 
         """
-        terms = ', '.join([repr(t) for t in self.terms])
+        terms = ', '.join([repr(t) for t in self])
 
         return f"Polynomial({terms})"
