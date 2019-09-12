@@ -1,7 +1,4 @@
-from collections import Counter
-
-
-class VariablesDict(Counter):
+class VariablesDict(dict):
     """
     A VariablesDict is a dictionary with
     some other features, created to manage
@@ -29,10 +26,61 @@ class VariablesDict(Counter):
 
         >>> print(VariablesDict(x=5, y=3))
         {'x': 5, 'y': 3}
-        >>> print(VariablesDict(Y=5))
-        {'y': 5}
-        >>> print(VariablesDict(a=2, b=8, c=3))
-        {'a': 2, 'b': 8, 'c': 3}
+
+        While inserting the pairs key: value, it
+        also:
+
+        - automatically makes the key lowercase.
+
+        >>> VariablesDict(Y=3)
+        VariablesDict(y=3)
+
+        - doesn't insert the pair if the value is 0
+
+        >>> VariablesDict(a=0, b=2)
+        VariablesDict(b=2)
+
+        - convert the value in int if it's a whole number
+
+        >>> VariablesDict(c=9.0)
+        VariablesDict(c=9)
+
+        It can raise an error if:
+
+        - the variable's name lenght is grater than 1
+
+        >>> VariablesDict(xy=3)
+        Traceback (most recent call last):
+        ...
+        ValueError: Variable name lenght must be one
+
+        - the variable's name is not alphabetical
+
+        >>> VariablesDict(x2=9)
+        Traceback (most recent call last):
+        ...
+        ValueError: Variable name must be alphabetical
+
+        - the exponent is not int or float
+
+        >>> VariablesDict(k=[])
+        Traceback (most recent call last):
+        ...
+        TypeError: Exponent must be int or float
+
+        - the exponent is not a whole number
+
+        >>> VariablesDict(z=7.13)
+        Traceback (most recent call last):
+        ...
+        ValueError: Exponent must be a whole number
+
+        - the exponent is negative
+
+        >>> VariablesDict(f=-3)
+        Traceback (most recent call last):
+        ...
+        ValueError: Exponent must be positive
 
         It also check if the dictionary is empty.
 
@@ -40,76 +88,99 @@ class VariablesDict(Counter):
         False
         >>> VariablesDict(x=0).empty
         True
-        """
-        super(VariablesDict, self).__init__(None)
 
-        # Add the values
-        for k in kwargs:
-            self.__setitem__(k, kwargs[k])
+        :raise: TypeError, ValueError
+        """
+
+        variables = {}
+
+        for key in kwargs:
+            # Check variable name
+            if not key.isalpha():
+                raise ValueError("Variable name must be alphabetical")
+            elif len(key) > 1:
+                raise ValueError("Variable name lenght must be one")
+
+            value = kwargs[key]
+
+            # Check variable exponent
+            if not isinstance(value, (int, float)):
+                raise TypeError("Exponent must be int or float")
+            elif isinstance(value, float) and not value.is_integer():
+                raise ValueError("Exponent must be a whole number")
+            elif value < 0:
+                raise ValueError("Exponent must be positive")
+
+            if not value == 0:
+                variables[key.lower()] = int(value)
+
+        super().__init__(variables)
 
         # Check if it's empty
         self.empty = not bool(len(self))
 
+    ### ITEMS ###
+
     def __setitem__(self, key, value):
         """
-        Insert a pair of key:value into the dictionary
-        if the values if is not zero and the key
-        respect the features descripted before.
-        It automatically make the key lowercase.
+        Raise TypeError: VariablesDict is immutable
 
-        >>> vd = VariablesDict(y=3)
-        >>> vd['x'] = 18
-        >>> vd
-        VariablesDict(x=18, y=3)
-
-        The keys are automatically made lowercase
-
-        >>> vd['S'] = 2
-        >>> vd
-        VariablesDict(s=2, x=18, y=3)
-
-        If the value is 0, it wont be inserted
-        into the dictionary
-
-        >>> vd['a'] = 0
-        >>> vd
-        VariablesDict(s=2, x=18, y=3)
-        >>> vd['x'] -= 18 # 18 - 18 = 0
-        >>> vd
-        VariablesDict(s=2, y=3)
-
-        You can also assign a float to a variable,
-        if it represents whole number
-        >>> vd['b'] = 9.0
-        >>> vd
-        VariablesDict(b=9, s=2, y=3)
-
-        :type key: str
-        :type value: int, float
-        :raise: TypeError, ValueError
+        :raise: TypeError
         """
 
-        # Check variable name
-        if not isinstance(key, str):
-            raise TypeError("Variable name must be str")
-        elif len(key) > 1:
-            raise ValueError("Variable name lenght must be one")
-        elif not key.isalpha():
-            raise ValueError("Variable name must be alphabetical")
+        raise TypeError("VariablesDict is immutable")
 
-        # Check variable exponent
-        elif not isinstance(value, (int, float)):
-            raise TypeError("Exponent must be int or float")
-        elif isinstance(value, float) and not value.is_integer():
-            raise ValueError("Exponent must be a whole number")
-        elif value < 0:
-            raise ValueError("Exponent must be positive")
+    def __delitem__(self, key):
+        """
+        Raise TypeError: VariablesDict is immutable
 
-        if value == 0:
-            del self[key]
+        :raise: TypeError
+        """
 
-        else:
-            super(VariablesDict, self).__setitem__(key.lower(), int(value))
+        raise TypeError("VariablesDict is immutable")
+
+    def pop (self, key):
+        """
+        Raise TypeError: VariablesDict is immutable
+
+        :raise: TypeError
+        """
+
+        raise TypeError("VariablesDict is immutable")
+
+    def clear (self):
+        """
+        Raise TypeError: VariablesDict is immutable
+
+        :raise: TypeError
+        """
+
+        raise TypeError("VariablesDict is immutable")
+
+    def __getitem__(self, key):
+        """
+        Get the exponent of a variable by the
+        variable's name
+
+        >>> v = VariablesDict(a=2, b=3)
+        >>> v['a']
+        2
+
+        If a variable isn't in the dictionary,
+        its value is 0
+
+        >>> v['k']
+        0
+
+        :type key: str
+        """
+
+        try:
+            return super().__getitem__(key)
+        except KeyError:
+            return 0
+
+    ### REPRESENTATION ###
 
     def __str__(self):
         """
@@ -127,7 +198,7 @@ class VariablesDict(Counter):
 
     def __repr__(self):
         """
-        Return the dict as a string (as a normal dict)
+        Return the dict as a string
 
         >>> repr(VariablesDict(Y=5))
         'VariablesDict(y=5)'
@@ -136,7 +207,9 @@ class VariablesDict(Counter):
         """
 
         pairs = [f"{k}={self[k]}" for k in sorted(self.keys())]
-        return f"VariablesDict({', '.join(pairs)})"
+        return f"{self.__class__.__name__}({', '.join(pairs)})"
+
+    ### OPERATIONS ###
 
     def __add__(self, other):
         """
@@ -157,10 +230,10 @@ class VariablesDict(Counter):
         if not isinstance(other, VariablesDict):
             return NotImplemented
 
-        result = VariablesDict()
+        result = {}
         for letter in set(self) | set(other):
             result[letter] = self[letter] + other[letter]
-        return result
+        return VariablesDict(**result)
 
     def __sub__(self, other):
         """
@@ -185,10 +258,12 @@ class VariablesDict(Counter):
         if not isinstance(other, VariablesDict):
             return NotImplemented
 
-        result = VariablesDict()
+        result = {}
         for letter in set(self) | set(other):
             result[letter] = self[letter] - other[letter]
-        return result
+        return VariablesDict(**result)
+
+    ### HASH ###
 
     def __hash__(self):
         """

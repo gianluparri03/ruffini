@@ -151,7 +151,7 @@ class Polynomial (tuple):
         As the name say, this method will subtract this
         polynomial from another polynomial, a monomial
         or a number, too.
-        
+
         >>> m0 = Monomial(10, {'a': 4})
         >>> m1 = Monomial(-4, {'a': 4})
         >>> m2 = Monomial(7, {'y': 1})
@@ -203,11 +203,13 @@ class Polynomial (tuple):
         """
 
         if isinstance(other, (Monomial, int, float)):
-            return Polynomial(*(t*other for t in self.terms))
+            return Polynomial(*(t*other for t in self))
         elif isinstance(other, Polynomial):
-            return Polynomial(*(a*b for a in self.terms for b in other.terms))
+            return Polynomial(*(a*b for a in self for b in other))
         else:
             return NotImplemented
+
+    ### Reverse Operations Methods ###
 
     def __radd__(self, other):
         """

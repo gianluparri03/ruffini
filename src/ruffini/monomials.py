@@ -176,7 +176,7 @@ class Monomial:
         coefficient = int(gcd(self.coefficient, other.coefficient))
 
         # Calculate the gcd of the variables
-        variables = VariablesDict()
+        variables = {}
         for variable in self.variables:
             if variable in other.variables:
                 variables[variable] = min(self.variables[variable],
@@ -433,7 +433,7 @@ class Monomial:
             raise ValueError("Exponent can't be negative")
 
         # Raise the variables to power
-        variables = VariablesDict()
+        variables = {}
         for var in self.variables:
             variables[var] = self.variables[var] * exp
 
@@ -570,9 +570,8 @@ class Monomial:
         """
 
         coefficient = self.coefficient
-        variables = VariablesDict()
-        values = dict(
-            zip(map(lambda v: v.lower(), values.keys()), values.values()))
+        variables = {}
+        values = dict(zip(map(lambda v: v.lower(), values.keys()), values.values()))
 
         # substitute values
         for var in self.variables:
