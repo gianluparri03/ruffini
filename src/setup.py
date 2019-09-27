@@ -1,7 +1,7 @@
 from setuptools import setup
 
 with open("../README.md") as f:
-    readme = f.read().split("</p>\n\n")[1]
+    readme = f.read()
 
 version = "v1.2"
 

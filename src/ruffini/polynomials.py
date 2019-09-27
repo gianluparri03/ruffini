@@ -105,7 +105,7 @@ class Polynomial (tuple):
         As the name say, this method will sum this
         polynomial with another polynomial, a monomial
         or a number, too.
-        
+
         >>> m0 = Monomial(10, {'a': 4})
         >>> m1 = Monomial(-4, {'a': 4})
         >>> m2 = Monomial(7, {'y': 1})
