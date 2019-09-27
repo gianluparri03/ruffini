@@ -54,7 +54,7 @@ class Test (TestCase):
 
     def test_mul (self):
         # works only with monomials, polynomials and numbers
-        self.assertEqual(self.p0.__add__("something"), NotImplemented)
+        self.assertEqual(self.p0.__mul__("something"), NotImplemented)
 
         # works with monomial
         self.assertEqual(self.p0 * self.m2, P(M(42, VD(a=4, y=1)), M(49, VD(y=2))))
