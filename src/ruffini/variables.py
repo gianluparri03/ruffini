@@ -4,6 +4,7 @@ class VariablesDict(dict):
     some other features, created to manage
     in a better way the variables of a monomial.
     The changes are:
+
     - If a key isn't in the dictionary,
       its value is 0
     - All the keys (wich are the letters) will

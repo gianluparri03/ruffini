@@ -17,7 +17,7 @@ class Test (TestCase):
 
         # Polynomials
         self.p0 = P(self.m0, self.m1, self.m2) # 6a^4 + 7y
-        self.p1 = P(self.m1, self.m3, self.m5)
+        self.p1 = P(self.m1, self.m3, self.m5) # -4a^4 +8x
         self.p2 = P(self.m4, self.m0) # -13y + 10a^4
 
     def test_new_init (self):
@@ -36,8 +36,7 @@ class Test (TestCase):
         self.assertEqual(self.p0.term_coefficient(VD(k=2, b=1)), 0)
 
     def test_add_sub (self):
-        # works only with monomials,
-        # polynomials and numbers
+        # works only with monomials, polynomials and numbers
         self.assertEqual(self.p0.__add__("something"), NotImplemented)
         self.assertEqual(self.p0.__sub__([]), NotImplemented)
 
@@ -52,3 +51,16 @@ class Test (TestCase):
         # works with polynomial
         self.assertEqual(self.p0 + self.p2, P(M(16, VD(a=4)), M(-6, VD(y=1))))
         self.assertEqual(self.p0 - self.p2, P(M(20, VD(y=1)), M(-4, VD(a=4))))
+
+    def test_mul (self):
+        # works only with monomials, polynomials and numbers
+        self.assertEqual(self.p0.__add__("something"), NotImplemented)
+
+        # works with monomial
+        self.assertEqual(self.p0 * self.m2, P(M(42, VD(a=4, y=1)), M(49, VD(y=2))))
+
+        # works with number
+        self.assertEqual(self.p0 * 3, P(M(18, VD(a=4)), M(21, VD(y=1))))
+
+        # works with polynomial
+        self.assertEqual(self.p0 * self.p2, P(M(-8, VD(a=4, y=1)), M(60, VD(a=8)), M(-91, VD(y=2))))

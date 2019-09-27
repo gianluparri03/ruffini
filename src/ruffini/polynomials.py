@@ -194,8 +194,34 @@ class Polynomial (tuple):
 
     def __mul__(self, other):
         """
-        Multiply two polynomials, a polynomial and a
-        monomial or a polynomial and a number (int/float)
+        This method is used to multiply a polynomial
+        by a polynomial, a monomial or a number:
+
+        >>> m0 = Monomial(10, {'a': 4})
+        >>> m1 = Monomial(-4, {'a': 4})
+        >>> m2 = Monomial(7, {'y': 1})
+        >>> m3 = Monomial(9, {'x': 1})
+        >>> m4 = Monomial(-13, {'y': 1})
+        >>> p = Polynomial(m1, m2, m4) # -4a^4 -6y
+        >>>
+        >>> # polynomial * polynomial
+        >>> print(p * Polynomial(m0, m1, m4))
+        -24a^8 +16a^4y +78y^2
+        >>> # polynomial * monomial
+        >>> print(p * m3)
+        -36a^4x -54xy
+        >>> # polynomial * number
+        >>> print(p * 3)
+        -12a^4 -18y
+
+        If the second operator type is not written
+        above, it will return NotImplemented (which
+        will transform in a TypeError)
+
+        >>> p * {}
+        Traceback (most recent call last):
+        ...
+        TypeError: unsupported operand type(s) for *: 'Polynomial' and 'dict'
 
         :type other: Monomial, Polynomial, int or float
         :rtype: Polynomial, NotImplemented
