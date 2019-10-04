@@ -254,7 +254,7 @@ class Polynomial (tuple):
         """
 
         try:
-            return self.__add__(other)
+            return self + other
         except TypeError:
             return NotImplemented
 
@@ -275,7 +275,7 @@ class Polynomial (tuple):
         """
 
         try:
-            return (-self).__add__(other)
+            return (-self) + other
         except TypeError:
             return NotImplemented
 
@@ -296,7 +296,7 @@ class Polynomial (tuple):
         """
 
         try:
-            return self.__mul__(other)
+            return self * other
         except TypeError:
             return NotImplemented
 
