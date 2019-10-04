@@ -36,8 +36,8 @@ Documentation for this project can be found in the Read the Docs [Ruffini's page
 - **latest**: the docs from this branch, updated on every commit in the `master` branch
 - **stable**: the docs from the latest stable release of ruffini (see the `relase` branch)
 
-### Todo
-[] Document and test the existent code
+## Todo
+[] Document and test the existent code  
 [] Add factorization for polynomials
 
 ## Authors
