@@ -239,8 +239,14 @@ class Polynomial (tuple):
 
     def __radd__(self, other):
         """
-        Add a polynomial to a monomial or to a number
-        (int / float).
+        This method is the reverse for Polynomial.__add__().
+        With this method, you can swap the two operands
+        of the addition:
+
+        >>> print(8 + Polynomial(Monomial(4, {'a': 2})))
+        4a^2 +8
+
+        For more informations, see Polynomial.__add__() docs.
 
         :type other: Monomial, int, float
         :rtype: Polynomial, NotImplemented
@@ -254,8 +260,14 @@ class Polynomial (tuple):
 
     def __rsub__(self, other):
         """
-        Subtract a monomial or a number (int / float)
-        from a polynomial
+        This method is the reverse for Polynomial.__sub__().
+        With this method, you can swap the two operands
+        of the addition:
+
+        >>> print(5 - Polynomial(Monomial(7, {'k': 1})))
+        -7k +5
+
+        For more informations, see Polynomial.__sub__() docs.
 
         :type other: Monomial, int, float
         :rtype: Polynomial, NotImplemented
@@ -269,8 +281,14 @@ class Polynomial (tuple):
 
     def __rmul__(self, other):
         """
-        Multiply a polynomial for a monomial
-        or a number (int / float).
+        This method is the reverse for Polynomial.__mul__().
+        With this method, you can swap the two operands
+        of the addition:
+
+        >>> print(10 * Polynomial(Monomial(3.5, {'b': 3})))
+        35.0b^3
+
+        For more informations, see Polynomial.__mul__() docs.
 
         :type other: Monomial, int, float
         :rtype: Polynomial, NotImplemented

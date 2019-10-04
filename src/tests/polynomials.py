@@ -64,3 +64,16 @@ class Test (TestCase):
 
         # works with polynomial
         self.assertEqual(self.p0 * self.p2, P(M(-8, VD(a=4, y=1)), M(60, VD(a=8)), M(-91, VD(y=2))))
+
+    def test_reverses(self):
+        # reverse add
+        self.assertEqual(19 + P(M(3, VD())), P(22))
+        self.assertEqual(self.p0.__radd__(""), NotImplemented)
+
+        # reverse sub
+        self.assertEqual(8 - P(M(3, VD())), P(5))
+        self.assertEqual(self.p1.__rsub__(""), NotImplemented)
+
+        # reverse mul
+        self.assertEqual(18 * P(M(3, VD())), P(54))
+        self.assertEqual(self.p2.__rmul__(""), NotImplemented)
