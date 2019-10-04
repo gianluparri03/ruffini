@@ -11,16 +11,17 @@ is a simple python library to compute monomials and polynomials.
 
 ## Getting Started
 
-### Installing
+### Installing via PyPI
 
-You can easily install the most recent version of `ruffini` package by
-downloading it from Python Package Index (PyPI) just doing:
+You can easily install the most recent version of the `ruffini` package by
+downloading it from the Python Package Index (PyPI) by just doing:
 
 ```bash
 pip install ruffini
 ```
 
-Instead, if you want to download and install it from the source, you have to do:
+### Installing from source
+If you want to download and install `ruffini` from this repo, type
 
 ```bash
 git clone https://github.com/gianluparri03/ruffini.git
@@ -28,21 +29,24 @@ cd ruffini/src
 python3 setup.py install
 ```
 
-### Documentations
+### Documentation
 
-The documentations for this project can be find in [Read the Docs website](https://ruffini.rtfd.com) in the two versions:
+Documentation for this project can be found in the Read the Docs [Ruffini's page](https://ruffini.rtfd.com) in two versions:
 
-- **latest:** the docs for this branch, updated at every commit in the branch `master`
-- **stable:** the docs for the latest relase of ruffini (see `relase` branch)
+- **latest**: the docs from this branch, updated on every commit in the `master` branch
+- **stable**: the docs from the latest stable release of ruffini (see the `relase` branch)
+
+## Todo
+- [ ] Document and test the existent code  
+- [ ] Add factorization for polynomials
 
 ## Authors
 
 - **Parri Gianluca** - *Creator and main developer* - [@gianluparri03](https://github.com/gianluparri03)
 
-See also the list of [contributors](https://github.com/your/project/contributors)
-who participated in this project.
+Click on [this link](https://github.com/gianluparri03/ruffini/graphs/contributors) to see the list of contributors who participated in this project.
 
 ## License
 
 This project is licensed under the MIT License -
-see the [LICENSE.md](LICENSE.md) file for details.
+see the [LICENSE.md](LICENSE.md) file for more details.
