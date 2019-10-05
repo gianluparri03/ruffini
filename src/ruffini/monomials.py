@@ -218,48 +218,51 @@ class Monomial:
         >>> Monomial(1, {'z': 1}) + 17
         Polynomial(Monomial(1, {'z': 1}), Monomial(17, {}))
 
-        Otherwise, it will return NotImplemented, which will become
-        a TypeError
+        You can also add a polynomial (in this case,
+        it will use the Polynomial().__add__() method)
+        
+        >>> Monomial(1, {'a': 2}) + Polynomial(Monomial(2, {'b': 1}))
+        a^2 + 2b
+
+        Otherwise, it will raise a TypeError
 
         >>> Monomial(2, {'z': 1}) - ""
         Traceback (most recent call last):
         ...
         TypeError: unsupported operand type(s) for -: 'Monomial' and 'str'
 
-        :type other: Monomial, int, float
-        :rtype: Monomial, Polynomial, NotImplemented, int, float
+        :type other: Monomial, Polynomial, int, float
+        :rtype: Monomial, Polynomial
         :raise: TypeError
         """
 
-        # M + (-M) = 0
-        if other == (-self):
-            return 0
+        from . import Polynomial
 
-        # M + 0 = M
-        elif other == 0:
-            return Monomial(self.coefficient, self.variables)
+        if isinstance(other, Monomial):
+            # Opposite monomial
+            if self == -other:
+                return Monomial(0, {})
 
-        # Simil monomials
-        elif self.similar_to(other) and isinstance(other, Monomial):
-            return Monomial(self.coefficient + other.coefficient,
-                            self.variables)
+            # Simil monomial
+            elif self.similar_to(other):
+                return Monomial(self.coefficient + other.coefficient, self.variables)
 
-        # Generic monomials
-        elif isinstance(other, Monomial):
-            from .polynomials import Polynomial
-            return Polynomial(self, other)
+            # Generic monomial
+            else:
+                return Polynomial(self, other)
 
-        # Monomial with no variables + Number
-        elif isinstance(other, (int, float)) and not self.variables:
-            return self.coefficient + other
-
-        # Monomial + Number
         elif isinstance(other, (int, float)):
-            from .polynomials import Polynomial
-            return Polynomial(self, Monomial(other, {}))
+            if self.variables.empty:
+                return Monomial(self.coefficient + other, {})
+
+            else:
+                return Polynomial(self, other)
+
+        elif isinstance(other, Polynomial):
+            return other + self
 
         else:
-            return NotImplemented
+            raise TypeError(f"unsupported operand type(s) for +: 'Monomial' and '{other.__class__.__name__}'")
 
     def __sub__(self, other):
         """
@@ -278,27 +281,36 @@ class Monomial:
         >>> Monomial(17, {'a': 1, 'b': 1}) - 2.5
         Polynomial(Monomial(17, {'a': 1, 'b': 1}), Monomial(-2.5, {}))
 
-        Otherwise, it will return NotImplemented, which will become
-        a TypeError
+        You can also subtract a polynomial (in this case,
+        it will use the Polynomial().__sub__() method)
+        
+        >>> Monomial(1, {'a': 2}) - Polynomial(Monomial(2, {'b': 1}))
+        a^2 - 2b
+
+        Otherwise, it will raise a TypeError
 
         >>> Monomial(2, {'z': 1}) - ""
         Traceback (most recent call last):
         ...
         TypeError: unsupported operand type(s) for -: 'Monomial' and 'str'
 
-        :type other: Monomial, int, float
-        :rtype: Monomial, Polynomial, NotImplemented, int, float
+        :type other: Polynomial, Monomial, int, float
+        :rtype: Monomial, Polynomial
         :raise: TypeError
         """
-        if isinstance(other, (Monomial, int, float)):
+        
+        from . import Polynomial
+
+        if isinstance(other, (Polynomial, Monomial, int, float)):
             return self + (-other)
+
         else:
-            return NotImplemented
+            raise TypeError(f"unsupported operand type(s) for -: 'Monomial' and '{other.__class__.__name__}'")
 
     def __mul__(self, other):
         """
-        Multiplicate this monomial for another
-        monomial or for a number (int / float)
+        Multiplicate this monomial by another
+        monomial or a number (int / float)
 
         >>> Monomial(5, {'x': 1, 'y': 2}) * Monomial(2, {'a': 1, 'b': 1})
         Monomial(10, {'a': 1, 'b': 1, 'x': 1, 'y': 2})
@@ -307,34 +319,44 @@ class Monomial:
         >>> Monomial(1, {'k': 3}) * Monomial(1, {'k': 3})
         Monomial(1, {'k': 6})
 
-        If the second operator isn't a monomial or
-        a number, it will raise a TypeError
+        Also multiplication by a polynomial is enabled
+        (it will use the Polynomial().__mul__() method)
+
+        >>> Monomial(1, {'a': 2}) * Polynomial(Monomial(2, {'b': 1}))
+        2a^2b
+
+        If the second operator isn't mentioned
+        above, it will raise a TypeError
 
         >>> Monomial(4, {}) * {}
         Traceback (most recent call last):
         ...
         TypeError: unsupported operand type(s) for *: 'Monomial' and 'dict'
 
-        :type other: Monomial, int, float
-        :rtype: Monomial, NotImplemented, int, float
+        :type other: Polynomial, Monomial, int, float
+        :rtype: Polynomial, Monomial
         :raise: TypeError
         """
 
+        from . import Polynomial
+
+        # numbers
         if isinstance(other, (int, float)):
             other = Monomial(other, {})
 
+        # monomials
         if isinstance(other, Monomial):
             coefficient = self.coefficient * other.coefficient
             variables = self.variables + other.variables
 
-            # return only the coefficent if there
-            # are no variables
-            if not variables:
-                return coefficient
-
             return Monomial(coefficient, variables)
+
+        # polynomials
+        elif isinstance(other, Polynomial):
+            return other * self
+
         else:
-            return NotImplemented
+            raise TypeError(f"unsupported operand type(s) for *: 'Monomial' and '{other.__class__.__name__}'")
 
     def __truediv__(self, other):
         """
@@ -448,19 +470,16 @@ class Monomial:
         of the addition:
 
         >>> 18 + Monomial(3, {})
-        21
+        Monomial(21, {})
 
         For more informations, see Monomial.__add__() docs.
 
-        :type other: int, float
-        :rtype: Monomial, Polynomial, NotImplemented, int, float
+        :type other: Polynomial, int, float
+        :rtype: Monomial, Polynomial
         :raise: TypeError
         """
 
-        try:
-            return self + other
-        except TypeError:
-            return NotImplemented
+        return self + other
 
     def __rsub__(self, other):
         """
@@ -469,19 +488,16 @@ class Monomial:
         of the subtraction:
 
         >>> 9 - Monomial(4, {})
-        5
+        Monomial(5, {})
 
         For more informations, see Monomial.__sub__() docs.
 
-        :type other: int, float
-        :rtype: Monomial, NotImplemented, int, float
+        :type other: Polynomial, int, float
+        :rtype: Polynomial, Monomial, int, float
         :raise: TypeError
         """
 
-        try:
-            return (- self) + other
-        except TypeError:
-            return NotImplemented
+        return (- self) + other
 
     def __rmul__(self, other):
         """
@@ -494,15 +510,12 @@ class Monomial:
 
         For more informations, see Monomial.__mul__() docs.
 
-        :type other: int, float
-        :rtype: Monomial, NotImplemented, int, float
+        :type other: Polynomial, int, float
+        :rtype: Monomial, Polynomial
         :raise: TypeError
         """
 
-        try:
-            return self * other
-        except TypeError:
-            return NotImplemented
+        return self * other
 
     def __rtruediv__(self, other):
         """
@@ -704,11 +717,10 @@ class Monomial:
         True
 
         If the second operator isn't a monomial or
-        a number, it will return NotImplemented, which
-        will return False most of the times.
+        a number, it will return False.
 
         :type other: Monomial, int, float
-        :rtype: bool, NotImplemented
+        :rtype: bool
         :raise: TypeError
         """
 
@@ -721,9 +733,8 @@ class Monomial:
         elif isinstance(other, (int, float)) and self.variables.empty:
             return self.coefficient == other
 
-        # monomial == *
         else:
-            return NotImplemented
+            return False
 
     def __neg__(self):
         """

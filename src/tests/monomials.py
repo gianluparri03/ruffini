@@ -78,7 +78,7 @@ class Test (TestCase):
 
     def test_add_sub(self):
         # M + (-M) = 0
-        self.assertIsInstance(self.m5 + (-self.m5), int)
+        self.assertEqual(self.m5 + (-self.m5), M(0, {}))
 
         # M + 0 = M
         self.assertEqual(self.m3 + 0, self.m3)
@@ -92,16 +92,16 @@ class Test (TestCase):
         # The sum of a monomial and a number is a polynomial
         self.assertEqual(self.m4 + 6.28, P(self.m4, M(6.28, {})))
 
-        # The sum of a number and a monomial with no variables
-        # is a number
-        self.assertIsInstance(M(18, {}) + 3, int)
-
         # m1 - m2 = m1 + (-m2)
         self.assertEqual(self.m0 - self.m3, self.m0 + (-self.m3))
 
         # only works with monomials and numbers
         self.assertRaises(TypeError, lambda: self.m1 + [])
         self.assertRaises(TypeError, lambda: self.m4 - "")
+
+        # works with polynomial
+        self.assertEqual(self.m0 + P(self.m3), P(self.m0, self.m3))
+        self.assertEqual(self.m2 - P(self.m4), P(self.m2, -self.m4))
 
         # the monomial remain equal after the operation
         self.assertEqual(self.m0, M(2, {'x': 1, 'y': 1}))
@@ -112,24 +112,16 @@ class Test (TestCase):
         self.assertRaises(TypeError, lambda: self.m2 * [])
         self.assertRaises(TypeError, lambda: self.m3 / {})
 
-        # monomial * monomial
+        # works with monomials
         self.assertEqual(self.m5 * self.m1, M(54, {'x': 1, 'y': 6}))
-
-        # monomial * number
-        self.assertEqual(self.m0 * self.m3, self.m0 * 3)
-
-        # monomial / monomial
         self.assertEqual(self.m1 / self.m5, M(2/3, {'x': 1}))
 
-        # monomial / number
+        # works with numbers
+        self.assertEqual(self.m0 * self.m3, self.m0 * 3)
         self.assertEqual(self.m0 / 2, M(1, {'x': 1, 'y': 1}))
 
-        # if the first operator is a multiple of the
-        # second, the result is a number
-        self.assertIsInstance(self.m2 / self.m0, int)
-
-        # the coefficient is automatically converted to int
-        self.assertIsInstance((self.m1 / self.m0).coefficient, int)
+        # multiplication works with polynomials
+        self.assertEqual(self.m5 * P(self.m1), P(self.m5*self.m1))
 
         # second operator's exponent must be lower than first's
         self.assertRaises(ValueError, lambda: self.m3 / self.m4)
@@ -152,19 +144,19 @@ class Test (TestCase):
     def test_reverses(self):
         # reverse add
         self.assertEqual(19 + self.m3, 22)
-        self.assertEqual(self.m2.__radd__(""), NotImplemented)
+        self.assertRaises(TypeError, lambda: "" + self.m2)
 
         # reverse sub
         self.assertEqual(8 - self.m3, 5)
-        self.assertEqual(self.m2.__rsub__(""), NotImplemented)
+        self.assertRaises(TypeError, lambda: "" - self.m2)
 
         # reverse mul
         self.assertEqual(18 * self.m3, 54)
-        self.assertEqual(self.m2.__rmul__(""), NotImplemented)
+        self.assertRaises(TypeError, lambda: "" * self.m2)
 
         # reverse div
         self.assertEqual(21 / self.m3, 7)
-        self.assertEqual(self.m2.__rtruediv__(""), NotImplemented)
+        self.assertRaises(TypeError, lambda: "" / self.m2)
         self.assertRaises(ValueError, lambda: 5 / self.m5)
 
     def test_call(self):
@@ -235,7 +227,7 @@ class Test (TestCase):
         self.assertFalse(self.m3 == 17)
 
         # can compare only to monomials and numbers
-        self.assertEqual(self.m4.__eq__({}), NotImplemented)
+        self.assertEqual(self.m4.__eq__({}), False)
 
     def test_neg_abs(self):
         # neg
