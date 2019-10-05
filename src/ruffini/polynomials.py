@@ -132,7 +132,7 @@ class Polynomial (tuple):
         TypeError: unsupported operand type(s) for +: 'Polynomial' and 'str'
 
         :type other: Polynomial, Monomial, int, float
-        :rtype: Polynomial, NotImplemented
+        :rtype: Polynomial
         :raise: TypeError
         """
 
@@ -141,10 +141,12 @@ class Polynomial (tuple):
 
         if isinstance(other, Polynomial):
             return Polynomial(*self, *other)
+
         elif isinstance(other, Monomial):
             return Polynomial(*self, other)
+
         else:
-            return NotImplemented
+            raise TypeError(f"unsupported operand type(s) for +: 'Polynomial' and '{other.__class__.__name__}'")
 
     def __sub__(self, other):
         """
@@ -178,7 +180,7 @@ class Polynomial (tuple):
         TypeError: unsupported operand type(s) for -: 'Polynomial' and 'list'
 
         :type other: Polynomial, Monomial, int, float
-        :rtype: Polynomial, NotImplemented
+        :rtype: Polynomial
         :raise: TypeError
         """
 
@@ -187,10 +189,12 @@ class Polynomial (tuple):
 
         if isinstance(other, Polynomial):
             return Polynomial(*self, *(-other))
+
         elif isinstance(other, Monomial):
             return Polynomial(*self, -other)
+
         else:
-            return NotImplemented
+            raise TypeError(f"unsupported operand type(s) for -: 'Polynomial' and '{other.__class__.__name__}'")
 
     def __mul__(self, other):
         """
@@ -214,7 +218,7 @@ class Polynomial (tuple):
         >>> print(p * 3)
         -12a^4 -18y
 
-        If the second operator type is not written
+        If the second operator type is not mentioned
         above, it will return NotImplemented (which
         will transform in a TypeError)
 
@@ -223,17 +227,19 @@ class Polynomial (tuple):
         ...
         TypeError: unsupported operand type(s) for *: 'Polynomial' and 'dict'
 
-        :type other: Monomial, Polynomial, int or float
-        :rtype: Polynomial, NotImplemented
+        :type other: Monomial, Polynomial, int, float
+        :rtype: Polynomial
         :raise: TypeError
         """
 
         if isinstance(other, (Monomial, int, float)):
             return Polynomial(*(t*other for t in self))
+
         elif isinstance(other, Polynomial):
             return Polynomial(*(a*b for a in self for b in other))
+
         else:
-            return NotImplemented
+            raise TypeError(f"unsupported operand type(s) for *: 'Polynomial' and '{other.__class__.__name__}'")
 
     ### Reverse Operations Methods ###
 
@@ -249,14 +255,14 @@ class Polynomial (tuple):
         For more informations, see Polynomial.__add__() docs.
 
         :type other: Monomial, int, float
-        :rtype: Polynomial, NotImplemented
+        :rtype: Polynomial
         :raise: TypeError
         """
 
         try:
             return self + other
         except TypeError:
-            return NotImplemented
+            raise TypeError(f"unsupported operand type(s) for +: '{other.__class__.__name__}' and 'Polynomial'")
 
     def __rsub__(self, other):
         """
@@ -270,14 +276,14 @@ class Polynomial (tuple):
         For more informations, see Polynomial.__sub__() docs.
 
         :type other: Monomial, int, float
-        :rtype: Polynomial, NotImplemented
+        :rtype: Polynomial
         :raise: TypeError
         """
 
         try:
             return (-self) + other
         except TypeError:
-            return NotImplemented
+            raise TypeError(f"unsupported operand type(s) for -: '{other.__class__.__name__}' and 'Polynomial'")
 
     def __rmul__(self, other):
         """
@@ -298,7 +304,7 @@ class Polynomial (tuple):
         try:
             return self * other
         except TypeError:
-            return NotImplemented
+            raise TypeError(f"unsupported operand type(s) for *: '{other.__class__.__name__}' and 'Polynomial'")
 
     ### Magic Methods ###
 
@@ -334,8 +340,7 @@ class Polynomial (tuple):
             if not len(self) == len(other):
                 return False
             else:
-                def sort(l): return sorted(
-                    l, key=lambda term: term.coefficient)
+                sort = lambda l: sorted(l, key=lambda t: t.coefficient)
                 first, second = sort(self), sort(other)
                 return all(first[i] == second[i] for i in range(len(first)))
         elif isinstance(other, Monomial) and len(self) == 1:

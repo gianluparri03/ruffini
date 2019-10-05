@@ -37,8 +37,8 @@ class Test (TestCase):
 
     def test_add_sub (self):
         # works only with monomials, polynomials and numbers
-        self.assertEqual(self.p0.__add__("something"), NotImplemented)
-        self.assertEqual(self.p0.__sub__([]), NotImplemented)
+        self.assertRaises(TypeError, lambda: self.p0 + "something")
+        self.assertRaises(TypeError, lambda: self.p0 - [])
 
         # works with monomial
         self.assertEqual(self.p0 + self.m2, P(M(6, VD(a=4)), M(14, VD(y=1))))
@@ -54,7 +54,7 @@ class Test (TestCase):
 
     def test_mul (self):
         # works only with monomials, polynomials and numbers
-        self.assertEqual(self.p0.__mul__("something"), NotImplemented)
+        self.assertRaises(TypeError, lambda: self.p0 * "something")
 
         # works with monomial
         self.assertEqual(self.p0 * self.m2, P(M(42, VD(a=4, y=1)), M(49, VD(y=2))))
@@ -68,12 +68,12 @@ class Test (TestCase):
     def test_reverses(self):
         # reverse add
         self.assertEqual(19 + P(M(3, VD())), P(22))
-        self.assertEqual(self.p0.__radd__(""), NotImplemented)
+        self.assertRaises(TypeError, lambda: "" + self.p0)
 
         # reverse sub
         self.assertEqual(8 - P(M(3, VD())), P(5))
-        self.assertEqual(self.p1.__rsub__(""), NotImplemented)
+        self.assertRaises(TypeError, lambda: "" - self.p1)
 
         # reverse mul
         self.assertEqual(18 * P(M(3, VD())), P(54))
-        self.assertEqual(self.p2.__rmul__(""), NotImplemented)
+        self.assertRaises(TypeError, lambda: "" * self.p2)

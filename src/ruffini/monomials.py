@@ -192,7 +192,7 @@ class Monomial:
         >>> a = Monomial(2, {'x': 1, 'y': 1})
         >>> b = Monomial(-9, {'y': 3})
         >>> a.lcm(b)
-        Monomial(18, {'x': 1, 'y': 3})
+        Monomial(18.0, {'x': 1, 'y': 3})
 
         If you want to know others informations
         like errors and limits, please check the
@@ -220,9 +220,10 @@ class Monomial:
 
         You can also add a polynomial (in this case,
         it will use the Polynomial().__add__() method)
-        
-        >>> Monomial(1, {'a': 2}) + Polynomial(Monomial(2, {'b': 1}))
-        a^2 + 2b
+
+        >>> from ruffini import Polynomial
+        >>> print(Monomial(1, {'a': 2}) + Polynomial(Monomial(2, {'b': 1})))
+        2b +a^2
 
         Otherwise, it will raise a TypeError
 
@@ -283,9 +284,10 @@ class Monomial:
 
         You can also subtract a polynomial (in this case,
         it will use the Polynomial().__sub__() method)
-        
-        >>> Monomial(1, {'a': 2}) - Polynomial(Monomial(2, {'b': 1}))
-        a^2 - 2b
+
+        >>> from ruffini import Polynomial
+        >>> print(Monomial(1, {'a': 2}) - Polynomial(Monomial(2, {'b': 1})))
+        -2b +a^2
 
         Otherwise, it will raise a TypeError
 
@@ -298,7 +300,7 @@ class Monomial:
         :rtype: Monomial, Polynomial
         :raise: TypeError
         """
-        
+
         from . import Polynomial
 
         if isinstance(other, (Polynomial, Monomial, int, float)):
@@ -322,7 +324,8 @@ class Monomial:
         Also multiplication by a polynomial is enabled
         (it will use the Polynomial().__mul__() method)
 
-        >>> Monomial(1, {'a': 2}) * Polynomial(Monomial(2, {'b': 1}))
+        >>> from ruffini import Polynomial
+        >>> print(Monomial(1, {'a': 2}) * Polynomial(Monomial(2, {'b': 1})))
         2a^2b
 
         If the second operator isn't mentioned
@@ -364,24 +367,11 @@ class Monomial:
         by a number (int / float)
 
         >>> Monomial(6, {'a': 3}) / Monomial(3, {'a': 1})
-        Monomial(2, {'a': 2})
+        Monomial(2.0, {'a': 2})
         >>> Monomial(18, {'k': 3}) / 6
-        Monomial(3, {'k': 3})
-
-        If the two monomials are similar (so if they
-        have the same variables) the result will be
-        an int of a float (3.0 will be taken to 3)
-
+        Monomial(3.0, {'k': 3})
         >>> Monomial(27, {'x': 6}) / Monomial(3, {'x': 6})
-        9
-
-        The coefficient is converted to int too, if
-        it's a whole number
-
-        >>> 6 / 3
-        2.0
-        >>> Monomial(6, {}) / Monomial(3, {})
-        2
+        Monomial(9.0, {})
 
         If second monomial's variable's exponent
         are higher than first's, it will raise a
@@ -401,7 +391,7 @@ class Monomial:
         TypeError: unsupported operand type(s) for /: 'Monomial' and 'dict'
 
         :type other: Monomial, int, float
-        :rtype: Monomial, NotImplemented, int, float
+        :rtype: Monomial
         :raise: ValueError, TypeError
         """
 
@@ -410,15 +400,11 @@ class Monomial:
 
         if isinstance(other, Monomial):
             coefficient = self.coefficient / other.coefficient
-            if isinstance(coefficient, float) and coefficient.is_integer():
-                coefficient = int(coefficient)
             variables = self.variables - other.variables
-            if variables == {}:
-                return coefficient
-            else:
-                return Monomial(coefficient, variables)
+            return Monomial(coefficient, variables)
+
         else:
-            return NotImplemented
+            raise TypeError(f"unsupported operand type(s) for /: 'Monomial' and '{other.__class__.__name__}'")
 
     def __pow__(self, exp):
         """
@@ -442,13 +428,13 @@ class Monomial:
         TypeError: unsupported operand type(s) for ** or pow(): 'Monomial' and 'float'
 
         :type exp: int
-        :rtype: Monomial, NotImplemented
+        :rtype: Monomial
         :raise: ValueError, TypeError
         """
 
         # Raise an error if the exponent is not an integer
         if not isinstance(exp, int):
-            return NotImplemented
+            raise TypeError(f"unsupported operand type(s) for ** or pow(): 'Monomial' and '{exp.__class__.__name__}'")
 
         # Raise an error if exponent is negative
         if not abs(exp) == exp:
@@ -479,7 +465,10 @@ class Monomial:
         :raise: TypeError
         """
 
-        return self + other
+        try:
+            return self + other
+        except TypeError:
+            raise TypeError(f"unsupported operand type(s) for +: '{other.__class__.__name__}' and 'Monomial'")
 
     def __rsub__(self, other):
         """
@@ -497,7 +486,10 @@ class Monomial:
         :raise: TypeError
         """
 
-        return (- self) + other
+        try:
+            return (- self) + other
+        except TypeError:
+            raise TypeError(f"unsupported operand type(s) for -: '{other.__class__.__name__}' and 'Monomial'")
 
     def __rmul__(self, other):
         """
@@ -515,7 +507,10 @@ class Monomial:
         :raise: TypeError
         """
 
-        return self * other
+        try:
+            return self * other
+        except TypeError:
+            raise TypeError(f"unsupported operand type(s) for *: '{other.__class__.__name__}' and 'Monomial'")
 
     def __rtruediv__(self, other):
         """
@@ -524,27 +519,22 @@ class Monomial:
         of the division:
 
         >>> 8 / Monomial(4, {})
-        2
+        Monomial(2.0, {})
 
         For more informations, see Monomial.__truediv__() docs.
 
         :type other: int, float
-        :rtype: Monomial, NotImplemented, int, float
-        :raise: TypeError
+        :rtype: Monomial
+        :raise: ValueError, TypeError
         """
 
         if not isinstance(other, (int, float)):
-            return NotImplemented
+            raise TypeError(f"unsupported operand type(s) for /: '{other.__class__.__name__}' and 'Monomial'")
 
         if self.variables:
             raise ValueError("Exponent must be positive")
 
-        result = (1 / self.coefficient) * other
-
-        if isinstance(result, float) and result.is_integer():
-            result = int(result)
-
-        return result
+        return Monomial(other/self.coefficient, {})
 
     ### Magic Methods ###
 
