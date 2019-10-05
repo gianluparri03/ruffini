@@ -18,7 +18,8 @@ class Test (TestCase):
         # Polynomials
         self.p0 = P(self.m0, self.m1, self.m2) # 6a^4 + 7y
         self.p1 = P(self.m1, self.m3, self.m5) # -4a^4 +8x
-        self.p2 = P(self.m4, self.m0) # -13y + 10a^4
+        self.p2 = P(self.m4, self.m0) # -13y +10a^4
+        self.p3 = P(self.m3 , self.m1) # 9x -4a^4
 
     def test_new_init (self):
         # terms must be monomials or number
@@ -77,3 +78,36 @@ class Test (TestCase):
         # reverse mul
         self.assertEqual(18 * P(M(3, VD())), P(54))
         self.assertRaises(TypeError, lambda: "" * self.p2)
+
+    def test_str_repr(self):
+        # a positive term is preceded by '+'
+        # only if it isn't the first term
+        self.assertEqual(str(self.p2), "-13y +10a^4")
+        self.assertEqual(str(self.p0), "6a^4 +7y")
+
+        # a negative term is preceded by '-'
+        self.assertEqual(str(self.p3), "9x -4a^4")
+
+        # test repr
+        self.assertEqual(repr(self.p2), "Polynomial(Monomial(-13, {'y': 1}), Monomial(10, {'a': 4}))")
+
+    def test_eq(self):
+        # two polynomials are not equal if
+        # they have not the same lenght
+        self.assertFalse(self.p3 == P(self.m5))
+
+        # two polynomials can be equals but with
+        # the terms in a different order
+        self.assertEqual(self.p3, P(self.m1, self.m3))
+
+        # a polynomial with a single term can be
+        # compared to a monomial
+        self.assertEqual(P(M(3, {'a': 2, 'b': 2})), M(3, {'a': 2, 'b': 2}))
+        self.assertEqual(P(M(6, {})), 6)
+
+        # otherwise the result is false
+        self.assertFalse(self.p2 == "string")
+
+    def test_neg(self):
+        # test neg
+        self.assertEqual(-self.p2, P(-self.m4, -self.m0))

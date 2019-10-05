@@ -594,9 +594,10 @@ class Monomial:
 
     def __str__(self):
         """
-        Return the monomial as a string. Normally,
-        it will return the coefficient and the variables
-        without spaces or *. The power is indicated with ^.
+        Return the monomial as a string in a human-readable
+        mode. Normally, it will return the coefficient and
+        the variables without spaces or *.
+        The power is indicated with ^.
 
         Examples:
 

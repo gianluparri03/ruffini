@@ -36,7 +36,7 @@ class Polynomial (tuple):
 
         counter = Counter()
 
-        # Sum the simil terms
+        # Sum the similar terms
         for term in terms:
             if isinstance(term, (int, float)):
                 term = Monomial(term, {})
@@ -63,7 +63,7 @@ class Polynomial (tuple):
         """
 
         # Add polynomial degree
-        self.degree = max(m.degree for m in self)
+        self.degree = max(m.degree for m in self) if self else 0
 
     ### Utility Methods ###
 
@@ -310,29 +310,92 @@ class Polynomial (tuple):
 
     def __str__(self):
         """
-        Return the polynomial as a string, adding
-        a space between each term
+        Return the polynomial as a string in a human-readable
+        mode. The exponent for the variables is indicated with a ^.
 
+        >>> str(Polynomial(Monomial(4, {'a': 4, 'b': 1})))
+        '4a^4b'
+        >>> str(Polynomial(Monomial(1, {'a': 2}), Monomial(-2, {'c': 2})))
+        'a^2 -2c^2'
+        >>> str(Polynomial(Monomial(3, {'x': 2}), Monomial(6, {'y': 3})))
+        '3x^2 +6y^3'
+
+        To see how the single terms are printed, see the
+        Monomial().__str__() docs.
+
+        :rtype: str
         """
+
         result = str(self[0])
         for term in self[1:]:
-            if term.coefficient > 0:
+            if term.coefficient == abs(term.coefficient): # positive
                 result += f" +{term}"
-            elif term.coefficient < 0:
+            else: # negative
                 result += f" {term}"
         return result
+
+    def __repr__(self):
+        """
+        Return the polynomial as a string in a less human-readable
+        mode than str()
+
+        >>> repr(Polynomial(Monomial(4, {'a': 4, 'b': 1})))
+        "Polynomial(Monomial(4, {'a': 4, 'b': 1}))"
+        >>> repr(Polynomial(Monomial(1, {'a': 2}), Monomial(-2, {'c': 2})))
+        "Polynomial(Monomial(1, {'a': 2}), Monomial(-2, {'c': 2}))"
+        >>> repr(Polynomial(Monomial(3, {'x': 2}), Monomial(6, {'y': 3})))
+        "Polynomial(Monomial(3, {'x': 2}), Monomial(6, {'y': 3}))"
+
+        NB. When you have a lot of terms, this method
+        will return a certain ammount of spam.
+
+        To see how the single terms are printed, you can
+        see the Monomial().__repr__() docs.
+
+        :rtype: str
+        """
+        terms = ', '.join([repr(t) for t in self])
+
+        return f"Polynomial({terms})"
+
 
     def __eq__(self, other):
         """
         Check if two polynomials are equivalent,
         comparating each term
 
+        >>> p0 = Polynomial(Monomial(4, {'a': 4, 'b': 1}))
+        >>> p1 = Polynomial(Monomial(1, {'a': 2}), Monomial(-2, {'c': 2}))
+        >>> p2 = Polynomial(Monomial(-2, {'c': 2}), Monomial(1, {'a': 2}))
+        >>>
+        >>> p0 == p1
+        False
+        >>> p0 == p0
+        True
+        >>> p1 == p2
+        True
+
         If a polynomial has a single term, it can
         also be compared to a monomial
 
-        Otherwise, the result will be False
+        >>> Polynomial(Monomial(3, {'f': 2})) == Monomial(3, {'f': 2})
+        True
 
-        :type other: Polynomial, Monomial
+        NB. Since a monomial with no variables can be
+        compared to a number, if a polynomial has only
+        a term, which is a monomial with no variables,
+        it can be compared to a number, too!
+
+        >>> Polynomial(Monomial(7,{})) == 7
+        True
+
+        If the second operator in not mentione above,
+        the result will be False.
+
+        >>> Polynomial() == {1, 2, 3}
+        False
+
+        :type other: Polynomial, Monomial, int, float
         :rtype: bool
         """
 
@@ -340,28 +403,25 @@ class Polynomial (tuple):
             if not len(self) == len(other):
                 return False
             else:
-                sort = lambda l: sorted(l, key=lambda t: t.coefficient)
-                first, second = sort(self), sort(other)
-                return all(first[i] == second[i] for i in range(len(first)))
-        elif isinstance(other, Monomial) and len(self) == 1:
+                return set(self) == set(other)
+
+        elif isinstance(other, (Monomial, int, float)) and len(self) == 1:
             return self[0] == other
+
         else:
             return False
 
     def __neg__(self):
         """
-        Return the opposite of the polynomial,
-        changing the sign at all it's terms:
+        This method return the opposite of
+        the polynomial, changing the sign of
+        each term of the polynomial
+
+        >>> print(-Polynomial(Monomial(4, {'x': 1}), Monomial(2, {'y': 2})))
+        -4x -2y^2
+        >>> print(-Polynomial(Monomial(-6, {'b': 2}), Monomial(3, {'k': 3})))
+        6b^2 -3k^3
 
         :rtype: Polynomial
         """
         return Polynomial(*(-m for m in self))
-
-    def __repr__(self):
-        """
-        Return the polynomial as a string
-
-        """
-        terms = ', '.join([repr(t) for t in self])
-
-        return f"Polynomial({terms})"
