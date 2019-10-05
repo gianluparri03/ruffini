@@ -1,4 +1,7 @@
-# Ruffini
+
+<p id="header" align="center">
+    <img id="logo" width="220" src="https://raw.githubusercontent.com/gianluparri03/ruffini/master/logo.png" alt="Ruffini">
+</p>
 
 ![](https://img.shields.io/codacy/grade/8bf3533a27104f44bdc0dad621d0de73.svg)
 ![](https://img.shields.io/codacy/coverage/8bf3533a27104f44bdc0dad621d0de73.svg)
