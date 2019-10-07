@@ -174,6 +174,7 @@ class VariablesDict(dict):
         0
 
         :type key: str
+        :rtype: int
         """
 
         try:
@@ -191,6 +192,8 @@ class VariablesDict(dict):
         "{'x': 5, 'y': 3}"
         >>> str(VariablesDict(Y=5))
         "{'y': 5}"
+
+        :rtype: str
         """
 
         pairs = [f"'{k}': {self[k]}" for k in sorted(self.keys())]
@@ -205,6 +208,8 @@ class VariablesDict(dict):
         'VariablesDict(y=5)'
         >>> repr(VariablesDict(a=2, b=8, c=3))
         'VariablesDict(a=2, b=8, c=3)'
+
+        :rtype: str
         """
 
         pairs = [f"{k}={self[k]}" for k in sorted(self.keys())]
@@ -227,9 +232,11 @@ class VariablesDict(dict):
 
         :type other: VariablesDict
         :rtype: VariablesDict
+        :raise: TypeError
         """
+
         if not isinstance(other, VariablesDict):
-            return NotImplemented
+            raise TypeError(f"unsupported operand type(s) for +: 'VariablesDict' and '{other.__class__.__name__}'")
 
         result = {}
         for letter in set(self) | set(other):
@@ -254,15 +261,87 @@ class VariablesDict(dict):
 
         :type other: VariablesDict
         :rtype: VariablesDict
-        :raise: ValueError
+        :raise: ValueError, TypeError
         """
+
         if not isinstance(other, VariablesDict):
-            return NotImplemented
+            raise TypeError(f"unsupported operand type(s) for -: 'VariablesDict' and '{other.__class__.__name__}'")
 
         result = {}
         for letter in set(self) | set(other):
             result[letter] = self[letter] - other[letter]
         return VariablesDict(**result)
+
+    def __mul__ (self, other):
+        """
+        This method returns a VariablesDict
+        whose exponent are equivalent to
+        this ones, multiplied by the given
+        integer positive number
+
+        >>> VariablesDict(a=2, b= 5) * 3
+        VariablesDict(a=6, b=15)
+
+        :type other: int
+        :rtype: VariablesDict
+        :raise: TypeError, ValueError
+        """
+
+        if not isinstance(other, int):
+            raise TypeError(f"unsupported operand type(s) for *: 'VariablesDict' and '{other.__class__.__name__}'")
+        elif other < 0:
+            raise ValueError("Second operator must be positive")
+
+        variables = {}
+        for l in self:
+            variables[l] = self[l] * other
+        return VariablesDict(**variables)
+
+    def __truediv__ (self, other):
+        """
+        This method returns a VariablesDict
+        whose exponent are equivalent to
+        this ones, divided by the given
+        integer positive number
+
+        >>> VariablesDict(a=6, b= 9) / 3
+        VariablesDict(a=2, b=3)
+
+        :type other: int
+        :rtype: VariablesDict
+        :raise: TypeError, ValueError
+        """
+
+        if not self % other:
+            raise ValueError(f"VariablesDict cannot be divided by {other}")
+
+        variables = {}
+        for l in self:
+            variables[l] = self[l] / other
+        return VariablesDict(**variables)
+
+    def __mod__ (self, other):
+        """
+        This method returns True if all the
+        variables' exponents can be divided
+        by a given integer positive number
+
+        >>> VariablesDict(a=2, b=4) % 2
+        True
+        >>> VariablesDict(a=2, b=4) % 3
+        False
+
+        :type other: int
+        :rtype: bool
+        :raise: TypeError
+        """
+
+        if not isinstance(other, int):
+            raise TypeError(f"unsupported operand type(s) for *: 'VariablesDict' and '{other.__class__.__name__}'")
+        elif other < 0:
+            raise ValueError("Second operator must be positive")
+
+        return all(l%other==0 for l in self.values())
 
     ### HASH ###
 

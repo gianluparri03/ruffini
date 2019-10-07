@@ -34,6 +34,16 @@ class Test (TestCase):
         # check the degree
         self.assertEqual(M(2, {'x': 2, 'y': 7}).degree, 9)
 
+        # check is_square
+        self.assertFalse(self.m0.is_square)
+        self.assertTrue(M(4, {'a': 2, 'b': 4}).is_square)
+        self.assertFalse(M(-4, {'a': 2, 'b': 4}).is_square)
+
+        # check is_cube
+        self.assertFalse(self.m1.is_cube)
+        self.assertTrue(M(27, {'a': 3}).is_cube)
+        self.assertTrue(M(-27, {'a': 3}).is_cube)
+
     def test_similarity(self):
         # two monomials are simimlar if they have the
         # same variables

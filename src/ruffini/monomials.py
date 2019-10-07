@@ -1,5 +1,6 @@
+from math import gcd, sqrt
+
 from .variables import VariablesDict
-from math import gcd
 
 
 class Monomial:
@@ -49,6 +50,12 @@ class Monomial:
         >>> Monomial(-2, {'a': 2, 'b': 1, 'c': 3}).degree
         6
 
+        It also calculates if the monomial is a cube or a square
+        >>> Monomial(4, {'a': 2, 'k': 4}).is_square
+        True
+        >>> Monomial(6, {'b': 27}).is_cube
+        False
+
         :type coefficient: int, float
         :type coefficient: dict, VariablesDict
         :raise: ValueError, TypeError
@@ -70,6 +77,19 @@ class Monomial:
 
         # Calculate the degree
         self.degree = sum(self.variables.values())
+
+        # Check if it's a square or a cube
+        if self.coefficient < 0:
+            self.is_square = False
+            self.is_cube = ((-self.coefficient) ** (1./3.)).is_integer() and self.variables % 3
+
+        elif self.coefficient > 0:
+            self.is_square = sqrt(self.coefficient).is_integer() and self.variables % 2
+            self.is_cube = (self.coefficient ** (1./3.)).is_integer() and self.variables % 3
+
+        else:
+            self.is_square = False
+            self.is_cube = False
 
     ### Utility Methods ###
 
@@ -440,12 +460,7 @@ class Monomial:
         if not abs(exp) == exp:
             raise ValueError("Exponent can't be negative")
 
-        # Raise the variables to power
-        variables = {}
-        for var in self.variables:
-            variables[var] = self.variables[var] * exp
-
-        return Monomial(self.coefficient ** exp, variables)
+        return Monomial(self.coefficient ** exp, self.variables * exp)
 
     ### Reversed Operations Method ###
 

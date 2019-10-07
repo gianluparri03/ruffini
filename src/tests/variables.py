@@ -4,7 +4,7 @@ from ruffini import VariablesDict as VD
 
 
 class Test (TestCase):
-    def test(self):
+    def test_general (self):
         # Keys has to be made lowecasse
         self.assertEqual(VD(X=3), VD(x=3))
 
@@ -13,7 +13,6 @@ class Test (TestCase):
         self.assertRaises(TypeError, lambda: VD().__delitem__('s'))
         self.assertRaises(TypeError, lambda: VD().clear())
         self.assertRaises(TypeError, lambda: VD().pop('c'))
-
 
         # Keys' lenght must be 1
         self.assertRaises(ValueError, lambda: VD(ab=5))
@@ -46,6 +45,10 @@ class Test (TestCase):
         self.assertTrue(VD(b=0).empty)
         self.assertFalse(VD(c=1).empty)
 
+        # check hash
+        self.assertEqual(hash(VD(x=2, y=3)), hash((('x', 2), ('y', 3))))
+
+    def test_str_repr(self):
         # str() work as a normal dict
         self.assertEqual(str(VD(x=2)), str({'x': 2}))
 
@@ -56,6 +59,7 @@ class Test (TestCase):
         self.assertRaises(TypeError, lambda: VD() + {})
         self.assertRaises(TypeError, lambda: VD() - {})
 
+    def test_operations(self):
         # test sum
         self.assertEqual(VD(x=2, y=3) + VD(x=6), VD(x=8, y=3))
 
@@ -63,5 +67,18 @@ class Test (TestCase):
         self.assertEqual(VD(x=2, y=3) - VD(x=2), VD(y=3))
         self.assertRaises(ValueError, lambda: VD(x=2, y=3) - VD(x=3))
 
-        # check hash
-        self.assertEqual(hash(VD(x=2, y=3)), hash((('x', 2), ('y', 3))))
+        # test multiplication
+        self.assertRaises(TypeError, lambda: VD() * 3.14)
+        self.assertRaises(ValueError, lambda: VD() * (-1))
+        self.assertEqual(VD(a=2, b=5) * 2, VD(a=4, b=10))
+
+        # test module
+        self.assertRaises(TypeError, lambda: VD() % 4.12)
+        self.assertRaises(ValueError, lambda: VD() % (-7))
+        self.assertFalse(VD(a=2, b=5) % 2)
+        self.assertTrue(VD(a=2, b=4) % 2)
+        self.assertTrue(VD(a=3, b=6) % 3)
+
+        # test division
+        self.assertEqual(VD(a=2, b=4) / 2, VD(a=1, b=2))
+        self.assertRaises(ValueError, lambda: VD(a=3) / 2)
