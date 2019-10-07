@@ -16,7 +16,7 @@ class Polynomial (tuple):
     calculate the value of that polynomial with the
     value you assigned.
 
-    NB. the Polynomial class is a subclass of tuple,
+    **NB** The Polynomial class is a subclass of tuple,
     so all the methods of tuple are automatically
     inherited from Polynomial; many of these methods
     are not in this docs.
@@ -244,14 +244,14 @@ class Polynomial (tuple):
 
     def __radd__(self, other):
         """
-        This method is the reverse for :func:`~ruffini.Polynomial.__add__`.
+        This method is the reverse for :func:Polynomial.__add__`.
         With this method, you can swap the two operands
         of the addition:
 
         >>> print(8 + Polynomial(Monomial(4, {'a': 2})))
         4a^2 +8
 
-        For more informations, see :func:`~ruffini.Polynomial.__add__` docs.
+        For more informations, see :func:Polynomial.__add__` docs.
 
         :type other: Monomial, int, float
         :rtype: Polynomial
@@ -265,14 +265,14 @@ class Polynomial (tuple):
 
     def __rsub__(self, other):
         """
-        This method is the reverse for :func:`~ruffini.Polynomial.__sub__`.
+        This method is the reverse for :func:Polynomial.__sub__`.
         With this method, you can swap the two operands
         of the addition:
 
         >>> print(5 - Polynomial(Monomial(7, {'k': 1})))
         -7k +5
 
-        For more informations, see :func:`~ruffini.Polynomial.__sub__ docs`.
+        For more informations, see :func:Polynomial.__sub__ docs`.
 
         :type other: Monomial, int, float
         :rtype: Polynomial
@@ -286,14 +286,14 @@ class Polynomial (tuple):
 
     def __rmul__(self, other):
         """
-        This method is the reverse for :func:`~ruffini.Polynomial.__mul__`.
+        This method is the reverse for :func:Polynomial.__mul__`.
         With this method, you can swap the two operands
         of the addition:
 
         >>> print(10 * Polynomial(Monomial(3.5, {'b': 3})))
         35.0b^3
 
-        For more informations, see :func:`~ruffini.Polynomial.__mul__` docs.
+        For more informations, see :func:Polynomial.__mul__` docs.
 
         :type other: Monomial, int, float
         :rtype: Polynomial, NotImplemented
@@ -320,7 +320,7 @@ class Polynomial (tuple):
         '3x^2 +6y^3'
 
         To see how the single terms are printed, see the
-        :func:`~ruffini.Monomial.__str__` docs.
+        :func:Monomial.__str__` docs.
 
         :rtype: str
         """
@@ -345,11 +345,11 @@ class Polynomial (tuple):
         >>> repr(Polynomial(Monomial(3, {'x': 2}), Monomial(6, {'y': 3})))
         "Polynomial(Monomial(3, {'x': 2}), Monomial(6, {'y': 3}))"
 
-        NB. When you have a lot of terms, this method
+        **NB** When you have a lot of terms, this method
         will return a certain ammount of spam.
 
         To see how the single terms are printed, you can
-        see the :func:`~ruffini.Monomial.__repr__` docs.
+        see the :func:Monomial.__repr__` docs.
 
         :rtype: str
         """
@@ -379,7 +379,7 @@ class Polynomial (tuple):
         >>> Polynomial(Monomial(3, {'f': 2})) == Monomial(3, {'f': 2})
         True
 
-        NB. Since a monomial with no variables can be
+        **NB** Since a monomial with no variables can be
         compared to a number, if a polynomial has only
         a term, which is a monomial with no variables,
         it can be compared to a number, too!

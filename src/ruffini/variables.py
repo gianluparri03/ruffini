@@ -14,7 +14,7 @@ class VariablesDict(dict):
     - The values (wich are the exponent) have to be
       integer (5.0 is allowed) and positive
 
-    NB. VariablesDict is a sublass of Counter, so all
+    **NB** VariablesDict is a sublass of Counter, so all
     the methods of Counter are inherited
     from VariablesDict; many of these methods
     are not in this docs.

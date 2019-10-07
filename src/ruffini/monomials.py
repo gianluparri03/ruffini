@@ -51,6 +51,7 @@ class Monomial:
         6
 
         It also calculates if the monomial is a cube or a square
+
         >>> Monomial(4, {'a': 2, 'k': 4}).is_square
         True
         >>> Monomial(6, {'b': 27}).is_cube
@@ -160,7 +161,7 @@ class Monomial:
         ...
         ValueError: Value can't be equal to zero
 
-        NB. the result will be always positive
+        **NB** the result will be always positive
 
         >>> c = Monomial(-30, {'x': 1, 'y': 1})
         >>> b.gcd(c)
@@ -239,7 +240,7 @@ class Monomial:
         Polynomial(Monomial(1, {'z': 1}), Monomial(17, {}))
 
         You can also add a polynomial (in this case,
-        it will use the :func:`~ruffini.Polynomial.__add__` method)
+        it will use the :func:`Polynomial.__add__` method)
 
         >>> from ruffini import Polynomial
         >>> print(Monomial(1, {'a': 2}) + Polynomial(Monomial(2, {'b': 1})))
@@ -303,7 +304,7 @@ class Monomial:
         Polynomial(Monomial(17, {'a': 1, 'b': 1}), Monomial(-2.5, {}))
 
         You can also subtract a polynomial (in this case,
-        it will use the :func:`~ruffini.Polynomial.__sub__` method)
+        it will use the :func:Polynomial.__sub__` method)
 
         >>> from ruffini import Polynomial
         >>> print(Monomial(1, {'a': 2}) - Polynomial(Monomial(2, {'b': 1})))
@@ -342,7 +343,7 @@ class Monomial:
         Monomial(1, {'k': 6})
 
         Also multiplication by a polynomial is enabled
-        (it will use the :func:`~ruffini.Polynomial.__mul__` method)
+        (it will use the :func:Polynomial.__mul__` method)
 
         >>> from ruffini import Polynomial
         >>> print(Monomial(1, {'a': 2}) * Polynomial(Monomial(2, {'b': 1})))
@@ -435,7 +436,7 @@ class Monomial:
         >>> Monomial(4, {'c': 6}) ** 3
         Monomial(64, {'c': 18})
 
-        NB. the exponent can be only positive
+        **NB** the exponent can be only positive
         and integer
 
         >>> Monomial(17, {'k': 1}) ** (-1)
@@ -466,14 +467,14 @@ class Monomial:
 
     def __radd__(self, other):
         """
-        This function is the reverse for :func:`~ruffini.Monomial.__add__`.
+        This function is the reverse for :func:Monomial.__add__`.
         With this function, you can swap the two operands
         of the addition:
 
         >>> 18 + Monomial(3, {})
         Monomial(21, {})
 
-        For more informations, see :func:`~ruffini.Monomial.__add__` docs.
+        For more informations, see :func:Monomial.__add__` docs.
 
         :type other: Polynomial, int, float
         :rtype: Monomial, Polynomial
@@ -487,14 +488,14 @@ class Monomial:
 
     def __rsub__(self, other):
         """
-        This function is the reverse for :func:`~ruffini.Monomial.__sub__`.
+        This function is the reverse for :func:Monomial.__sub__`.
         With this function, you can swap the two operands
         of the subtraction:
 
         >>> 9 - Monomial(4, {})
         Monomial(5, {})
 
-        For more informations, see :func:`~ruffini.Monomial.__sub__` docs.
+        For more informations, see :func:Monomial.__sub__` docs.
 
         :type other: Polynomial, int, float
         :rtype: Polynomial, Monomial, int, float
@@ -508,14 +509,14 @@ class Monomial:
 
     def __rmul__(self, other):
         """
-        This function is the reverse for :func:`~ruffini.Monomial.__mul__`.
+        This function is the reverse for :func:Monomial.__mul__`.
         With this function, you can swap the two operands
         of the multiplication:
 
         >>> 5 * Monomial(2, {'x': 2})
         Monomial(10, {'x': 2})
 
-        For more informations, see :func:`~ruffini.Monomial.__mul__` docs.
+        For more informations, see :func:Monomial.__mul__` docs.
 
         :type other: Polynomial, int, float
         :rtype: Monomial, Polynomial
@@ -529,14 +530,14 @@ class Monomial:
 
     def __rtruediv__(self, other):
         """
-        This function is the reverse for :func:`~ruffini.Monomial.__truediv__`.
+        This function is the reverse for :func:Monomial.__truediv__`.
         With this function, you can swap the two operands
         of the division:
 
         >>> 8 / Monomial(4, {})
         Monomial(2.0, {})
 
-        For more informations, see :func:`~ruffini.Monomial.__truediv__ docs`.
+        For more informations, see :func:Monomial.__truediv__ docs`.
 
         :type other: int, float
         :rtype: Monomial
@@ -575,7 +576,7 @@ class Monomial:
         >>> m(b=7)
         Monomial(5, {'x': 1, 'y': 1})
 
-        NB: as for the initialization, the variable
+        **NB** as for the initialization, the variable
         isn't case sensitive
 
         >>> m(x=2) == m(X=2)
@@ -646,7 +647,7 @@ class Monomial:
         >>> print(Monomial(-1, {}))
         -1
 
-        NB the variables are displayed in
+        **NB** the variables are displayed in
         alphabetical order
 
         >>> print(Monomial(5, {'k': 2, 'b': 3}))
@@ -697,7 +698,7 @@ class Monomial:
         >>> Monomial(-1, {'a': 2, 'c': 3})
         Monomial(-1, {'a': 2, 'c': 3})
 
-        NB the variables are displayed in
+        **NB** the variables are displayed in
         alphabetical order
 
         >>> Monomial(5, {'k': 2, 'b': 3})
