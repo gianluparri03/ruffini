@@ -244,14 +244,14 @@ class Polynomial (tuple):
 
     def __radd__(self, other):
         """
-        This method is the reverse for :func:ruffini.Polynomial.__add__.
+        This method is the reverse for :func:`~ruffini.Polynomial.__add__`.
         With this method, you can swap the two operands
         of the addition:
 
         >>> print(8 + Polynomial(Monomial(4, {'a': 2})))
         4a^2 +8
 
-        For more informations, see :func:ruffini.Polynomial.__add__ docs.
+        For more informations, see :func:`~ruffini.Polynomial.__add__` docs.
 
         :type other: Monomial, int, float
         :rtype: Polynomial
@@ -265,14 +265,14 @@ class Polynomial (tuple):
 
     def __rsub__(self, other):
         """
-        This method is the reverse for :func:ruffini.Polynomial.__sub__.
+        This method is the reverse for :func:`~ruffini.Polynomial.__sub__`.
         With this method, you can swap the two operands
         of the addition:
 
         >>> print(5 - Polynomial(Monomial(7, {'k': 1})))
         -7k +5
 
-        For more informations, see :func:ruffini.Polynomial.__sub__ docs.
+        For more informations, see :func:`~ruffini.Polynomial.__sub__ docs`.
 
         :type other: Monomial, int, float
         :rtype: Polynomial
@@ -286,14 +286,14 @@ class Polynomial (tuple):
 
     def __rmul__(self, other):
         """
-        This method is the reverse for :func:ruffini.Polynomial.__mul__.
+        This method is the reverse for :func:`~ruffini.Polynomial.__mul__`.
         With this method, you can swap the two operands
         of the addition:
 
         >>> print(10 * Polynomial(Monomial(3.5, {'b': 3})))
         35.0b^3
 
-        For more informations, see :func:ruffini.Polynomial.__mul__ docs.
+        For more informations, see :func:`~ruffini.Polynomial.__mul__` docs.
 
         :type other: Monomial, int, float
         :rtype: Polynomial, NotImplemented
@@ -320,7 +320,7 @@ class Polynomial (tuple):
         '3x^2 +6y^3'
 
         To see how the single terms are printed, see the
-        Monomial().__str__() docs.
+        :func:`~ruffini.Monomial.__str__` docs.
 
         :rtype: str
         """
@@ -349,7 +349,7 @@ class Polynomial (tuple):
         will return a certain ammount of spam.
 
         To see how the single terms are printed, you can
-        see the Monomial().__repr__() docs.
+        see the :func:`~ruffini.Monomial.__repr__` docs.
 
         :rtype: str
         """
