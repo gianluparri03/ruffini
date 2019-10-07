@@ -115,7 +115,6 @@ class Polynomial (tuple):
         >>> m3 = Monomial(9, {'x': 1})
         >>> m4 = Monomial(-13, {'y': 1})
         >>> p = Polynomial(m1, m2, m4) # -4a^4 -6y
-        >>> 
         >>> # polynomial + polynomial
         >>> print(p + Polynomial(m0, m3, m2))
         6a^4 +y +9x
@@ -163,7 +162,6 @@ class Polynomial (tuple):
         >>> m3 = Monomial(9, {'x': 1})
         >>> m4 = Monomial(-13, {'y': 1})
         >>> p = Polynomial(m1, m2, m4) # -4a^4 -6y
-        >>> 
         >>> # polynomial - polynomial
         >>> print(p - Polynomial(m0, m3, m2))
         -14a^4 -13y -9x
@@ -210,7 +208,6 @@ class Polynomial (tuple):
         >>> m3 = Monomial(9, {'x': 1})
         >>> m4 = Monomial(-13, {'y': 1})
         >>> p = Polynomial(m1, m2, m4) # -4a^4 -6y
-        >>> 
         >>> # polynomial * polynomial
         >>> print(p * Polynomial(m0, m1, m4))
         -24a^8 +16a^4y +78y^2
@@ -247,14 +244,14 @@ class Polynomial (tuple):
 
     def __radd__(self, other):
         """
-        This method is the reverse for Polynomial.__add__().
+        This method is the reverse for :func:ruffini.Polynomial.__add__.
         With this method, you can swap the two operands
         of the addition:
 
         >>> print(8 + Polynomial(Monomial(4, {'a': 2})))
         4a^2 +8
 
-        For more informations, see Polynomial.__add__() docs.
+        For more informations, see :func:ruffini.Polynomial.__add__ docs.
 
         :type other: Monomial, int, float
         :rtype: Polynomial
@@ -268,14 +265,14 @@ class Polynomial (tuple):
 
     def __rsub__(self, other):
         """
-        This method is the reverse for Polynomial.__sub__().
+        This method is the reverse for :func:ruffini.Polynomial.__sub__.
         With this method, you can swap the two operands
         of the addition:
 
         >>> print(5 - Polynomial(Monomial(7, {'k': 1})))
         -7k +5
 
-        For more informations, see Polynomial.__sub__() docs.
+        For more informations, see :func:ruffini.Polynomial.__sub__ docs.
 
         :type other: Monomial, int, float
         :rtype: Polynomial
@@ -289,14 +286,14 @@ class Polynomial (tuple):
 
     def __rmul__(self, other):
         """
-        This method is the reverse for Polynomial.__mul__().
+        This method is the reverse for :func:ruffini.Polynomial.__mul__.
         With this method, you can swap the two operands
         of the addition:
 
         >>> print(10 * Polynomial(Monomial(3.5, {'b': 3})))
         35.0b^3
 
-        For more informations, see Polynomial.__mul__() docs.
+        For more informations, see :func:ruffini.Polynomial.__mul__ docs.
 
         :type other: Monomial, int, float
         :rtype: Polynomial, NotImplemented
@@ -369,7 +366,6 @@ class Polynomial (tuple):
         >>> p0 = Polynomial(Monomial(4, {'a': 4, 'b': 1}))
         >>> p1 = Polynomial(Monomial(1, {'a': 2}), Monomial(-2, {'c': 2}))
         >>> p2 = Polynomial(Monomial(-2, {'c': 2}), Monomial(1, {'a': 2}))
-        >>> 
         >>> p0 == p1
         False
         >>> p0 == p0
