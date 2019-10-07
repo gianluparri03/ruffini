@@ -239,7 +239,7 @@ class Monomial:
         Polynomial(Monomial(1, {'z': 1}), Monomial(17, {}))
 
         You can also add a polynomial (in this case,
-        it will use the Polynomial().__add__() method)
+        it will use the :func:Polynomial().__add__() method)
 
         >>> from ruffini import Polynomial
         >>> print(Monomial(1, {'a': 2}) + Polynomial(Monomial(2, {'b': 1})))
@@ -303,7 +303,7 @@ class Monomial:
         Polynomial(Monomial(17, {'a': 1, 'b': 1}), Monomial(-2.5, {}))
 
         You can also subtract a polynomial (in this case,
-        it will use the Polynomial().__sub__() method)
+        it will use the :func:Polynomial().__sub__() method)
 
         >>> from ruffini import Polynomial
         >>> print(Monomial(1, {'a': 2}) - Polynomial(Monomial(2, {'b': 1})))
@@ -342,7 +342,7 @@ class Monomial:
         Monomial(1, {'k': 6})
 
         Also multiplication by a polynomial is enabled
-        (it will use the Polynomial().__mul__() method)
+        (it will use the :func:Polynomial().__mul__() method)
 
         >>> from ruffini import Polynomial
         >>> print(Monomial(1, {'a': 2}) * Polynomial(Monomial(2, {'b': 1})))

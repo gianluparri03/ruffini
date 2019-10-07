@@ -27,9 +27,11 @@ class Polynomial (tuple):
         Create the polynomial giving it a list
         of terms (a term can be a Monomial or a
         number); if two or more terms have the
-        same variablesm, it will sum them toghether
+        same variables, it will sum them toghether
 
-        :param *terms: Terms of the polynomial
+        >>> print(Polynomial(Monomial(2, {'x': 2, 'y': 2})))
+        2x^2y^2
+
         :type *terms: Monomials, int, float
         :raise: TypeError
         """
@@ -58,7 +60,9 @@ class Polynomial (tuple):
         the polynomial degree (the highest degree
         of the terms)
 
-        :param *terms: Terms of the polynomial
+        >>> print(Polynomial(Monomial(1, {'a': 1}), Monomial(3, {})))
+        a +3
+
         :type *terms: Monomials, int, float
         """
 
@@ -85,7 +89,6 @@ class Polynomial (tuple):
         0
 
         :type variables: dict, VariablesDict
-        :param variables: The variables of the coefficient you're looking for
         :rtype: int, float
         """
 
@@ -112,7 +115,7 @@ class Polynomial (tuple):
         >>> m3 = Monomial(9, {'x': 1})
         >>> m4 = Monomial(-13, {'y': 1})
         >>> p = Polynomial(m1, m2, m4) # -4a^4 -6y
-        >>>
+        >>> 
         >>> # polynomial + polynomial
         >>> print(p + Polynomial(m0, m3, m2))
         6a^4 +y +9x
@@ -160,7 +163,7 @@ class Polynomial (tuple):
         >>> m3 = Monomial(9, {'x': 1})
         >>> m4 = Monomial(-13, {'y': 1})
         >>> p = Polynomial(m1, m2, m4) # -4a^4 -6y
-        >>>
+        >>> 
         >>> # polynomial - polynomial
         >>> print(p - Polynomial(m0, m3, m2))
         -14a^4 -13y -9x
@@ -207,7 +210,7 @@ class Polynomial (tuple):
         >>> m3 = Monomial(9, {'x': 1})
         >>> m4 = Monomial(-13, {'y': 1})
         >>> p = Polynomial(m1, m2, m4) # -4a^4 -6y
-        >>>
+        >>> 
         >>> # polynomial * polynomial
         >>> print(p * Polynomial(m0, m1, m4))
         -24a^8 +16a^4y +78y^2
@@ -219,8 +222,7 @@ class Polynomial (tuple):
         -12a^4 -18y
 
         If the second operator type is not mentioned
-        above, it will return NotImplemented (which
-        will transform in a TypeError)
+        above, it will raise a TypeError
 
         >>> p * {}
         Traceback (most recent call last):
@@ -367,7 +369,7 @@ class Polynomial (tuple):
         >>> p0 = Polynomial(Monomial(4, {'a': 4, 'b': 1}))
         >>> p1 = Polynomial(Monomial(1, {'a': 2}), Monomial(-2, {'c': 2}))
         >>> p2 = Polynomial(Monomial(-2, {'c': 2}), Monomial(1, {'a': 2}))
-        >>>
+        >>> 
         >>> p0 == p1
         False
         >>> p0 == p0
