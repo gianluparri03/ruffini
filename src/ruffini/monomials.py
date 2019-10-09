@@ -32,7 +32,7 @@ class Monomial:
         and the values the degrees).
 
         >>> print(Monomial(17, {'k': 3}))
-        17k^3
+        17k**3
 
         The variables will be stored in a VariableDict, so:
 
@@ -244,7 +244,7 @@ class Monomial:
 
         >>> from ruffini import Polynomial
         >>> print(Monomial(1, {'a': 2}) + Polynomial(Monomial(2, {'b': 1})))
-        2b +a^2
+        2b +a**2
 
         Otherwise, it will raise a TypeError
 
@@ -308,7 +308,7 @@ class Monomial:
 
         >>> from ruffini import Polynomial
         >>> print(Monomial(1, {'a': 2}) - Polynomial(Monomial(2, {'b': 1})))
-        -2b +a^2
+        -2b +a**2
 
         Otherwise, it will raise a TypeError
 
@@ -347,7 +347,7 @@ class Monomial:
 
         >>> from ruffini import Polynomial
         >>> print(Monomial(1, {'a': 2}) * Polynomial(Monomial(2, {'b': 1})))
-        2a^2b
+        2a**2b
 
         If the second operator isn't mentioned
         above, it will raise a TypeError
@@ -613,7 +613,7 @@ class Monomial:
         Return the monomial as a string in a human-readable
         mode. Normally, it will return the coefficient and
         the variables without spaces or *.
-        The power is indicated with ^.
+        The power is indicated with **.
 
         Examples:
 
@@ -625,12 +625,12 @@ class Monomial:
         coefficient = 1 and there are variables
 
         >>> print(Monomial(1, {'a': 2}))
-        a^2
+        a**2
 
         coefficient = -1 and there are variables
 
         >>> print(Monomial(-1, {'k': 3}))
-        -k^3
+        -k**3
 
         coefficient = 0
 
@@ -651,7 +651,7 @@ class Monomial:
         alphabetical order
 
         >>> print(Monomial(5, {'k': 2, 'b': 3}))
-        5b^3k^2
+        5b**3k**2
 
         :rtype: str
         """
@@ -661,7 +661,7 @@ class Monomial:
         # order the variables
         for letter in sorted(self.variables.keys()):
             if self.variables[letter] > 1:
-                variables += f"{letter}^{self.variables[letter]}"
+                variables += f"{letter}**{self.variables[letter]}"
             else:
                 variables += letter
 

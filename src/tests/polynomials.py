@@ -16,10 +16,10 @@ class Test (TestCase):
         self.m5 = M(-1, {'x': 1})
 
         # Polynomials
-        self.p0 = P(self.m0, self.m1, self.m2) # 6a^4 + 7y
-        self.p1 = P(self.m1, self.m3, self.m5) # -4a^4 +8x
-        self.p2 = P(self.m4, self.m0) # -13y +10a^4
-        self.p3 = P(self.m3 , self.m1) # 9x -4a^4
+        self.p0 = P(self.m0, self.m1, self.m2) # 6a**4 + 7y
+        self.p1 = P(self.m1, self.m3, self.m5) # -4a**4 +8x
+        self.p2 = P(self.m4, self.m0) # -13y +10a**4
+        self.p3 = P(self.m3 , self.m1) # 9x -4a**4
 
     def test_new_init (self):
         # terms must be monomials or number
@@ -82,11 +82,11 @@ class Test (TestCase):
     def test_str_repr(self):
         # a positive term is preceded by '+'
         # only if it isn't the first term
-        self.assertEqual(str(self.p2), "-13y +10a^4")
-        self.assertEqual(str(self.p0), "6a^4 +7y")
+        self.assertEqual(str(self.p2), "-13y +10a**4")
+        self.assertEqual(str(self.p0), "6a**4 +7y")
 
         # a negative term is preceded by '-'
-        self.assertEqual(str(self.p3), "9x -4a^4")
+        self.assertEqual(str(self.p3), "9x -4a**4")
 
         # test repr
         self.assertEqual(repr(self.p2), "Polynomial(Monomial(-13, {'y': 1}), Monomial(10, {'a': 4}))")

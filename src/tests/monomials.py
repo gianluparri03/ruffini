@@ -201,10 +201,10 @@ class Test (TestCase):
         self.assertEqual(str(M(5, {'x': 1, 'y': 1})), '5xy')
 
         # coefficient == 1 w/ variables
-        self.assertEqual(str(M(1, {'a': 2})), 'a^2')
+        self.assertEqual(str(M(1, {'a': 2})), 'a**2')
 
         # coefficient == -1 and w/ variables
-        self.assertEqual(str(M(-1, {'k': 3})), '-k^3')
+        self.assertEqual(str(M(-1, {'k': 3})), '-k**3')
 
         # coefficient == 0
         self.assertEqual(str(M(0, {'s': 5})), '0')
