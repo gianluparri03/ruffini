@@ -12,11 +12,11 @@
 **Ruffini** (/rʊˈfiːni/, reference to [Paolo Ruffini](https://en.wikipedia.org/wiki/Paolo_Ruffini), Italian mathematician)
 is a simple python library to compute monomials and polynomials.
 
-## Getting Started
+## Installing
 
 ### Installing via PyPI
 
-You can easily install the most recent version of the `ruffini` package by
+You can easily install the most recent release of the `ruffini` package by
 downloading it from the Python Package Index (PyPI) by just doing:
 
 ```bash
@@ -24,7 +24,8 @@ pip install ruffini
 ```
 
 ### Installing from source
-If you want to download and install `ruffini` from this repo, type
+
+If you want to download and install the latest version of `ruffini` from this repo, type
 
 ```bash
 git clone https://github.com/gianluparri03/ruffini.git
@@ -32,14 +33,26 @@ cd ruffini/src
 python3 setup.py install
 ```
 
-### Documentation
+## Documentation
 
 Documentation for this project can be found in the Read the Docs [Ruffini's page](https://ruffini.rtfd.com) in two versions:
 
-- **latest**: the docs from this branch, updated on every commit in the `master` branch
-- **stable**: the docs from the latest stable release of ruffini (see the `relase` branch)
+- **latest**: the docs updated on every commit of the `master` branch
+- **stable**: the docs from the latest stable release of ruffini
 
-## Todo
+## Contributing
+
+You can fork ruffini every time you want; If you are submitting a pull request, just make sure your changes are working and they aren't in conflict with the present code and tests.
+If you want to test your changes, check the [testing section](#testing).
+If you want to contribute, but you don't know how, just have a look at the [TODO section](#TODO).
+
+### Testing
+
+To test the docstring of ruffini, just go to the `src` folder and type `make doctest`.
+Instead, if you want to run the unittest, the command is `make unittest`.
+The Makefile also has a coverage function: if you want to see the lines of code which aren't tested with the unittest, use `make coverage`.
+
+### Todo
 
 - [ ] Add factorization for polynomials
 
