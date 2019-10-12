@@ -35,7 +35,7 @@ python3 setup.py install
 
 ## Documentation
 
-Documentation for this project can be found in the Read the Docs [Ruffini's page](https://ruffini.rtfd.com) in two versions:
+Documentation for this project can be found in the Read the Docs [Ruffini's page](https://ruffini.rtfd.io) in two versions:
 
 - **latest**: the docs updated on every commit of the `master` branch
 - **stable**: the docs from the latest stable release of ruffini
@@ -54,7 +54,11 @@ The Makefile also has a coverage function: if you want to see the lines of code 
 
 ### Todo
 
-- [ ] Add factorization for polynomials
+- [ ] Polynomial factoring
+	- [ ] Add `VariablesDict().__truediv__()`
+	- [ ] Add `Monomial().__mod__()` like `VariablesDict().__mod__()`
+	- [ ] Implement `Monomial().__pow__()` with floating-point exponent
+
 
 ## Authors
 
