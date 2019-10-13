@@ -14,8 +14,7 @@ The Makefile also has a coverage function: if you want to see the lines of code 
 
 - [ ] Polynomial factoring:
 	- [X] Add `VariablesDict().__truediv__()`
-	- [ ] Add `Monomial().__mod__()` like `VariablesDict().__mod__()`
-	- [ ] Implement `Monomial().__pow__()` with floating-point exponent
+	- [X] Implement `Monomial().__pow__()` with floating-point exponent
 	- [ ] Create the `FPolynomial` class
 	- [ ] Implement the algorythms for factoring:
 		- [ ] `XA + XB = X(A + B)`

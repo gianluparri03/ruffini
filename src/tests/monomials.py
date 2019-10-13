@@ -145,6 +145,17 @@ class Test (TestCase):
         self.assertRaises(ValueError, lambda: M(5, {}) ** (-3))
         self.assertRaises(TypeError, lambda: M(17, {}) ** 2.14)
 
+        # if the exponentn is 0, the result is 1
+        self.assertEqual(self.m5**0, 1)
+
+        # you can calculate square/cube root if the
+        # monomial is a square/cube
+        self.assertEqual(M(4, VD(x=2)) ** (1/2), M(2, VD(x=1)))
+        self.assertEqual(M(8, VD(y=9)) ** (1/3), M(2, VD(y=3)))
+
+        # you can't do it if the monomial isn't a square or a cube
+        self.assertRaises(TypeError, lambda: M(8, VD(y=27)) ** (1/2))
+
         # test result
         self.assertEqual(self.m5 ** 3, M(-729, {'y': 9}))
 

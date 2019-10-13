@@ -436,29 +436,70 @@ class Monomial:
         >>> Monomial(4, {'c': 6}) ** 3
         Monomial(64, {'c': 18})
 
-        **NB** the exponent can be only positive
-        and integer
+        If the exponent is 0, the result will be always 1
+
+        >>> Monomial(5, {'k': 6}) ** 0
+        1
+
+        If the monomial is a square, you can
+        calcolate the square root
+
+        >>> Monomial(4, {'x': 2}).is_square
+        True
+        >>> Monomial(4, {'x': 2}) ** (1/2)
+        Monomial(2, {'x': 1})
+
+        You can do the same thing with a cube
+
+        >>> Monomial(27, {'y': 6}).is_cube
+        True
+        >>> Monomial(27, {'y': 6}) ** (1/3)
+        Monomial(3, {'y': 2})
+
+        In all the other cases, a float exponent
+        will raise a TypeError
+
+        >>> Monomial(3.14, {'a': 3}) ** 2.5
+        Traceback (most recent call last):
+        ...
+        TypeError: unsupported operand type(s) for ** or pow(): 'Monomial' and 'float'
+
+        When the exponent is negative, it will raise
+        a ValueError
 
         >>> Monomial(17, {'k': 1}) ** (-1)
         Traceback (most recent call last):
         ...
         ValueError: Exponent can't be negative
-        >>> Monomial(3.14, {'a': 3}) ** 2.5
-        Traceback (most recent call last):
-        ...
-        TypeError: unsupported operand type(s) for ** or pow(): 'Monomial' and 'float'
+        
 
         :type exp: int
         :rtype: Monomial
         :raise: ValueError, TypeError
         """
 
-        # Raise an error if the exponent is not an integer
+        # if the exponent is not an integer...
         if not isinstance(exp, int):
-            raise TypeError(f"unsupported operand type(s) for ** or pow(): 'Monomial' and '{exp.__class__.__name__}'")
+            # if the monomial is a square and the exponent
+            # is 1/2, return the square root
+            if exp == 1/2 and self.is_square:
+                return Monomial(int(sqrt(self.coefficient)), self.variables / 2)
+
+            # if the monomial is a cube and the exponent
+            # is 1/3, return the cube root
+            elif exp == 1/3 and self.is_cube:
+                return Monomial(int(self.coefficient ** (1/3)), self.variables / 3)
+
+            # otherwise raise an error
+            else:
+                raise TypeError(f"unsupported operand type(s) for ** or pow(): 'Monomial' and '{exp.__class__.__name__}'")
+
+        # return 1 if the exponent is 0
+        if exp == 0:
+            return 1
 
         # Raise an error if exponent is negative
-        if not abs(exp) == exp:
+        elif not exp > 0:
             raise ValueError("Exponent can't be negative")
 
         return Monomial(self.coefficient ** exp, self.variables * exp)
