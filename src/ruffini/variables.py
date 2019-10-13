@@ -299,26 +299,42 @@ class VariablesDict(dict):
 
     def __truediv__ (self, other):
         """
-        This method returns a VariablesDict
-        whose exponent are equivalent to
-        this ones, divided by the given
-        integer positive number
+        Divide all the variables' exponents
+        by the given number (other)
 
-        >>> VariablesDict(a=6, b= 9) / 3
-        VariablesDict(a=2, b=3)
+        >>> VariablesDict(a=4, b=2) / 2
+        VariablesDict(a=2, b=1)
+
+        If the variablesdict is not divisible
+        by the number, it will raise a ValueError
+
+        >>> VariablesDict(x=7) % 3
+        False
+        >>> VariablesDict(x=7) / 3
+        Traceback (most recent call last):
+        ...
+        ValueError: cannot divide by 3
+
+        Intead, if the second operator is not a
+        number, it will raise a TypeError
+
+        >>> VariablesDict(k=2) / 1.5
+        Traceback (most recent call last):
+        ...
+        TypeError: unsupported operand type(s) for /: 'VariablesDict' and 'float'
 
         :type other: int
         :rtype: VariablesDict
-        :raise: TypeError, ValueError
+        :raises: ValueError, TypeError
         """
 
-        if not self % other:
-            raise ValueError(f"VariablesDict cannot be divided by {other}")
+        if not isinstance(other, int):
+            raise TypeError(f"unsupported operand type(s) for /: 'VariablesDict' and '{other.__class__.__name__}'")
 
-        variables = {}
-        for l in self:
-            variables[l] = self[l] / other
-        return VariablesDict(**variables)
+        if not self % other:
+            raise ValueError(f"cannot divide by {other}")
+
+        return VariablesDict(**dict(map(lambda k: (k, self[k] / other), self)))
 
     def __mod__ (self, other):
         """
@@ -337,7 +353,7 @@ class VariablesDict(dict):
         """
 
         if not isinstance(other, int):
-            raise TypeError(f"unsupported operand type(s) for *: 'VariablesDict' and '{other.__class__.__name__}'")
+            raise TypeError(f"unsupported operand type(s) for %: 'VariablesDict' and '{other.__class__.__name__}'")
         elif other < 0:
             raise ValueError("Second operator must be positive")
 
@@ -349,5 +365,7 @@ class VariablesDict(dict):
         """
         Return the hash for the VariablesDict.
         It's equal to the tuple of the items.
+
+        :rtype: int
         """
         return hash(tuple(list((k, self[k]) for k in self)))

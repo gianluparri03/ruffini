@@ -13,11 +13,11 @@ The Makefile also has a coverage function: if you want to see the lines of code 
 ### Todo
 
 - [ ] Polynomial factoring:
-	1. [ ] Add `VariablesDict().__truediv__()`
-	2. [ ] Add `Monomial().__mod__()` like `VariablesDict().__mod__()`
-	3. [ ] Implement `Monomial().__pow__()` with floating-point exponent
-	4. [ ] Create the `FPolynomial` class
-	5. [ ] Implement the algorythms for factoring:
+	- [X] Add `VariablesDict().__truediv__()`
+	- [ ] Add `Monomial().__mod__()` like `VariablesDict().__mod__()`
+	- [ ] Implement `Monomial().__pow__()` with floating-point exponent
+	- [ ] Create the `FPolynomial` class
+	- [ ] Implement the algorythms for factoring:
 		- [ ] `XA + XB = X(A + B)`
 		- [ ] `XA + XB +YA + YB = (X + Y)(A + B)`
 		- [ ] `A**2 - B**2 = (A + B)(A - B)`

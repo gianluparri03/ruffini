@@ -82,3 +82,4 @@ class Test (TestCase):
         # test division
         self.assertEqual(VD(a=2, b=4) / 2, VD(a=1, b=2))
         self.assertRaises(ValueError, lambda: VD(a=3) / 2)
+        self.assertRaises(TypeError, lambda: VD(a=3) / 2.56)
