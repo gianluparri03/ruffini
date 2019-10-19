@@ -23,7 +23,7 @@ The Makefile also has a coverage function: if you want to see the lines of code 
 		- [ ] `A**2 +2AB + B**2 = (A + B)**2`
 		- [ ] `A**3 + 3A**2B + 3AB**2 + B**2 = (A + B)**3`
 		- [ ] `A**2 + B**2 + C**2 + 2AB + 2BC + 2AC = (A + B + C)**2`
-		- [ ] `A**3 + B**3 = (A + B)(A**2 - AB + A**2)`
+		- [ ] `A**3 + B**3 = (A + B)(A**2 - AB + B**2)`
 		- [ ] `A**3 - B**3 = (A - B)(A**2 + AB + B**2)`
 		- [ ] `X**2 + (P + Q)X + PQ = (X + P)(X + Q)`
 		- [ ] Ruffini's Rule

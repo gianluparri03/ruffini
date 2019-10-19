@@ -31,6 +31,10 @@ class Test (TestCase):
         variables = VD()
         self.assertIs(M(2, variables).variables, variables)
 
+        # if the coefficient is a whole number
+        # it will be an integer
+        self.assertIsInstance(M(3.0, {'a': 2}).coefficient, int)
+
         # check the degree
         self.assertEqual(M(2, {'x': 2, 'y': 7}).degree, 9)
 

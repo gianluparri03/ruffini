@@ -291,7 +291,7 @@ class Polynomial (tuple):
         of the addition:
 
         >>> print(10 * Polynomial(Monomial(3.5, {'b': 3})))
-        35.0b**3
+        35b**3
 
         For more informations, see :func:`Polynomial.__mul__` docs.
 

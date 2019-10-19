@@ -57,13 +57,22 @@ class Monomial:
         >>> Monomial(6, {'b': 27}).is_cube
         False
 
+        **NB** if the coefficient is instance of float
+        but it's a whole number (such as 18.0), it will
+        be transformed in 18
+
+        >>> Monomial(7.0, {'a': 2})
+        Monomial(7, {'a': 2})
+
         :type coefficient: int, float
         :type coefficient: dict, VariablesDict
         :raise: ValueError, TypeError
         """
 
         # Check the coefficient
-        if isinstance(coefficient, (int, float)):
+        if isinstance(coefficient, float) and coefficient.is_integer():
+            self.coefficient = int(coefficient)
+        elif isinstance(coefficient, (int, float)):
             self.coefficient = coefficient
         else:
             raise TypeError("Coefficient must be int or float")
@@ -213,7 +222,7 @@ class Monomial:
         >>> a = Monomial(2, {'x': 1, 'y': 1})
         >>> b = Monomial(-9, {'y': 3})
         >>> a.lcm(b)
-        Monomial(18.0, {'x': 1, 'y': 3})
+        Monomial(18, {'x': 1, 'y': 3})
 
         If you want to know others informations
         like errors and limits, please check the
@@ -388,11 +397,11 @@ class Monomial:
         by a number (int / float)
 
         >>> Monomial(6, {'a': 3}) / Monomial(3, {'a': 1})
-        Monomial(2.0, {'a': 2})
+        Monomial(2, {'a': 2})
         >>> Monomial(18, {'k': 3}) / 6
-        Monomial(3.0, {'k': 3})
+        Monomial(3, {'k': 3})
         >>> Monomial(27, {'x': 6}) / Monomial(3, {'x': 6})
-        Monomial(9.0, {})
+        Monomial(9, {})
 
         If second monomial's variable's exponent
         are higher than first's, it will raise a
@@ -471,7 +480,7 @@ class Monomial:
         Traceback (most recent call last):
         ...
         ValueError: Exponent can't be negative
-        
+
 
         :type exp: int
         :rtype: Monomial
@@ -576,7 +585,7 @@ class Monomial:
         of the division:
 
         >>> 8 / Monomial(4, {})
-        Monomial(2.0, {})
+        Monomial(2, {})
 
         For more informations, see :func:`Monomial.__truediv__ docs`.
 
