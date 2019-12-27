@@ -5,6 +5,7 @@
 
 ![](https://img.shields.io/codacy/grade/8bf3533a27104f44bdc0dad621d0de73.svg)
 ![](https://img.shields.io/codacy/coverage/8bf3533a27104f44bdc0dad621d0de73.svg)
+![](https://img.shields.io/travis/gianluparri03/ruffini)
 ![](https://img.shields.io/readthedocs/ruffini.svg)
 ![](https://img.shields.io/pypi/v/ruffini.svg?color=success)
 ![](https://img.shields.io/github/license/gianluparri03/ruffini.svg)
