@@ -7,3 +7,9 @@ python:
 script:
   - cd src/
   - make unittest
+
+after_success:
+- pip install coverage
+- pip install codacy-coverage
+- cd src
+- make coverage-push
