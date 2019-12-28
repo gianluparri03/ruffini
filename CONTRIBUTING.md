@@ -12,10 +12,14 @@ The Makefile also has a coverage function: if you want to see the lines of code 
 
 ### Todo
 
+- [ ] Change monomial initialization (`Monomial(5, {'x': 1})` -> `Monomial(5, x=1)`) _NB: variables will be transformed in VariablesDict however_
+- [ ] Change variables implementation
+	- [ ] Create `Variable` class
+	- [ ] Adjust `VariablesDict()`
+	- [ ] Add variables to import (e.g. `from ruffini import x`)
 - [ ] Polynomial factoring:
 	- [X] Add `VariablesDict().__truediv__()`
 	- [X] Implement `Monomial().__pow__()` with floating-point exponent
 	- [ ] Create the `FPolynomial` class
 	- [ ] Think about a method to implement factoring
-	- [ ] Implement the algorythms for factoring
-
+	- [ ] Implement it

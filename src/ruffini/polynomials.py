@@ -401,7 +401,7 @@ class Polynomial (tuple):
             if not len(self) == len(other):
                 return False
             else:
-                return set(self) == set(other)
+                return all((t in other for t in self))
 
         elif isinstance(other, (Monomial, int, float)) and len(self) == 1:
             return self[0] == other
