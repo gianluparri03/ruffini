@@ -38,7 +38,7 @@ class Test (TestCase):
 
         # Factors must be polynomials, monomials or numbers
         self.assertRaises(TypeError, FP, "", self.p[1])
-        
+
         # default string representation
         self.assertEqual(str(self.fp[0]), '(5y**2 + 17z)(2x + 3)')
 

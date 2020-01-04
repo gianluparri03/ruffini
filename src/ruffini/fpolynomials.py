@@ -102,9 +102,11 @@ class FPolynomial (tuple):
             if factor in done:
                 continue
 
+            exponent = self.count(factor)
+
             # if exponent is greater than one
-            if (c := self.count(factor)) > 1:
-                factors += f'({factor})**{c}'
+            if exponent > 1:
+                factors += f'({factor})**{exponent}'
             # if it's a monomial
             elif len(factor) == 1:
                 factors += f'{factor}'
