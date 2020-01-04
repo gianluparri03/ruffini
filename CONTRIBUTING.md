@@ -13,6 +13,8 @@ The Makefile also has a coverage function: if you want to see the lines of code 
 ### Todo
 
 - [ ] Change monomial initialization (`Monomial(5, {'x': 1})` -> `Monomial(5, x=1)`) _NB: variables will be transformed in VariablesDict however_
+- [ ] Add monomial's default values (`coefficient=1`, `variables={}`)
+- [ ] Look for a solution to `__repr__` (too verbose)
 - [ ] Change variables implementation
 	- [ ] Create `Variable` class
 	- [ ] Adjust `VariablesDict()`

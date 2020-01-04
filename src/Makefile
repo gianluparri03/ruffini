@@ -6,22 +6,15 @@ unittest:
 doctest:
 	python3 doctests.py
 
-# Coverage
-
 coverage:
 	coverage run -m unittest discover
 	coverage report -m
 	rm .coverage
 
-coverage-push:
-	coverage run -m unittest discover
-	coverage xml
-	python-codacy-coverage -r coverage.xml
-	rm coverage.xml .coverage
 
 # PyPI
 
-build-clean:
+delete-build:
 	rm ruffini-*
 
 build:

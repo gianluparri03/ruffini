@@ -9,7 +9,10 @@ script:
   - make unittest
 
 after_success:
-- pip install coverage
-- pip install codacy-coverage
-- cd src
-- make coverage-push
+  - pip install coverage
+  - pip install codacy-coverage
+  - cd src
+  - coverage run -m unittest discover
+  - coverage xml
+  - python-codacy-coverage -r coverage.xml
+  - rm coverage.xml .coverage

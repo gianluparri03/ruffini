@@ -1,3 +1,7 @@
+from .variables import VariablesDict
 from .monomials import Monomial
 from .polynomials import Polynomial
-from .variables import VariablesDict
+
+del variables
+del monomials
+del polynomials

@@ -1,18 +1,21 @@
 from unittest import TestCase
 
+from ruffini import VariablesDict as VD
 from ruffini import Monomial as M
 from ruffini import Polynomial as P
-from ruffini import VariablesDict as VD
 
 
 class Test (TestCase):
     def setUp(self):
-        self.m0 = M(2, {'x': 1, 'y': 1})
-        self.m1 = M(-6, {'x': 1, 'y': 3})
-        self.m2 = M(8, {'x': 1, 'y': 1})
-        self.m3 = M(3, {})
-        self.m4 = M(1.16, {'a': 4})
-        self.m5 = M(-9, {'y': 3})
+        # Monomials
+        self.m = [
+                  M(2, {'x': 1, 'y': 1}),
+                  M(-6, {'x': 1, 'y': 3}),
+                  M(8, {'x': 1, 'y': 1}),
+                  M(3, {}),
+                  M(1.16, {'a': 4}),
+                  M(-9, {'y': 3})
+                 ]
 
     def test_init (self):
         # Coefficient must be int or float
@@ -39,110 +42,110 @@ class Test (TestCase):
         self.assertEqual(M(2, {'x': 2, 'y': 7}).degree, 9)
 
         # check is_square
-        self.assertFalse(self.m0.is_square)
+        self.assertFalse(self.m[0].is_square)
         self.assertTrue(M(4, {'a': 2, 'b': 4}).is_square)
         self.assertFalse(M(-4, {'a': 2, 'b': 4}).is_square)
 
         # check is_cube
-        self.assertFalse(self.m1.is_cube)
+        self.assertFalse(self.m[1].is_cube)
         self.assertTrue(M(27, {'a': 3}).is_cube)
         self.assertTrue(M(-27, {'a': 3}).is_cube)
 
     def test_similarity(self):
         # two monomials are simimlar if they have the
         # same variables
-        self.assertTrue(self.m0.similar_to(self.m2))
-        self.assertFalse(self.m0.similar_to(self.m1))
+        self.assertTrue(self.m[0].similar_to(self.m[2]))
+        self.assertFalse(self.m[0].similar_to(self.m[1]))
 
         # if the second operator is not a monomial
         # they are never similar
-        self.assertFalse(self.m2.similar_to(""))
+        self.assertFalse(self.m[2].similar_to(""))
 
         # if the first operator has no variables, it
         # can be compared to floats or integers
-        self.assertTrue(self.m3.similar_to(6.28))
+        self.assertTrue(self.m[3].similar_to(6.28))
 
     def test_gcd_lcm(self):
         # only works with numbers and monomials
-        self.assertRaises(TypeError, self.m0.gcd, "")
-        self.assertRaises(TypeError, self.m0.lcm, [])
+        self.assertRaises(TypeError, self.m[0].gcd, "")
+        self.assertRaises(TypeError, self.m[0].lcm, [])
 
         # can work with numbers
-        self.assertEqual(self.m1.gcd(3), self.m1.gcd(M(3, {})))
+        self.assertEqual(self.m[1].gcd(3), self.m[1].gcd(M(3, {})))
 
         # only integer coefficient
-        self.assertRaises(ValueError, self.m3.gcd, self.m4)
-        self.assertRaises(ValueError, self.m4.gcd, self.m3)
+        self.assertRaises(ValueError, self.m[3].gcd, self.m[4])
+        self.assertRaises(ValueError, self.m[4].gcd, self.m[3])
 
         # always positive result
-        self.assertGreater(self.m0.gcd(self.m5).coefficient, 0)
-        self.assertGreater(self.m2.lcm(self.m3).coefficient, 0)
+        self.assertGreater(self.m[0].gcd(self.m[5]).coefficient, 0)
+        self.assertGreater(self.m[2].lcm(self.m[3]).coefficient, 0)
 
         # return 0 if one term is 0
-        self.assertRaises(ValueError, self.m5.gcd, 0)
-        self.assertRaises(ValueError, M(0, {}).gcd, self.m3)
+        self.assertRaises(ValueError, self.m[5].gcd, 0)
+        self.assertRaises(ValueError, M(0, {}).gcd, self.m[3])
 
         # values
-        self.assertEqual(self.m1.gcd(self.m2), M(2, {'x': 1, 'y': 1}))
-        self.assertEqual(self.m0.lcm(self.m5), M(18, {'x': 1, 'y': 3}))
+        self.assertEqual(self.m[1].gcd(self.m[2]), M(2, {'x': 1, 'y': 1}))
+        self.assertEqual(self.m[0].lcm(self.m[5]), M(18, {'x': 1, 'y': 3}))
 
         # commutative property
-        self.assertEqual(self.m0.gcd(self.m2), self.m2.gcd(self.m0))
-        self.assertEqual(self.m0.lcm(self.m2), self.m2.lcm(self.m0))
+        self.assertEqual(self.m[0].gcd(self.m[2]), self.m[2].gcd(self.m[0]))
+        self.assertEqual(self.m[0].lcm(self.m[2]), self.m[2].lcm(self.m[0]))
 
     def test_add_sub(self):
         # M + (-M) = 0
-        self.assertEqual(self.m5 + (-self.m5), M(0, {}))
+        self.assertEqual(self.m[5] + (-self.m[5]), M(0, {}))
 
         # M + 0 = M
-        self.assertEqual(self.m3 + 0, self.m3)
+        self.assertEqual(self.m[3] + 0, self.m[3])
 
         # The sum of two similar monomials is a monomial
-        self.assertEqual(self.m0 + self.m2, M(10, {'x': 1, 'y': 1}))
+        self.assertEqual(self.m[0] + self.m[2], M(10, {'x': 1, 'y': 1}))
 
         # The sum of two NON similar monomials is a polynomial
-        self.assertEqual(self.m1 + self.m3, P(self.m1, self.m3))
+        self.assertEqual(self.m[1] + self.m[3], P(self.m[1], self.m[3]))
 
         # The sum of a monomial and a number is a polynomial
-        self.assertEqual(self.m4 + 6.28, P(self.m4, M(6.28, {})))
+        self.assertEqual(self.m[4] + 6.28, P(self.m[4], M(6.28, {})))
 
-        # m1 - m2 = m1 + (-m2)
-        self.assertEqual(self.m0 - self.m3, self.m0 + (-self.m3))
+        # m[1] - m[2] = m[1] + (-m[2])
+        self.assertEqual(self.m[0] - self.m[3], self.m[0] + (-self.m[3]))
 
         # only works with monomials and numbers
-        self.assertRaises(TypeError, lambda: self.m1 + [])
-        self.assertRaises(TypeError, lambda: self.m4 - "")
+        self.assertRaises(TypeError, lambda: self.m[1] + [])
+        self.assertRaises(TypeError, lambda: self.m[4] - "")
 
         # works with polynomial
-        self.assertEqual(self.m0 + P(self.m3), P(self.m0, self.m3))
-        self.assertEqual(self.m2 - P(self.m4), P(self.m2, -self.m4))
+        self.assertEqual(self.m[0] + P(self.m[3]), P(self.m[0], self.m[3]))
+        self.assertEqual(self.m[2] - P(self.m[4]), P(self.m[2], -self.m[4]))
 
         # the monomial remain equal after the operation
-        self.assertEqual(self.m0, M(2, {'x': 1, 'y': 1}))
-        self.assertEqual(self.m4, M(1.16, {'a': 4}))
+        self.assertEqual(self.m[0], M(2, {'x': 1, 'y': 1}))
+        self.assertEqual(self.m[4], M(1.16, {'a': 4}))
 
     def test_mul_div(self):
         # only works with monomials and numbers
-        self.assertRaises(TypeError, lambda: self.m2 * [])
-        self.assertRaises(TypeError, lambda: self.m3 / {})
+        self.assertRaises(TypeError, lambda: self.m[2] * [])
+        self.assertRaises(TypeError, lambda: self.m[3] / {})
 
         # works with monomials
-        self.assertEqual(self.m5 * self.m1, M(54, {'x': 1, 'y': 6}))
-        self.assertEqual(self.m1 / self.m5, M(2/3, {'x': 1}))
+        self.assertEqual(self.m[5] * self.m[1], M(54, {'x': 1, 'y': 6}))
+        self.assertEqual(self.m[1] / self.m[5], M(2/3, {'x': 1}))
 
         # works with numbers
-        self.assertEqual(self.m0 * self.m3, self.m0 * 3)
-        self.assertEqual(self.m0 / 2, M(1, {'x': 1, 'y': 1}))
+        self.assertEqual(self.m[0] * self.m[3], self.m[0] * 3)
+        self.assertEqual(self.m[0] / 2, M(1, {'x': 1, 'y': 1}))
 
         # multiplication works with polynomials
-        self.assertEqual(self.m5 * P(self.m1), P(self.m5*self.m1))
+        self.assertEqual(self.m[5] * P(self.m[1]), P(self.m[5]*self.m[1]))
 
         # second operator's exponent must be lower than first's
-        self.assertRaises(ValueError, lambda: self.m3 / self.m4)
+        self.assertRaises(ValueError, lambda: self.m[3] / self.m[4])
 
         # the monomial remain equal after the operation
-        self.assertEqual(self.m1, M(-6, {'x': 1, 'y': 3}))
-        self.assertEqual(self.m0, M(2, {'x': 1, 'y': 1}))
+        self.assertEqual(self.m[1], M(-6, {'x': 1, 'y': 3}))
+        self.assertEqual(self.m[0], M(2, {'x': 1, 'y': 1}))
 
     def test_pow(self):
         # works only with whole positive exponents
@@ -150,7 +153,7 @@ class Test (TestCase):
         self.assertRaises(TypeError, lambda: M(17, {}) ** 2.14)
 
         # if the exponentn is 0, the result is 1
-        self.assertEqual(self.m5**0, 1)
+        self.assertEqual(self.m[5]**0, 1)
 
         # you can calculate square/cube root if the
         # monomial is a square/cube
@@ -161,55 +164,55 @@ class Test (TestCase):
         self.assertRaises(TypeError, lambda: M(8, VD(y=27)) ** (1/2))
 
         # test result
-        self.assertEqual(self.m5 ** 3, M(-729, {'y': 9}))
+        self.assertEqual(self.m[5] ** 3, M(-729, {'y': 9}))
 
         # the monomial remain equal after the operation
-        self.assertEqual(self.m5, M(-9, {'y': 3}))
+        self.assertEqual(self.m[5], M(-9, {'y': 3}))
 
     def test_reverses(self):
         # reverse add
-        self.assertEqual(19 + self.m3, 22)
-        self.assertRaises(TypeError, lambda: "" + self.m2)
+        self.assertEqual(19 + self.m[3], 22)
+        self.assertRaises(TypeError, lambda: "" + self.m[2])
 
         # reverse sub
-        self.assertEqual(8 - self.m3, 5)
-        self.assertRaises(TypeError, lambda: "" - self.m2)
+        self.assertEqual(8 - self.m[3], 5)
+        self.assertRaises(TypeError, lambda: "" - self.m[2])
 
         # reverse mul
-        self.assertEqual(18 * self.m3, 54)
-        self.assertRaises(TypeError, lambda: "" * self.m2)
+        self.assertEqual(18 * self.m[3], 54)
+        self.assertRaises(TypeError, lambda: "" * self.m[2])
 
         # reverse div
-        self.assertEqual(21 / self.m3, 7)
-        self.assertRaises(TypeError, lambda: "" / self.m2)
-        self.assertRaises(ValueError, lambda: 5 / self.m5)
+        self.assertEqual(21 / self.m[3], 7)
+        self.assertRaises(TypeError, lambda: "" / self.m[2])
+        self.assertRaises(ValueError, lambda: 5 / self.m[5])
 
     def test_call(self):
         # test value
-        self.assertEqual(self.m5(y=2), -72)
+        self.assertEqual(self.m[5](y=2), -72)
 
         # if a variable value isn't specified
         # it will stay there
-        self.assertEqual(self.m0(x=5), M(10, {'y': 1}))
+        self.assertEqual(self.m[0](x=5), M(10, {'y': 1}))
 
         # if there are no variables left returns an int/float
-        self.assertIsInstance(self.m5(y=2), int)
+        self.assertIsInstance(self.m[5](y=2), int)
 
         # otherwise it return a monomial
-        self.assertIsInstance(self.m2(x=3), M)
+        self.assertIsInstance(self.m[2](x=3), M)
 
         # if a variable isn't in the monomial, nothing change
-        self.assertEqual(self.m4(b=7), self.m4)
+        self.assertEqual(self.m[4](b=7), self.m[4])
 
         # works only with number
-        self.assertRaises(TypeError, self.m0, x="")
+        self.assertRaises(TypeError, self.m[0], x="")
 
         # the monomial remain equal after evaluating it
-        self.m2(x=2)
-        self.assertEqual(self.m2, M(8, {'x': 1, 'y': 1}))
+        self.m[2](x=2)
+        self.assertEqual(self.m[2], M(8, {'x': 1, 'y': 1}))
 
         # it's not case sensitive
-        self.assertEqual(self.m0(x=2), self.m0(X=2))
+        self.assertEqual(self.m[0](x=2), self.m[0](X=2))
 
     def test_str_repr(self):
         # normal monomial
@@ -235,35 +238,35 @@ class Test (TestCase):
 
     def test_eq(self):
         # same coefficient, same variables
-        self.assertTrue(self.m4 == self.m4)
+        self.assertTrue(self.m[4] == self.m[4])
 
         # same variables, different coefficient
-        self.assertFalse(self.m0 == self.m2)
+        self.assertFalse(self.m[0] == self.m[2])
 
         # same coefficient, different variables
-        self.assertFalse(self.m1 == M(-6, {'a': 2}))
+        self.assertFalse(self.m[1] == M(-6, {'a': 2}))
 
         # different coefficient, different variables
-        self.assertFalse(self.m4 == self.m3)
+        self.assertFalse(self.m[4] == self.m[3])
 
         # if there aren't variables, it can be compared
         # to a number
-        self.assertTrue(self.m3 == 3)
-        self.assertFalse(self.m3 == 17)
+        self.assertTrue(self.m[3] == 3)
+        self.assertFalse(self.m[3] == 17)
 
         # can compare only to monomials and numbers
-        self.assertEqual(self.m4.__eq__({}), False)
+        self.assertEqual(self.m[4].__eq__({}), False)
 
     def test_neg_abs(self):
         # neg
-        self.assertEqual(-self.m0, M(-self.m0.coefficient, self.m0.variables))
+        self.assertEqual(-self.m[0], M(-self.m[0].coefficient, self.m[0].variables))
 
         # abs
-        self.assertEqual(abs(self.m1), M(abs(self.m1.coefficient), self.m1.variables))
+        self.assertEqual(abs(self.m[1]), M(abs(self.m[1].coefficient), self.m[1].variables))
 
     def test_hash(self):
         # w/ variables
-        self.assertEqual(hash(self.m2), hash((8, ('x', 1), ('y', 1))))
+        self.assertEqual(hash(self.m[2]), hash((8, ('x', 1), ('y', 1))))
 
         # w/o variables
-        self.assertEqual(hash(self.m3), hash(3))
+        self.assertEqual(hash(self.m[3]), hash(3))

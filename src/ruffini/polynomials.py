@@ -1,5 +1,5 @@
-from .monomials import Monomial
 from .variables import VariablesDict
+from .monomials import Monomial
 
 from collections import Counter
 
@@ -61,7 +61,7 @@ class Polynomial (tuple):
         of the terms)
 
         >>> print(Polynomial(Monomial(1, {'a': 1}), Monomial(3, {})))
-        a +3
+        a + 3
 
         :type *terms: Monomials, int, float
         """
@@ -117,13 +117,13 @@ class Polynomial (tuple):
         >>> p = Polynomial(m1, m2, m4) # -4a**4 -6y
         >>> # polynomial + polynomial
         >>> print(p + Polynomial(m0, m3, m2))
-        6a**4 +y +9x
+        6a**4 + y + 9x
         >>> # polynomial + monomial
         >>> print(p + m3)
-        -4a**4 -6y +9x
+        -4a**4 - 6y + 9x
         >>> # polynomial + number
         >>> print(p + 9)
-        -4a**4 -6y +9
+        -4a**4 - 6y + 9
 
         If the second operator isn't in the list above,
         it will raise a TypeError
@@ -164,13 +164,13 @@ class Polynomial (tuple):
         >>> p = Polynomial(m1, m2, m4) # -4a**4 -6y
         >>> # polynomial - polynomial
         >>> print(p - Polynomial(m0, m3, m2))
-        -14a**4 -13y -9x
+        -14a**4 - 13y - 9x
         >>> # polynomial - monomial
         >>> print(p - m3)
-        -4a**4 -6y -9x
+        -4a**4 - 6y - 9x
         >>> # polynomial - number
         >>> print(p - 9)
-        -4a**4 -6y -9
+        -4a**4 - 6y - 9
 
         If the second operator isn't in the list above,
         it will raise a TypeError
@@ -210,13 +210,13 @@ class Polynomial (tuple):
         >>> p = Polynomial(m1, m2, m4) # -4a**4 -6y
         >>> # polynomial * polynomial
         >>> print(p * Polynomial(m0, m1, m4))
-        -24a**8 +16a**4y +78y**2
+        -24a**8 + 16a**4y + 78y**2
         >>> # polynomial * monomial
         >>> print(p * m3)
-        -36a**4x -54xy
+        -36a**4x - 54xy
         >>> # polynomial * number
         >>> print(p * 3)
-        -12a**4 -18y
+        -12a**4 - 18y
 
         If the second operator type is not mentioned
         above, it will raise a TypeError
@@ -249,7 +249,7 @@ class Polynomial (tuple):
         of the addition:
 
         >>> print(8 + Polynomial(Monomial(4, {'a': 2})))
-        4a**2 +8
+        4a**2 + 8
 
         For more informations, see :func:`Polynomial.__add__` docs.
 
@@ -270,7 +270,7 @@ class Polynomial (tuple):
         of the addition:
 
         >>> print(5 - Polynomial(Monomial(7, {'k': 1})))
-        -7k +5
+        -7k + 5
 
         For more informations, see :func:`Polynomial.__sub__ docs`.
 
@@ -315,9 +315,9 @@ class Polynomial (tuple):
         >>> str(Polynomial(Monomial(4, {'a': 4, 'b': 1})))
         '4a**4b'
         >>> str(Polynomial(Monomial(1, {'a': 2}), Monomial(-2, {'c': 2})))
-        'a**2 -2c**2'
+        'a**2 - 2c**2'
         >>> str(Polynomial(Monomial(3, {'x': 2}), Monomial(6, {'y': 3})))
-        '3x**2 +6y**3'
+        '3x**2 + 6y**3'
 
         To see how the single terms are printed, see the
         :func:`Monomial.__str__` docs.
@@ -328,9 +328,9 @@ class Polynomial (tuple):
         result = str(self[0])
         for term in self[1:]:
             if term.coefficient == abs(term.coefficient): # positive
-                result += f" +{term}"
+                result += " + " + str(term)
             else: # negative
-                result += f" {term}"
+                result += " - " + str(term)[1:]
         return result
 
     def __repr__(self):
@@ -416,9 +416,9 @@ class Polynomial (tuple):
         each term of the polynomial
 
         >>> print(-Polynomial(Monomial(4, {'x': 1}), Monomial(2, {'y': 2})))
-        -4x -2y**2
+        -4x - 2y**2
         >>> print(-Polynomial(Monomial(-6, {'b': 2}), Monomial(3, {'k': 3})))
-        6b**2 -3k**3
+        6b**2 - 3k**3
 
         :rtype: Polynomial
         """

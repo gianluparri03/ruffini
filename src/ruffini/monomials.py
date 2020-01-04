@@ -253,7 +253,7 @@ class Monomial:
 
         >>> from ruffini import Polynomial
         >>> print(Monomial(1, {'a': 2}) + Polynomial(Monomial(2, {'b': 1})))
-        2b +a**2
+        2b + a**2
 
         Otherwise, it will raise a TypeError
 
@@ -317,7 +317,7 @@ class Monomial:
 
         >>> from ruffini import Polynomial
         >>> print(Monomial(1, {'a': 2}) - Polynomial(Monomial(2, {'b': 1})))
-        -2b +a**2
+        -2b + a**2
 
         Otherwise, it will raise a TypeError
 
@@ -781,16 +781,9 @@ class Monomial:
         :raise: TypeError
         """
 
-        # monomial == monomial
-        if isinstance(other, Monomial):
-            return self.coefficient == other.coefficient \
-                and self.variables == other.variables
-
-        # monomial == int, float
-        elif isinstance(other, (int, float)) and self.variables.empty:
-            return self.coefficient == other
-
-        else:
+        try:
+            return hash(self) == hash(other)
+        except TypeError:
             return False
 
     def __neg__(self):
@@ -843,6 +836,6 @@ class Monomial:
         if self.variables == {}:
             return hash(self.coefficient)
 
-        variables = ((k, self.variables[k]) for k in self.variables)
+        variables = ((k, self.variables[k]) for k in sorted(self.variables.keys()))
 
         return hash((self.coefficient, ) + tuple(list(variables)))
