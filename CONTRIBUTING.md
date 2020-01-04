@@ -10,6 +10,8 @@ To test the docstring of ruffini, just go to the `src` folder and type `make doc
 Instead, if you want to run the unittest, the command is `make unittest`.
 The Makefile also has a coverage function: if you want to see the lines of code which aren't tested with the unittest, use `make coverage`.
 
+**NB:** If you want to run coverage tests, make sure you have installed `coverage`
+
 ### Todo
 
 **General:**
@@ -18,8 +20,8 @@ The Makefile also has a coverage function: if you want to see the lines of code 
 - [ ] Look for a solution to `__repr__` (too verbose)
 - [ ] Create a new logo
 - [X] Add `Polynomial().__hash__()`
-- [ ] Add `Polynomial().eval()`
-- [ ] Make legal `Monomial(2, {'x': 1}).eval(x=Monomial(2, {'y': 2}))`
+- [] Add `Polynomial().eval()`
+- [X] Make legal `Monomial(2, {'x': 1}).eval(x=Monomial(2, {'y': 2}))`
 
 **Variables:**
 - [ ] Change variables implementation

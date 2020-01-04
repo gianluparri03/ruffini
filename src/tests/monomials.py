@@ -10,7 +10,7 @@ class Test (TestCase):
         self.m = [
                   M(2, x=1, y=4),
                   M(-6, x=1, y=3),
-                  M(8, x=1, y=4),
+                  M(8, x=1, y=4), #
                   M(3),
                   M(1.16, a=4),
                   M(-9, y=3)
@@ -196,7 +196,7 @@ class Test (TestCase):
         # if a variable isn't in the monomial, nothing change
         self.assertEqual(self.m[4].eval(b=7), self.m[4])
 
-        # works only with number
+        # works only with number and monomials
         self.assertRaises(TypeError, self.m[0].eval, x="")
 
         # the monomial remain equal after evaluating it
@@ -205,6 +205,9 @@ class Test (TestCase):
 
         # it's not case sensitive
         self.assertEqual(self.m[0].eval(x=2), self.m[0].eval(X=2))
+
+        # a variable's value can be a monomial
+        self.assertEqual(self.m[2].eval(y=M(2, x=3)), M(128, x=13))
 
     def test_str_repr(self):
         # normal monomial

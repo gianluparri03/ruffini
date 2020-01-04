@@ -57,4 +57,4 @@ Click on [this link](https://github.com/gianluparri03/ruffini/graphs/contributor
 ## License
 
 This project is licensed under the MIT License -
-see the [LICENSE.md](LICENSE.md) file for more details.
+see the [LICENSE](LICENSE) file for more details.

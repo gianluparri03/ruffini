@@ -258,30 +258,30 @@ class Monomial:
         >>> m.eval(x=2) == m.eval(X=2)
         True
 
-        :type values: int, float
+        :type values: int, float, Monomial
         :rtype: int, float, Monomial
         :raise: TypeError
         """
 
-        coefficient = self.coefficient
-        variables = {}
-        values = dict(zip(map(lambda v: v.lower(), values.keys()), values.values()))
+        # lowerize the variables and prepare the result
+        values = {v.lower(): values[v] for v in values}
+        result = Monomial(self.coefficient, **self.variables)
 
-        # substitute values
-        for var in self.variables:
+        # for every variable that is in the result
+        for variable in values:
+            if variable in result.variables:
+                # multiply the result for the value
+                # raised to the exponent. then divide for
+                # the variable
+                exp = result.variables[variable.lower()]
+                result *= (values[variable] ** exp)
+                result /= Monomial(**{variable: exp})
 
-            if var in values and isinstance(values[var], (int, float)):
-                coefficient *= (values[var] ** self.variables[var])
-            elif var in values:
-                raise TypeError(f"{var}'s value can't be set to {values[var]}")
-            else:
-                variables[var] = self.variables[var]
+        # If there are no variables, return only the coefficient
+        if result.variables.is_empty:
+            return result.coefficient
 
-        # if there are no variables left return an int/float
-        if not variables:
-            return coefficient
-
-        return Monomial(coefficient, **variables)
+        return result
 
     ### Operations Methods ###
 
@@ -763,7 +763,7 @@ class Monomial:
 
         elif variables == "" and self.coefficient == 1:
             return "Monomial()"
- 
+
         return f"Monomial({self.coefficient}, {variables})"
 
     def __eq__(self, other):
