@@ -1,6 +1,5 @@
 from unittest import TestCase
 
-from ruffini import VariablesDict as VD
 from ruffini import Monomial as M
 from ruffini import Polynomial as P
 from ruffini import FPolynomial as FP
@@ -10,9 +9,9 @@ class Test (TestCase):
     def setUp (self):
         # Monomials
         self.m = [
-                  M(2, VD(x=1)),
-                  M(5, VD(y=2)),
-                  M(17, VD(z=1))
+                  M(2, x=1),
+                  M(5, y=2),
+                  M(17, z=1)
                  ]
 
         # Polynomials
@@ -51,4 +50,4 @@ class Test (TestCase):
         self.assertEqual(str(FP(self.p[0], self.m[0], self.m[0])), '(2x)**2(2x + 3)')
 
         # eval
-        self.assertEqual(self.fp[1].eval(), P(M(10, VD(x=1)), 15))
+        self.assertEqual(self.fp[1].eval(), P(M(10, x=1), 15))

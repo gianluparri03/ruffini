@@ -42,8 +42,8 @@ class Test (TestCase):
         self.assertEqual(VD(c=0), VD())
 
         # check empty
-        self.assertTrue(VD(b=0).empty)
-        self.assertFalse(VD(c=1).empty)
+        self.assertTrue(VD(b=0).is_empty)
+        self.assertFalse(VD(c=1).is_empty)
 
         # check hash
         self.assertEqual(hash(VD(x=2, y=3)), hash((('x', 2), ('y', 3))))

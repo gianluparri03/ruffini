@@ -85,9 +85,9 @@ class VariablesDict(dict):
 
         It also check if the dictionary is empty.
 
-        >>> VariablesDict(a=2, b=8, c=3).empty
+        >>> VariablesDict(a=2, b=8, c=3).is_empty
         False
-        >>> VariablesDict(x=0).empty
+        >>> VariablesDict(x=0).is_empty
         True
 
         :raise: TypeError, ValueError
@@ -118,7 +118,7 @@ class VariablesDict(dict):
         super().__init__(variables)
 
         # Check if it's empty
-        self.empty = not bool(len(self))
+        self.is_empty = not bool(len(self))
 
     ### ITEMS ###
 

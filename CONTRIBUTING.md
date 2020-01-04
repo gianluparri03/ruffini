@@ -13,8 +13,8 @@ The Makefile also has a coverage function: if you want to see the lines of code 
 ### Todo
 
 **General:**
-- [ ] Change monomial initialization (`Monomial(5, {'x': 1})` -> `Monomial(5, x=1)`) _NB: variables will be transformed in VariablesDict however_
-- [ ] Add monomial's default values (`coefficient=1`, `variables={}`)
+- [X] Change monomial initialization (`Monomial(5, {'x': 1})` -> `Monomial(5, x=1)`) _NB: variables will be transformed in VariablesDict however_
+- [X] Add monomial's default values (`coefficient=1`, `variables={}`)
 - [ ] Look for a solution to `__repr__` (too verbose)
 - [ ] Create a new logo
 - [X] Add `Polynomial().__hash__()`

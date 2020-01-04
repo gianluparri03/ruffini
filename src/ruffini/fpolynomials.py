@@ -29,7 +29,7 @@ class FPolynomial (tuple):
         Create the factorized polynomial giving it a list
         of factors (int, float, Monomial or Polynomial).
 
-        >>> p = Polynomial(Monomial(2, {'x': 2, 'y': 2}))
+        >>> p = Polynomial(Monomial(2, x=2, y=2))
         >>> fp = FPolynomial(5, p)
         >>> print(fp)
         5(2x**2y**2)
@@ -74,8 +74,8 @@ class FPolynomial (tuple):
         """
         Return the factorized polynomial as a string.
 
-        >>> p1 = Polynomial(2, Monomial(3, {'x': 1}))
-        >>> p2 = Polynomial(Monomial(2, {'y': 1}), 7)
+        >>> p1 = Polynomial(2, Monomial(3, x=1))
+        >>> p2 = Polynomial(Monomial(2, y=1), 7)
         >>> print(FPolynomial(p1, p2))
         (2 + 3x)(2y + 7)
 
@@ -124,7 +124,7 @@ class FPolynomial (tuple):
         Return the starting polynomial multiplying
         all the factors
 
-        >>> f = FPolynomial(5, Polynomial(Monomial(2, {'x': 1}), 3))
+        >>> f = FPolynomial(5, Polynomial(Monomial(2, x=1), 3))
         >>> print(f)
         5(2x + 3)
         >>> print(f.eval())

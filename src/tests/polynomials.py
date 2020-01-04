@@ -1,6 +1,5 @@
 from unittest import TestCase
 
-from ruffini import VariablesDict as VD
 from ruffini import Monomial as M
 from ruffini import Polynomial as P
 
@@ -9,12 +8,12 @@ class Test (TestCase):
     def setUp (self):
         # Monomials
         self.m = [
-                  M(10, {'a': 4}),
-                  M(-4, {'a': 4}),
-                  M(7, {'y': 1}),
-                  M(9, {'x': 1}),
-                  M(-13, {'y': 1}),
-                  M(-1, {'x': 1})
+                  M(10, a=4),
+                  M(-4, a=4),
+                  M(7, y=1),
+                  M(9, x=1),
+                  M(-13, y=1),
+                  M(-1, x=1)
                  ]
 
         # Polynomials
@@ -35,10 +34,10 @@ class Test (TestCase):
 
         # if more terms have the same variables
         # they are summed together
-        self.assertEqual(self.p[0].term_coefficient(VD(a=4)), 6)
+        self.assertEqual(self.p[0].term_coefficient(a=4), 6)
 
         # if term_coefficient find nothing, the result is 0
-        self.assertEqual(self.p[0].term_coefficient(VD(k=2, b=1)), 0)
+        self.assertEqual(self.p[0].term_coefficient(k=2, b=1), 0)
 
     def test_add_sub (self):
         # works only with monomials, polynomials and numbers
@@ -46,41 +45,41 @@ class Test (TestCase):
         self.assertRaises(TypeError, lambda: self.p[0] - [])
 
         # works with monomial
-        self.assertEqual(self.p[0] + self.m[2], P(M(6, VD(a=4)), M(14, VD(y=1))))
-        self.assertEqual(self.p[0] - self.m[4], P(M(6, VD(a=4)), M(20, VD(y=1))))
+        self.assertEqual(self.p[0] + self.m[2], P(M(6, a=4), M(14, y=1)))
+        self.assertEqual(self.p[0] - self.m[4], P(M(6, a=4), M(20, y=1)))
 
         # works with number
-        self.assertEqual(self.p[0] + 3, P(M(6, VD(a=4)), M(7, VD(y=1)), M(3, {})))
-        self.assertEqual(self.p[0] - 18, P(M(6, VD(a=4)), M(7, VD(y=1)), M(-18, {})))
+        self.assertEqual(self.p[0] + 3, P(M(6, a=4), M(7, y=1), M(3)))
+        self.assertEqual(self.p[0] - 18, P(M(6, a=4), M(7, y=1), M(-18)))
 
         # works with polynomial
-        self.assertEqual(self.p[0] + self.p[2], P(M(16, VD(a=4)), M(-6, VD(y=1))))
-        self.assertEqual(self.p[0] - self.p[2], P(M(20, VD(y=1)), M(-4, VD(a=4))))
+        self.assertEqual(self.p[0] + self.p[2], P(M(16, a=4), M(-6, y=1)))
+        self.assertEqual(self.p[0] - self.p[2], P(M(20, y=1), M(-4, a=4)))
 
     def test_mul (self):
         # works only with monomials, polynomials and numbers
         self.assertRaises(TypeError, lambda: self.p[0] * "something")
 
         # works with monomial
-        self.assertEqual(self.p[0] * self.m[2], P(M(42, VD(a=4, y=1)), M(49, VD(y=2))))
+        self.assertEqual(self.p[0] * self.m[2], P(M(42, a=4, y=1), M(49, y=2)))
 
         # works with number
-        self.assertEqual(self.p[0] * 3, P(M(18, VD(a=4)), M(21, VD(y=1))))
+        self.assertEqual(self.p[0] * 3, P(M(18, a=4), M(21, y=1)))
 
         # works with polynomial
-        self.assertEqual(self.p[0] * self.p[2], P(M(-8, VD(a=4, y=1)), M(60, VD(a=8)), M(-91, VD(y=2))))
+        self.assertEqual(self.p[0] * self.p[2], P(M(-8, a=4, y=1), M(60, a=8), M(-91, y=2)))
 
     def test_reverses(self):
         # reverse add
-        self.assertEqual(19 + P(M(3, VD())), P(22))
+        self.assertEqual(19 + P(M(3)), P(22))
         self.assertRaises(TypeError, lambda: "" + self.p[0])
 
         # reverse sub
-        self.assertEqual(8 - P(M(3, VD())), P(5))
+        self.assertEqual(8 - P(M(3)), P(5))
         self.assertRaises(TypeError, lambda: "" - self.p[1])
 
         # reverse mul
-        self.assertEqual(18 * P(M(3, VD())), P(54))
+        self.assertEqual(18 * P(M(3)), P(54))
         self.assertRaises(TypeError, lambda: "" * self.p[2])
 
     def test_str_repr(self):
@@ -93,7 +92,7 @@ class Test (TestCase):
         self.assertEqual(str(self.p[3]), "9x - 4a**4")
 
         # test repr
-        self.assertEqual(repr(self.p[2]), "Polynomial(Monomial(-13, {'y': 1}), Monomial(10, {'a': 4}))")
+        self.assertEqual(repr(self.p[2]), "Polynomial(Monomial(-13, y=1), Monomial(10, a=4))")
 
     def test_eq_hash(self):
         # two polynomials are not equal if
@@ -106,8 +105,8 @@ class Test (TestCase):
 
         # a polynomial with a single term can be
         # compared to a monomial
-        self.assertEqual(P(M(3, {'a': 2, 'b': 2})), M(3, {'a': 2, 'b': 2}))
-        self.assertEqual(P(M(6, {})), 6)
+        self.assertEqual(P(M(3, a=2, b=2)), M(3, a=2, b=2))
+        self.assertEqual(P(M(6)), 6)
 
         # otherwise the result is false
         self.assertFalse(self.p[2] == {1, 7, 9})

@@ -24,14 +24,14 @@ class Monomial:
     value you assigned.
     """
 
-    def __init__(self, coefficient, variables):
+    def __init__(self, coefficient=1, **variables):
         """
         Create a Monomial object by giving the
         numerical coefficient and the variables,
         stored in a dict (the keys are the letters
         and the values the degrees).
 
-        >>> print(Monomial(17, {'k': 3}))
+        >>> print(Monomial(17, k=3))
         17k**3
 
         The variables will be stored in a VariableDict, so:
@@ -41,28 +41,28 @@ class Monomial:
           with a lenght of one character
         - the exponent must be positive and integer
 
-        >>> type(Monomial(3, {'a': 5}).variables)
+        >>> type(Monomial(3, a=5).variables)
         <class 'ruffini.variables.VariablesDict'>
 
         When initialized the monomial, this method calculates
         the monomial's total degree (the sum of all the degrees)
 
-        >>> Monomial(-2, {'a': 2, 'b': 1, 'c': 3}).degree
+        >>> Monomial(-2, a=2, b=1, c=3).degree
         6
 
         It also calculates if the monomial is a cube or a square
 
-        >>> Monomial(4, {'a': 2, 'k': 4}).is_square
+        >>> Monomial(4, a=2, k=4).is_square
         True
-        >>> Monomial(6, {'b': 27}).is_cube
+        >>> Monomial(6, b=27).is_cube
         False
 
         **NB** if the coefficient is instance of float
         but it's a whole number (such as 18.0), it will
         be transformed in 18
 
-        >>> Monomial(7.0, {'a': 2})
-        Monomial(7, {'a': 2})
+        >>> Monomial(7.0, a=2)
+        Monomial(7, a=2)
 
         :type coefficient: int, float
         :type coefficient: dict, VariablesDict
@@ -78,12 +78,7 @@ class Monomial:
             raise TypeError("Coefficient must be int or float")
 
         # Check the variables
-        if isinstance(variables, VariablesDict):
-            self.variables = variables
-        elif isinstance(variables, dict):
-            self.variables = VariablesDict(**variables)
-        else:
-            raise TypeError("Variables must be stored in a dict")
+        self.variables = VariablesDict(**variables)
 
         # Calculate the degree
         self.degree = sum(self.variables.values())
@@ -108,10 +103,10 @@ class Monomial:
         Check if two monomials are similar (if
         the have the same variables).
 
-        >>> m1 = Monomial(3, {'x': 1, 'y': 1})
-        >>> m2 = Monomial(-6, {'x': 1, 'y': 3})
-        >>> m3 = Monomial(2.6, {'x': 1, 'y': 1})
-        >>> m4 = Monomial(3.14, {})
+        >>> m1 = Monomial(3, x=1, y=1)
+        >>> m2 = Monomial(-6, x=1, y=3)
+        >>> m3 = Monomial(2.6, x=1, y=1)
+        >>> m4 = Monomial(3.14)
         >>> m1.similar_to(m4)
         False
         >>> m1.similar_to(m3)
@@ -137,7 +132,7 @@ class Monomial:
         :rtype: bool
         """
 
-        if self.variables.empty and isinstance(other, (int, float)):
+        if self.variables.is_empty and isinstance(other, (int, float)):
             return True
         elif not isinstance(other, Monomial):
             return False
@@ -149,10 +144,10 @@ class Monomial:
         Calculate the greatest common divisor
         of two monomials (or numbers)
 
-        >>> a = Monomial(5, {'x': 1, 'y': 1})
-        >>> b = Monomial(15, {'x': 1})
+        >>> a = Monomial(5, x=1, y=1)
+        >>> b = Monomial(15, x=1)
         >>> a.gcd(b)
-        Monomial(5, {'x': 1})
+        Monomial(5, x=1)
 
         It works only with integer coefficient/numbers
         different from zero
@@ -161,7 +156,7 @@ class Monomial:
         Traceback (most recent call last):
         ...
         TypeError: Can't calculate gcd between Monomial and float
-        >>> a.gcd(Monomial(3.14, {}))
+        >>> a.gcd(Monomial(3.14))
         Traceback (most recent call last):
         ...
         ValueError: Monomial coefficient must be int
@@ -172,16 +167,16 @@ class Monomial:
 
         **NB** the result will be always positive
 
-        >>> c = Monomial(-30, {'x': 1, 'y': 1})
+        >>> c = Monomial(-30, x=1, y=1)
         >>> b.gcd(c)
-        Monomial(15, {'x': 1})
+        Monomial(15, x=1)
 
         If you want to calculate the gcd with more
         operators, you can just do
 
         >>> from functools import reduce
         >>> reduce(lambda m1, m2: m1.gcd(m2), (a, b, c))
-        Monomial(5, {'x': 1})
+        Monomial(5, x=1)
 
         :type others: Monomial, int, float
         :rtype: Monomial, int
@@ -190,7 +185,7 @@ class Monomial:
 
         # Check types of the operators
         if isinstance(other, int):
-            other = Monomial(other, {})
+            other = Monomial(other)
         elif isinstance(other, Monomial):
             if any(isinstance(m.coefficient, float) for m in [self, other]):
                 raise ValueError("Monomial coefficient must be int")
@@ -212,17 +207,17 @@ class Monomial:
                 variables[variable] = min(self.variables[variable],
                                           other.variables[variable])
 
-        return Monomial(coefficient, variables)
+        return Monomial(coefficient, **variables)
 
     def lcm(self, other):
         """
         Calculate the least common multiple
         of two or monomials (or numbers)
 
-        >>> a = Monomial(2, {'x': 1, 'y': 1})
-        >>> b = Monomial(-9, {'y': 3})
+        >>> a = Monomial(2, x=1, y=1)
+        >>> b = Monomial(-9, y=3)
         >>> a.lcm(b)
-        Monomial(18, {'x': 1, 'y': 3})
+        Monomial(18, x=1, y=3)
 
         If you want to know others informations
         like errors and limits, please check the
@@ -240,7 +235,7 @@ class Monomial:
         Evaluate the monomial, giving the values
         of the variables to the method
 
-        >>> m = Monomial(5, {'x': 1, 'y': 1})
+        >>> m = Monomial(5, x=1, y=1)
         >>> m.eval(x=2, y=3)
         30
 
@@ -248,14 +243,14 @@ class Monomial:
         variables will remain there
 
         >>> m.eval(x=2)
-        Monomial(10, {'y': 1})
+        Monomial(10, y=1)
 
         You can declare some variables values
         which aren't in the monomial and the
         result won't change
 
         >>> m.eval(b=7)
-        Monomial(5, {'x': 1, 'y': 1})
+        Monomial(5, x=1, y=1)
 
         **NB** as for the initialization, the variable
         isn't case sensitive
@@ -286,7 +281,7 @@ class Monomial:
         if not variables:
             return coefficient
 
-        return Monomial(coefficient, variables)
+        return Monomial(coefficient, **variables)
 
     ### Operations Methods ###
 
@@ -295,22 +290,22 @@ class Monomial:
         As the name say, this method is used
         to sum two monomials, or a number, too
 
-        >>> Monomial(5, {'x': 1, 'y':3}) + Monomial(-1.52, {'x':1, 'y':3})
-        Monomial(3.48, {'x': 1, 'y': 3})
+        >>> Monomial(5, x=1, y=3) + Monomial(-1.52, x=1, y=3)
+        Monomial(3.48, x=1, y=3)
 
-        >>> Monomial(1, {'z': 1}) + 17
-        Polynomial(Monomial(1, {'z': 1}), Monomial(17, {}))
+        >>> Monomial(1, z=1) + 17
+        Polynomial(Monomial(z=1), Monomial(17))
 
         You can also add a polynomial (in this case,
         it will use the :func:`Polynomial.__add__` method)
 
         >>> from ruffini import Polynomial
-        >>> print(Monomial(1, {'a': 2}) + Polynomial(Monomial(2, {'b': 1})))
+        >>> print(Monomial(1, a=2) + Polynomial(Monomial(2, b=1)))
         2b + a**2
 
         Otherwise, it will raise a TypeError
 
-        >>> Monomial(2, {'z': 1}) - ""
+        >>> Monomial(2, z=1) - ""
         Traceback (most recent call last):
         ...
         TypeError: unsupported operand type(s) for -: 'Monomial' and 'str'
@@ -325,19 +320,19 @@ class Monomial:
         if isinstance(other, Monomial):
             # Opposite monomial
             if self == -other:
-                return Monomial(0, {})
+                return Monomial(0)
 
             # Simil monomial
             elif self.similar_to(other):
-                return Monomial(self.coefficient + other.coefficient, self.variables)
+                return Monomial(self.coefficient + other.coefficient, **self.variables)
 
             # Generic monomial
             else:
                 return Polynomial(self, other)
 
         elif isinstance(other, (int, float)):
-            if self.variables.empty:
-                return Monomial(self.coefficient + other, {})
+            if self.variables.is_empty:
+                return Monomial(self.coefficient + other)
 
             else:
                 return Polynomial(self, other)
@@ -353,28 +348,28 @@ class Monomial:
         Return the subtraction between this monomial
         and another one
 
-        >>> Monomial(5, {'x': 1}) - Monomial(3, {'x': 1})
-        Monomial(2, {'x': 1})
+        >>> Monomial(5, x=1) - Monomial(3, x=1)
+        Monomial(2, x=1)
 
         If the monomials are not similar or the second
         operator is a number, the result will be a
         polynomial
 
-        >>> Monomial(5, {'x': 1, 'y': 3}) - Monomial(3, {'x': 1})
-        Polynomial(Monomial(5, {'x': 1, 'y': 3}), Monomial(-3, {'x': 1}))
-        >>> Monomial(17, {'a': 1, 'b': 1}) - 2.5
-        Polynomial(Monomial(17, {'a': 1, 'b': 1}), Monomial(-2.5, {}))
+        >>> Monomial(5, x=1, y=3) - Monomial(3, x=1)
+        Polynomial(Monomial(5, x=1, y=3), Monomial(-3, x=1))
+        >>> Monomial(17, a=1, b=1) - 2.5
+        Polynomial(Monomial(17, a=1, b=1), Monomial(-2.5))
 
         You can also subtract a polynomial (in this case,
         it will use the :func:`Polynomial.__sub__` method)
 
         >>> from ruffini import Polynomial
-        >>> print(Monomial(1, {'a': 2}) - Polynomial(Monomial(2, {'b': 1})))
+        >>> print(Monomial(1, a=2) - Polynomial(Monomial(2, b=1)))
         -2b + a**2
 
         Otherwise, it will raise a TypeError
 
-        >>> Monomial(2, {'z': 1}) - ""
+        >>> Monomial(2, z=1) - ""
         Traceback (most recent call last):
         ...
         TypeError: unsupported operand type(s) for -: 'Monomial' and 'str'
@@ -397,24 +392,24 @@ class Monomial:
         Multiplicate this monomial by another
         monomial or a number (int / float)
 
-        >>> Monomial(5, {'x': 1, 'y': 2}) * Monomial(2, {'a': 1, 'b': 1})
-        Monomial(10, {'a': 1, 'b': 1, 'x': 1, 'y': 2})
-        >>> Monomial(3, {'c': 2}) * 5
-        Monomial(15, {'c': 2})
-        >>> Monomial(1, {'k': 3}) * Monomial(1, {'k': 3})
-        Monomial(1, {'k': 6})
+        >>> Monomial(5, x=1, y=2) * Monomial(2, a=1, b=1)
+        Monomial(10, a=1, b=1, x=1, y=2)
+        >>> Monomial(3, c=2) * 5
+        Monomial(15, c=2)
+        >>> Monomial(k=3) * Monomial(k=3)
+        Monomial(k=6)
 
-        Also multiplication by a polynomial is enabled
+        Also multiplication by a polynomial is legal
         (it will use the :func:`Polynomial.__mul__` method)
 
         >>> from ruffini import Polynomial
-        >>> print(Monomial(1, {'a': 2}) * Polynomial(Monomial(2, {'b': 1})))
+        >>> print(Monomial(a=2) * Polynomial(Monomial(2, b=1)))
         2a**2b
 
         If the second operator isn't mentioned
         above, it will raise a TypeError
 
-        >>> Monomial(4, {}) * {}
+        >>> Monomial(4) * {}
         Traceback (most recent call last):
         ...
         TypeError: unsupported operand type(s) for *: 'Monomial' and 'dict'
@@ -428,14 +423,14 @@ class Monomial:
 
         # numbers
         if isinstance(other, (int, float)):
-            other = Monomial(other, {})
+            other = Monomial(other)
 
         # monomials
         if isinstance(other, Monomial):
             coefficient = self.coefficient * other.coefficient
             variables = self.variables + other.variables
 
-            return Monomial(coefficient, variables)
+            return Monomial(coefficient, **variables)
 
         # polynomials
         elif isinstance(other, Polynomial):
@@ -449,18 +444,18 @@ class Monomial:
         Divide this monomial by another monomial or
         by a number (int / float)
 
-        >>> Monomial(6, {'a': 3}) / Monomial(3, {'a': 1})
-        Monomial(2, {'a': 2})
-        >>> Monomial(18, {'k': 3}) / 6
-        Monomial(3, {'k': 3})
-        >>> Monomial(27, {'x': 6}) / Monomial(3, {'x': 6})
-        Monomial(9, {})
+        >>> Monomial(6, a=3) / Monomial(3, a=1)
+        Monomial(2, a=2)
+        >>> Monomial(18, k=3) / 6
+        Monomial(3, k=3)
+        >>> Monomial(27, x=6) / Monomial(3, x=6)
+        Monomial(9)
 
         If second monomial's variable's exponent
         are higher than first's, it will raise a
         ValueError
 
-        >>> Monomial(5, {}) / Monomial(4, {'x': 1})
+        >>> Monomial(5) / Monomial(4, x=1)
         Traceback (most recent call last):
         ...
         ValueError: Exponent must be positive
@@ -468,7 +463,7 @@ class Monomial:
         Otherwise, if the second operator isn't a monomial
         or a number, it will raise a TypeError
 
-        >>> Monomial(30, {}) / {}
+        >>> Monomial(30) / {}
         Traceback (most recent call last):
         ...
         TypeError: unsupported operand type(s) for /: 'Monomial' and 'dict'
@@ -479,12 +474,12 @@ class Monomial:
         """
 
         if isinstance(other, (int, float)):
-            other = Monomial(other, {})
+            other = Monomial(other)
 
         if isinstance(other, Monomial):
             coefficient = self.coefficient / other.coefficient
             variables = self.variables - other.variables
-            return Monomial(coefficient, variables)
+            return Monomial(coefficient, **variables)
 
         else:
             raise TypeError(f"unsupported operand type(s) for /: 'Monomial' and '{other.__class__.__name__}'")
@@ -493,35 +488,35 @@ class Monomial:
         """
         Raise a monomial to power
 
-        >>> Monomial(5, {'x': 1}) ** 2
-        Monomial(25, {'x': 2})
-        >>> Monomial(4, {'c': 6}) ** 3
-        Monomial(64, {'c': 18})
+        >>> Monomial(5, x=1) ** 2
+        Monomial(25, x=2)
+        >>> Monomial(4, c=6) ** 3
+        Monomial(64, c=18)
 
         If the exponent is 0, the result will be always 1
 
-        >>> Monomial(5, {'k': 6}) ** 0
+        >>> Monomial(5, k=6) ** 0
         1
 
         If the monomial is a square, you can
         calcolate the square root
 
-        >>> Monomial(4, {'x': 2}).is_square
+        >>> Monomial(4, x=2).is_square
         True
-        >>> Monomial(4, {'x': 2}) ** (1/2)
-        Monomial(2, {'x': 1})
+        >>> Monomial(4, x=2) ** (1/2)
+        Monomial(2, x=1)
 
         You can do the same thing with a cube
 
-        >>> Monomial(27, {'y': 6}).is_cube
+        >>> Monomial(27, y=6).is_cube
         True
-        >>> Monomial(27, {'y': 6}) ** (1/3)
-        Monomial(3, {'y': 2})
+        >>> Monomial(27, y=6) ** (1/3)
+        Monomial(3, y=2)
 
         In all the other cases, a float exponent
         will raise a TypeError
 
-        >>> Monomial(3.14, {'a': 3}) ** 2.5
+        >>> Monomial(3.14, a=3) ** 2.5
         Traceback (most recent call last):
         ...
         TypeError: unsupported operand type(s) for ** or pow(): 'Monomial' and 'float'
@@ -529,7 +524,7 @@ class Monomial:
         When the exponent is negative, it will raise
         a ValueError
 
-        >>> Monomial(17, {'k': 1}) ** (-1)
+        >>> Monomial(17, k=1) ** (-1)
         Traceback (most recent call last):
         ...
         ValueError: Exponent can't be negative
@@ -545,12 +540,12 @@ class Monomial:
             # if the monomial is a square and the exponent
             # is 1/2, return the square root
             if exp == 1/2 and self.is_square:
-                return Monomial(int(sqrt(self.coefficient)), self.variables / 2)
+                return Monomial(int(sqrt(self.coefficient)), **(self.variables / 2))
 
             # if the monomial is a cube and the exponent
             # is 1/3, return the cube root
             elif exp == 1/3 and self.is_cube:
-                return Monomial(int(self.coefficient ** (1/3)), self.variables / 3)
+                return Monomial(int(self.coefficient ** (1/3)), **(self.variables / 3))
 
             # otherwise raise an error
             else:
@@ -564,7 +559,7 @@ class Monomial:
         elif not exp > 0:
             raise ValueError("Exponent can't be negative")
 
-        return Monomial(self.coefficient ** exp, self.variables * exp)
+        return Monomial(self.coefficient ** exp, **(self.variables * exp))
 
     ### Reversed Operations Method ###
 
@@ -574,8 +569,8 @@ class Monomial:
         With this function, you can swap the two operands
         of the addition:
 
-        >>> 18 + Monomial(3, {})
-        Monomial(21, {})
+        >>> 18 + Monomial(3)
+        Monomial(21)
 
         For more informations, see :func:`Monomial.__add__` docs.
 
@@ -595,8 +590,8 @@ class Monomial:
         With this function, you can swap the two operands
         of the subtraction:
 
-        >>> 9 - Monomial(4, {})
-        Monomial(5, {})
+        >>> 9 - Monomial(4)
+        Monomial(5)
 
         For more informations, see :func:`Monomial.__sub__` docs.
 
@@ -616,8 +611,8 @@ class Monomial:
         With this function, you can swap the two operands
         of the multiplication:
 
-        >>> 5 * Monomial(2, {'x': 2})
-        Monomial(10, {'x': 2})
+        >>> 5 * Monomial(2, x=2)
+        Monomial(10, x=2)
 
         For more informations, see :func:`Monomial.__mul__` docs.
 
@@ -637,8 +632,8 @@ class Monomial:
         With this function, you can swap the two operands
         of the division:
 
-        >>> 8 / Monomial(4, {})
-        Monomial(2, {})
+        >>> 8 / Monomial(4)
+        Monomial(2)
 
         For more informations, see :func:`Monomial.__truediv__ docs`.
 
@@ -653,7 +648,7 @@ class Monomial:
         if self.variables:
             raise ValueError("Exponent must be positive")
 
-        return Monomial(other/self.coefficient, {})
+        return Monomial(other/self.coefficient)
 
     ### Magic Methods ###
 
@@ -668,38 +663,38 @@ class Monomial:
 
         Normal monomial:
 
-        >>> print(Monomial(5, {'x': 1, 'y': 1}))
+        >>> print(Monomial(5, x=1, y=1))
         5xy
 
         coefficient = 1 and there are variables
 
-        >>> print(Monomial(1, {'a': 2}))
+        >>> print(Monomial(a=2))
         a**2
 
         coefficient = -1 and there are variables
 
-        >>> print(Monomial(-1, {'k': 3}))
+        >>> print(Monomial(-1, k=3))
         -k**3
 
         coefficient = 0
 
-        >>> print(Monomial(0, {'s': 5}))
+        >>> print(Monomial(0, s=5))
         0
 
         coefficient = 1 and there aren't variables
 
-        >>> print(Monomial(1, {}))
+        >>> print(Monomial())
         1
 
         coefficient = -1 and there aren't variables
 
-        >>> print(Monomial(-1, {}))
+        >>> print(Monomial(-1))
         -1
 
         **NB** the variables are displayed in
         alphabetical order
 
-        >>> print(Monomial(5, {'k': 2, 'b': 3}))
+        >>> print(Monomial(5, k=2, b=3))
         5b**3k**2
 
         :rtype: str
@@ -742,34 +737,47 @@ class Monomial:
         """
         Return the monomial as a string
 
-        >>> Monomial(5, {'x': 5})
-        Monomial(5, {'x': 5})
-        >>> Monomial(-1, {'a': 2, 'c': 3})
-        Monomial(-1, {'a': 2, 'c': 3})
+        >>> Monomial(5, x=5)
+        Monomial(5, x=5)
+        >>> Monomial(-1, a=2, c=3)
+        Monomial(-1, a=2, c=3)
 
         **NB** the variables are displayed in
         alphabetical order
 
-        >>> Monomial(5, {'k': 2, 'b': 3})
-        Monomial(5, {'b': 3, 'k': 2})
+        >>> Monomial(5, k=2, b=3)
+        Monomial(5, b=3, k=2)
 
         :rtype: str
         """
 
-        return f"Monomial({self.coefficient}, {self.variables})"
+        variables = sorted(self.variables.keys())
+        variables = [f"{l}={self.variables[l]}" for l in variables]
+        variables = ', '.join(variables)
+
+        if self.coefficient == 1 and variables:
+            return f"Monomial({variables})"
+
+        elif variables == "" and self.coefficient != 1:
+            return f"Monomial({self.coefficient})"
+
+        elif variables == "" and self.coefficient == 1:
+            return "Monomial()"
+ 
+        return f"Monomial({self.coefficient}, {variables})"
 
     def __eq__(self, other):
         """
         Check if two monomials are equivalent,
         comparing coefficients and variables
 
-        >>> Monomial(5, {'x': 1}) == Monomial(5, {'x': 1})
+        >>> Monomial(5, x=1) == Monomial(5, x=1)
         True
 
         If there are no variables, it can be
         compared also to a number
 
-        >>> Monomial(4, {}) == 4
+        >>> Monomial(4) == 4
         True
 
         If the second operator isn't a monomial or
@@ -790,28 +798,28 @@ class Monomial:
         Return the opposite of the monomial,
         inverting the coefficient
 
-        >>> - Monomial(5, {'x': 1, 'y': 1})
-        Monomial(-5, {'x': 1, 'y': 1})
-        >>> - Monomial(-3, {'a': 1, 'b': 4})
-        Monomial(3, {'a': 1, 'b': 4})
+        >>> - Monomial(5, x=1, y=1)
+        Monomial(-5, x=1, y=1)
+        >>> - Monomial(-3, a=1, b=4)
+        Monomial(3, a=1, b=4)
 
         :rtype: Monomial
         """
-        return Monomial(-self.coefficient, self.variables)
+        return Monomial(-self.coefficient, **self.variables)
 
     def __abs__(self):
         """
         Return the absolute value of the monomial,
         calculating the absolute value of the coefficient
 
-        >>> abs(Monomial(-3, {'a': 1, 'b': 4}))
-        Monomial(3, {'a': 1, 'b': 4})
-        >>> abs(Monomial(5, {'x': 1, 'y': 1}))
-        Monomial(5, {'x': 1, 'y': 1})
+        >>> abs(Monomial(-3, a=1, b=4))
+        Monomial(3, a=1, b=4)
+        >>> abs(Monomial(5, x=1, y=1))
+        Monomial(5, x=1, y=1)
 
         :rtype: Monomial
         """
-        return Monomial(abs(self.coefficient), self.variables)
+        return Monomial(abs(self.coefficient), **self.variables)
 
     def __hash__(self):
         """
@@ -823,13 +831,13 @@ class Monomial:
         If the monomial has no variables, its hash
         will be equal to the coefficient's hash
 
-        >>> hash(Monomial(3, {})) == hash(3)
+        >>> hash(Monomial(3)) == hash(3)
         True
 
         :rtype: int
         """
 
-        if self.variables == {}:
+        if self.variables.is_empty:
             return hash(self.coefficient)
 
         variables = ((k, self.variables[k]) for k in sorted(self.variables.keys()))

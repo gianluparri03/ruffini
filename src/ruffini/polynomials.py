@@ -29,7 +29,7 @@ class Polynomial (tuple):
         number); if two or more terms have the
         same variables, it will sum them toghether
 
-        >>> print(Polynomial(Monomial(2, {'x': 2, 'y': 2})))
+        >>> print(Polynomial(Monomial(2, x=2, y=2)))
         2x**2y**2
 
         :type *terms: Monomials, int, float
@@ -41,7 +41,7 @@ class Polynomial (tuple):
         # Sum the similar terms
         for term in terms:
             if isinstance(term, (int, float)):
-                term = Monomial(term, {})
+                term = Monomial(term)
             elif isinstance(term, Monomial):
                 pass
             else:
@@ -50,7 +50,7 @@ class Polynomial (tuple):
             counter[term.variables] += term.coefficient
 
         # Rewrite them
-        terms = [Monomial(c, v) for v, c in counter.items()]
+        terms = [Monomial(c, **v) for v, c in counter.items()]
 
         return super().__new__(cls, terms)
 
@@ -60,7 +60,7 @@ class Polynomial (tuple):
         the polynomial degree (the highest degree
         of the terms)
 
-        >>> print(Polynomial(Monomial(1, {'a': 1}), Monomial(3, {})))
+        >>> print(Polynomial(Monomial(1, a=1), Monomial(3)))
         a + 3
 
         :type *terms: Monomials, int, float
@@ -71,21 +71,21 @@ class Polynomial (tuple):
 
     ### Utility Methods ###
 
-    def term_coefficient(self, variables):
+    def term_coefficient(self, **variables):
         """
         Return the coefficient of the term with
         the given variables
 
-        >>> m0 = Monomial(2, {'x': 1, 'y': 1})
-        >>> m1 = Monomial(-6, {'x': 1, 'y': 3})
-        >>> m2 = Monomial(8, {'x': 1, 'y': 1})
+        >>> m0 = Monomial(2, x=1, y=1)
+        >>> m1 = Monomial(-6, x=1, y=3)
+        >>> m2 = Monomial(8, x=1, y=1)
         >>> p = Polynomial(m0, m1, m2)
-        >>> p.term_coefficient({'x': 1, 'y': 1})
+        >>> p.term_coefficient(x=1, y=1)
         10
 
         If none is found, the result will be 0
 
-        >>> p.term_coefficient({'k': 1, 'b': 2})
+        >>> p.term_coefficient(k=1, b=2)
         0
 
         :type variables: dict, VariablesDict
@@ -109,11 +109,11 @@ class Polynomial (tuple):
         polynomial with another polynomial, a monomial
         or a number, too.
 
-        >>> m0 = Monomial(10, {'a': 4})
-        >>> m1 = Monomial(-4, {'a': 4})
-        >>> m2 = Monomial(7, {'y': 1})
-        >>> m3 = Monomial(9, {'x': 1})
-        >>> m4 = Monomial(-13, {'y': 1})
+        >>> m0 = Monomial(10, a=4)
+        >>> m1 = Monomial(-4, a=4)
+        >>> m2 = Monomial(7, y=1)
+        >>> m3 = Monomial(9, x=1)
+        >>> m4 = Monomial(-13, y=1)
         >>> p = Polynomial(m1, m2, m4) # -4a**4 -6y
         >>> # polynomial + polynomial
         >>> print(p + Polynomial(m0, m3, m2))
@@ -139,7 +139,7 @@ class Polynomial (tuple):
         """
 
         if isinstance(other, (int, float)):
-            other = Monomial(other, {})
+            other = Monomial(other)
 
         if isinstance(other, Polynomial):
             return Polynomial(*self, *other)
@@ -156,11 +156,11 @@ class Polynomial (tuple):
         polynomial from another polynomial, a monomial
         or a number, too.
 
-        >>> m0 = Monomial(10, {'a': 4})
-        >>> m1 = Monomial(-4, {'a': 4})
-        >>> m2 = Monomial(7, {'y': 1})
-        >>> m3 = Monomial(9, {'x': 1})
-        >>> m4 = Monomial(-13, {'y': 1})
+        >>> m0 = Monomial(10, a=4)
+        >>> m1 = Monomial(-4, a=4)
+        >>> m2 = Monomial(7, y=1)
+        >>> m3 = Monomial(9, x=1)
+        >>> m4 = Monomial(-13, y=1)
         >>> p = Polynomial(m1, m2, m4) # -4a**4 -6y
         >>> # polynomial - polynomial
         >>> print(p - Polynomial(m0, m3, m2))
@@ -186,7 +186,7 @@ class Polynomial (tuple):
         """
 
         if isinstance(other, (int, float)):
-            other = Monomial(other, {})
+            other = Monomial(other)
 
         if isinstance(other, Polynomial):
             return Polynomial(*self, *(-other))
@@ -202,11 +202,11 @@ class Polynomial (tuple):
         This method is used to multiply a polynomial
         by a polynomial, a monomial or a number:
 
-        >>> m0 = Monomial(10, {'a': 4})
-        >>> m1 = Monomial(-4, {'a': 4})
-        >>> m2 = Monomial(7, {'y': 1})
-        >>> m3 = Monomial(9, {'x': 1})
-        >>> m4 = Monomial(-13, {'y': 1})
+        >>> m0 = Monomial(10, a=4)
+        >>> m1 = Monomial(-4, a=4)
+        >>> m2 = Monomial(7, y=1)
+        >>> m3 = Monomial(9, x=1)
+        >>> m4 = Monomial(-13, y=1)
         >>> p = Polynomial(m1, m2, m4) # -4a**4 -6y
         >>> # polynomial * polynomial
         >>> print(p * Polynomial(m0, m1, m4))
@@ -248,7 +248,7 @@ class Polynomial (tuple):
         With this method, you can swap the two operands
         of the addition:
 
-        >>> print(8 + Polynomial(Monomial(4, {'a': 2})))
+        >>> print(8 + Polynomial(Monomial(4, a=2)))
         4a**2 + 8
 
         For more informations, see :func:`Polynomial.__add__` docs.
@@ -269,7 +269,7 @@ class Polynomial (tuple):
         With this method, you can swap the two operands
         of the addition:
 
-        >>> print(5 - Polynomial(Monomial(7, {'k': 1})))
+        >>> print(5 - Polynomial(Monomial(7, k=1)))
         -7k + 5
 
         For more informations, see :func:`Polynomial.__sub__ docs`.
@@ -290,7 +290,7 @@ class Polynomial (tuple):
         With this method, you can swap the two operands
         of the addition:
 
-        >>> print(10 * Polynomial(Monomial(3.5, {'b': 3})))
+        >>> print(10 * Polynomial(Monomial(3.5, b=3)))
         35b**3
 
         For more informations, see :func:`Polynomial.__mul__` docs.
@@ -312,11 +312,11 @@ class Polynomial (tuple):
         Return the polynomial as a string in a human-readable
         mode. The exponent for the variables is indicated with a **.
 
-        >>> str(Polynomial(Monomial(4, {'a': 4, 'b': 1})))
+        >>> str(Polynomial(Monomial(4, a=4, b=1)))
         '4a**4b'
-        >>> str(Polynomial(Monomial(1, {'a': 2}), Monomial(-2, {'c': 2})))
+        >>> str(Polynomial(Monomial(a=2), Monomial(-2, c=2)))
         'a**2 - 2c**2'
-        >>> str(Polynomial(Monomial(3, {'x': 2}), Monomial(6, {'y': 3})))
+        >>> str(Polynomial(Monomial(3, x=2), Monomial(6, y=3)))
         '3x**2 + 6y**3'
 
         To see how the single terms are printed, see the
@@ -338,12 +338,12 @@ class Polynomial (tuple):
         Return the polynomial as a string in a less human-readable
         mode than str()
 
-        >>> repr(Polynomial(Monomial(4, {'a': 4, 'b': 1})))
-        "Polynomial(Monomial(4, {'a': 4, 'b': 1}))"
-        >>> repr(Polynomial(Monomial(1, {'a': 2}), Monomial(-2, {'c': 2})))
-        "Polynomial(Monomial(1, {'a': 2}), Monomial(-2, {'c': 2}))"
-        >>> repr(Polynomial(Monomial(3, {'x': 2}), Monomial(6, {'y': 3})))
-        "Polynomial(Monomial(3, {'x': 2}), Monomial(6, {'y': 3}))"
+        >>> repr(Polynomial(Monomial(4, a=4, b=1)))
+        'Polynomial(Monomial(4, a=4, b=1))'
+        >>> repr(Polynomial(Monomial(1, a=2), Monomial(-2, c=2)))
+        'Polynomial(Monomial(a=2), Monomial(-2, c=2))'
+        >>> repr(Polynomial(Monomial(3, x=2), Monomial(6, y=3)))
+        'Polynomial(Monomial(3, x=2), Monomial(6, y=3))'
 
         **NB** When you have a lot of terms, this method
         will return a certain ammount of spam.
@@ -362,9 +362,9 @@ class Polynomial (tuple):
         Check if two polynomials are equivalent,
         comparating each term
 
-        >>> p0 = Polynomial(Monomial(4, {'a': 4, 'b': 1}))
-        >>> p1 = Polynomial(Monomial(1, {'a': 2}), Monomial(-2, {'c': 2}))
-        >>> p2 = Polynomial(Monomial(-2, {'c': 2}), Monomial(1, {'a': 2}))
+        >>> p0 = Polynomial(Monomial(4, a=4, b=1))
+        >>> p1 = Polynomial(Monomial(1, a=2), Monomial(-2, c=2))
+        >>> p2 = Polynomial(Monomial(-2, c=2), Monomial(1, a=2))
         >>> p0 == p1
         False
         >>> p0 == p0
@@ -375,7 +375,7 @@ class Polynomial (tuple):
         If a polynomial has a single term, it can
         also be compared to a monomial
 
-        >>> Polynomial(Monomial(3, {'f': 2})) == Monomial(3, {'f': 2})
+        >>> Polynomial(Monomial(3, f=2)) == Monomial(3, f=2)
         True
 
         **NB** Since a monomial with no variables can be
@@ -383,7 +383,7 @@ class Polynomial (tuple):
         a term, which is a monomial with no variables,
         it can be compared to a number, too!
 
-        >>> Polynomial(Monomial(7,{})) == 7
+        >>> Polynomial(Monomial(7)) == 7
         True
 
         If the second operator in not mentione above,
@@ -407,9 +407,9 @@ class Polynomial (tuple):
         the polynomial, changing the sign of
         each term of the polynomial
 
-        >>> print(-Polynomial(Monomial(4, {'x': 1}), Monomial(2, {'y': 2})))
+        >>> print(-Polynomial(Monomial(4, x=1), Monomial(2, y=2)))
         -4x - 2y**2
-        >>> print(-Polynomial(Monomial(-6, {'b': 2}), Monomial(3, {'k': 3})))
+        >>> print(-Polynomial(Monomial(-6, b=2), Monomial(3, k=3)))
         6b**2 - 3k**3
 
         :rtype: Polynomial
@@ -426,13 +426,13 @@ class Polynomial (tuple):
         If the polynomial has only a term, its hash
         will be equal to the hash of that term
 
-        >>> hash(Polynomial(Monomial(3, {'x': 1}))) == hash(Monomial(3, {'x': 1}))
+        >>> hash(Polynomial(Monomial(3, x=1))) == hash(Monomial(3, x=1))
         True
 
         If that term has no variables, the hash will be equal
         to the coefficient's
 
-        >>> hash(Polynomial(Monomial(3, {}))) == hash(3)
+        >>> hash(Polynomial(Monomial(3))) == hash(3)
         True
 
         :rtype: int
