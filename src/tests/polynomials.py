@@ -95,7 +95,7 @@ class Test (TestCase):
         # test repr
         self.assertEqual(repr(self.p[2]), "Polynomial(Monomial(-13, {'y': 1}), Monomial(10, {'a': 4}))")
 
-    def test_eq(self):
+    def test_eq_hash(self):
         # two polynomials are not equal if
         # they have not the same lenght
         self.assertFalse(self.p[3] == P(self.m[5]))
@@ -110,7 +110,7 @@ class Test (TestCase):
         self.assertEqual(P(M(6, {})), 6)
 
         # otherwise the result is false
-        self.assertFalse(self.p[2] == "string")
+        self.assertFalse(self.p[2] == {1, 7, 9})
 
     def test_neg(self):
         # test neg

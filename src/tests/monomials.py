@@ -187,32 +187,32 @@ class Test (TestCase):
         self.assertRaises(TypeError, lambda: "" / self.m[2])
         self.assertRaises(ValueError, lambda: 5 / self.m[5])
 
-    def test_call(self):
+    def test_eval(self):
         # test value
-        self.assertEqual(self.m[5](y=2), -72)
+        self.assertEqual(self.m[5].eval(y=2), -72)
 
         # if a variable value isn't specified
         # it will stay there
-        self.assertEqual(self.m[0](x=5), M(10, {'y': 1}))
+        self.assertEqual(self.m[0].eval(x=5), M(10, {'y': 1}))
 
         # if there are no variables left returns an int/float
-        self.assertIsInstance(self.m[5](y=2), int)
+        self.assertIsInstance(self.m[5].eval(y=2), int)
 
         # otherwise it return a monomial
-        self.assertIsInstance(self.m[2](x=3), M)
+        self.assertIsInstance(self.m[2].eval(x=3), M)
 
         # if a variable isn't in the monomial, nothing change
-        self.assertEqual(self.m[4](b=7), self.m[4])
+        self.assertEqual(self.m[4].eval(b=7), self.m[4])
 
         # works only with number
-        self.assertRaises(TypeError, self.m[0], x="")
+        self.assertRaises(TypeError, self.m[0].eval, x="")
 
         # the monomial remain equal after evaluating it
-        self.m[2](x=2)
+        self.m[2].eval(x=2)
         self.assertEqual(self.m[2], M(8, {'x': 1, 'y': 1}))
 
         # it's not case sensitive
-        self.assertEqual(self.m[0](x=2), self.m[0](X=2))
+        self.assertEqual(self.m[0].eval(x=2), self.m[0].eval(X=2))
 
     def test_str_repr(self):
         # normal monomial

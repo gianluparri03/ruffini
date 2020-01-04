@@ -357,7 +357,6 @@ class Polynomial (tuple):
 
         return f"Polynomial({terms})"
 
-
     def __eq__(self, other):
         """
         Check if two polynomials are equivalent,
@@ -397,16 +396,9 @@ class Polynomial (tuple):
         :rtype: bool
         """
 
-        if isinstance(other, Polynomial):
-            if not len(self) == len(other):
-                return False
-            else:
-                return all((t in other for t in self))
-
-        elif isinstance(other, (Monomial, int, float)) and len(self) == 1:
-            return self[0] == other
-
-        else:
+        try:
+            return hash(self) == hash(other)
+        except TypeError:
             return False
 
     def __neg__(self):
@@ -423,3 +415,30 @@ class Polynomial (tuple):
         :rtype: Polynomial
         """
         return Polynomial(*(-m for m in self))
+
+    def __hash__(self):
+        """
+        Return the hash for the Polynomial
+
+        The hash for 8xy + 2, for example, is equal
+        to the hash of ((8, ('x', 1), ('y', 1)), 2).
+
+        If the polynomial has only a term, its hash
+        will be equal to the hash of that term
+
+        >>> hash(Polynomial(Monomial(3, {'x': 1}))) == hash(Monomial(3, {'x': 1}))
+        True
+
+        If that term has no variables, the hash will be equal
+        to the coefficient's
+
+        >>> hash(Polynomial(Monomial(3, {}))) == hash(3)
+        True
+
+        :rtype: int
+        """
+
+        if len(self) == 1:
+            return hash(self[0])
+
+        return hash(tuple(sorted(self, key=str)))

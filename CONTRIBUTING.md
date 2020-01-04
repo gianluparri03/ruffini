@@ -12,16 +12,32 @@ The Makefile also has a coverage function: if you want to see the lines of code 
 
 ### Todo
 
+**General:**
 - [ ] Change monomial initialization (`Monomial(5, {'x': 1})` -> `Monomial(5, x=1)`) _NB: variables will be transformed in VariablesDict however_
 - [ ] Add monomial's default values (`coefficient=1`, `variables={}`)
 - [ ] Look for a solution to `__repr__` (too verbose)
+- [ ] Create a new logo
+- [X] Add `Polynomial().__hash__()`
+- [ ] Add `Polynomial().eval()`
+- [ ] Make legal `Monomial(2, {'x': 1}).eval(x=Monomial(2, {'y': 2}))`
+
+**Variables:**
 - [ ] Change variables implementation
-	- [ ] Create `Variable` class
-	- [ ] Adjust `VariablesDict()`
-	- [ ] Add variables to import (e.g. `from ruffini import x`)
-- [ ] Polynomial factoring:
-	- [X] Add `VariablesDict().__truediv__()`
-	- [X] Implement `Monomial().__pow__()` with floating-point exponent
-	- [ ] Create the `FPolynomial` class
-	- [ ] Think about a method to implement factoring
-	- [ ] Implement it
+- [ ] Create `Variable` class
+- [ ] Make `VariablesDict()` keys istance of `Variable`
+
+**Pre-Factoring:**
+- [X] Add `VariablesDict().__truediv__()`
+- [X] Implement `Monomial().__pow__()` with floating-point exponent
+- [X] Create the `FPolynomial` class
+
+**Factoring algorythms:**
+- [ ] `AX + AY = A(X + Y)`
+- [ ] `AX + BX + AY + BY = (A + B)(X + Y)`
+- [ ] `X**2 + (P + Q)X + PQ = (X + P)(X + Q)`
+- [ ] `A**2 +2AB + B**2 = (A + B)**2`
+- [ ] `A**3 + 3A**2B + 3AB**2 + B**2 = (A + B)**3`
+- [ ] `A**2 + B**2 + C**2 + 2AB + 2BC + 2AC = (A + B + C)**2`
+- [ ] `A**3 + B**3 = (A + B)(A**2 - AB + B**2)`
+- [ ] `A**3 - B**3 = (A - B)(A**2 + AB + B**2)`
+- [ ] Ruffini's Rule

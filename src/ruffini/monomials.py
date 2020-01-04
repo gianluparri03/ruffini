@@ -235,6 +235,59 @@ class Monomial:
 
         return abs(self * other) / self.gcd(other)
 
+    def eval(self, **values):
+        """
+        Evaluate the monomial, giving the values
+        of the variables to the method
+
+        >>> m = Monomial(5, {'x': 1, 'y': 1})
+        >>> m.eval(x=2, y=3)
+        30
+
+        If you omit some variables values, the
+        variables will remain there
+
+        >>> m.eval(x=2)
+        Monomial(10, {'y': 1})
+
+        You can declare some variables values
+        which aren't in the monomial and the
+        result won't change
+
+        >>> m.eval(b=7)
+        Monomial(5, {'x': 1, 'y': 1})
+
+        **NB** as for the initialization, the variable
+        isn't case sensitive
+
+        >>> m.eval(x=2) == m.eval(X=2)
+        True
+
+        :type values: int, float
+        :rtype: int, float, Monomial
+        :raise: TypeError
+        """
+
+        coefficient = self.coefficient
+        variables = {}
+        values = dict(zip(map(lambda v: v.lower(), values.keys()), values.values()))
+
+        # substitute values
+        for var in self.variables:
+
+            if var in values and isinstance(values[var], (int, float)):
+                coefficient *= (values[var] ** self.variables[var])
+            elif var in values:
+                raise TypeError(f"{var}'s value can't be set to {values[var]}")
+            else:
+                variables[var] = self.variables[var]
+
+        # if there are no variables left return an int/float
+        if not variables:
+            return coefficient
+
+        return Monomial(coefficient, variables)
+
     ### Operations Methods ###
 
     def __add__(self, other):
@@ -604,60 +657,6 @@ class Monomial:
 
     ### Magic Methods ###
 
-    def __call__(self, **values):
-        """
-        Evaluate the monomial, giving the values
-        of the variables to the method
-
-        >>> m = Monomial(5, {'x': 1, 'y': 1})
-        >>> m(x=2, y=3)
-        30
-
-        If you omit some variables values, the
-        variables will remain there
-
-        >>> m(x=2)
-        Monomial(10, {'y': 1})
-
-        You can declare some variables values
-        which aren't in the monomial and the
-        result won't change
-
-        >>> m(b=7)
-        Monomial(5, {'x': 1, 'y': 1})
-
-        **NB** as for the initialization, the variable
-        isn't case sensitive
-
-        >>> m(x=2) == m(X=2)
-        True
-
-
-        :type values: int, float
-        :rtype: int, float, Monomial
-        :raise: TypeError
-        """
-
-        coefficient = self.coefficient
-        variables = {}
-        values = dict(zip(map(lambda v: v.lower(), values.keys()), values.values()))
-
-        # substitute values
-        for var in self.variables:
-
-            if var in values and isinstance(values[var], (int, float)):
-                coefficient *= (values[var] ** self.variables[var])
-            elif var in values:
-                raise TypeError(f"{var}'s value can't be set to {values[var]}")
-            else:
-                variables[var] = self.variables[var]
-
-        # if there are no variables left return an int/float
-        if not variables:
-            return coefficient
-
-        return Monomial(coefficient, variables)
-
     def __str__(self):
         """
         Return the monomial as a string in a human-readable
@@ -817,9 +816,6 @@ class Monomial:
     def __hash__(self):
         """
         Return the hash for the Monomial
-
-        >>> hash(Monomial(1, {'a': 1})) == hash(Monomial(1, {'a': 1}))
-        True
 
         The hash for 8xy, for example, is equal
         to the hash of (8, ('x', 1), ('y', 1)).
