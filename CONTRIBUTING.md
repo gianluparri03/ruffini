@@ -22,6 +22,7 @@ The Makefile also has a coverage function: if you want to see the lines of code 
 - [X] Add `Polynomial().__hash__()`
 - [] Add `Polynomial().eval()`
 - [X] Make legal `Monomial(2, {'x': 1}).eval(x=Monomial(2, {'y': 2}))`
+- [X] Add `gcd(*args)` and `lcm(*args)` in `__init__.py` as shortands
 
 **Variables:**
 - [ ] Change variables implementation

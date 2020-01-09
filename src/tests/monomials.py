@@ -1,5 +1,6 @@
 from unittest import TestCase
 
+from ruffini import gcd, lcm
 from ruffini import Monomial as M
 from ruffini import Polynomial as P
 
@@ -10,7 +11,7 @@ class Test (TestCase):
         self.m = [
                   M(2, x=1, y=4),
                   M(-6, x=1, y=3),
-                  M(8, x=1, y=4), #
+                  M(8, x=1, y=4),
                   M(3),
                   M(1.16, a=4),
                   M(-9, y=3)
@@ -84,6 +85,10 @@ class Test (TestCase):
         # commutative property
         self.assertEqual(self.m[0].gcd(self.m[2]), self.m[2].gcd(self.m[0]))
         self.assertEqual(self.m[0].lcm(self.m[2]), self.m[2].lcm(self.m[0]))
+
+        # test shorthands
+        self.assertEqual(gcd(3, self.m[1], self.m[5]), 3)
+        self.assertEqual(lcm(6, self.m[2], self.m[3]), M(24, x=1, y=4))
 
     def test_add_sub(self):
         # M + (-M) = 0
@@ -230,7 +235,7 @@ class Test (TestCase):
 
         # coefficient == 1 w/o variables
         self.assertEqual(str(M()), '1')
-        self.assertEqual(repr(M()), 'Monomial()')
+        self.assertEqual(repr(M()), 'Monomial(1)')
 
         # coefficient == -1 w/o variables
         self.assertEqual(str(M(-1)), '-1')

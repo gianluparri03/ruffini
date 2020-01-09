@@ -172,11 +172,7 @@ class Monomial:
         Monomial(15, x=1)
 
         If you want to calculate the gcd with more
-        operators, you can just do
-
-        >>> from functools import reduce
-        >>> reduce(lambda m1, m2: m1.gcd(m2), (a, b, c))
-        Monomial(5, x=1)
+        operators, you can use the shorthand :func:`gcd`.
 
         :type others: Monomial, int, float
         :rtype: Monomial, int
@@ -221,7 +217,10 @@ class Monomial:
 
         If you want to know others informations
         like errors and limits, please check the
-        documentation of Monomial().gcd()
+        documentation of Monomial().gcd().
+
+        If you want to calculate the lcm between more
+        monomials, you can use the :func:`lcm` shorthand.
 
         :type others: Monomial, int, float
         :rtype: Monomial, int, float
@@ -565,8 +564,8 @@ class Monomial:
 
     def __radd__(self, other):
         """
-        This function is the reverse for :func:`Monomial.__add__`.
-        With this function, you can swap the two operands
+        This method is the reverse for :func:`Monomial.__add__`.
+        With this method, you can swap the two operands
         of the addition:
 
         >>> 18 + Monomial(3)
@@ -586,8 +585,8 @@ class Monomial:
 
     def __rsub__(self, other):
         """
-        This function is the reverse for :func:`Monomial.__sub__`.
-        With this function, you can swap the two operands
+        This method is the reverse for :func:`Monomial.__sub__`.
+        With this method, you can swap the two operands
         of the subtraction:
 
         >>> 9 - Monomial(4)
@@ -607,8 +606,8 @@ class Monomial:
 
     def __rmul__(self, other):
         """
-        This function is the reverse for :func:`Monomial.__mul__`.
-        With this function, you can swap the two operands
+        This method is the reverse for :func:`Monomial.__mul__`.
+        With this method, you can swap the two operands
         of the multiplication:
 
         >>> 5 * Monomial(2, x=2)
@@ -628,8 +627,8 @@ class Monomial:
 
     def __rtruediv__(self, other):
         """
-        This function is the reverse for :func:`Monomial.__truediv__`.
-        With this function, you can swap the two operands
+        This method is the reverse for :func:`Monomial.__truediv__`.
+        With this method, you can swap the two operands
         of the division:
 
         >>> 8 / Monomial(4)
@@ -758,11 +757,8 @@ class Monomial:
         if self.coefficient == 1 and variables:
             return f"Monomial({variables})"
 
-        elif variables == "" and self.coefficient != 1:
+        elif variables == "":
             return f"Monomial({self.coefficient})"
-
-        elif variables == "" and self.coefficient == 1:
-            return "Monomial()"
 
         return f"Monomial({self.coefficient}, {variables})"
 

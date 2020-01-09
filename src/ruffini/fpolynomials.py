@@ -38,7 +38,7 @@ class FPolynomial (tuple):
         >>> FPolynomial(5)
         Traceback (most recent call last):
         ...
-        TypeError: there must be at least a polynomial
+        TypeError: There must be at least a polynomial
 
         **NB:** It converts all the factors to Polynomial
         and sort them by frequency.
@@ -107,7 +107,7 @@ class FPolynomial (tuple):
             if exponent > 1:
                 factors += f'({factor})**{exponent}'
             # if it's a monomial
-            elif len(factor) == 1:
+            elif len(factor) == 1 and len(done) == 0:
                 factors += f'{factor}'
             # default
             else:
@@ -132,7 +132,7 @@ class FPolynomial (tuple):
         The result will always be a Polynomial
 
         >>> type(f.eval())
-        <class ruffini.polynomials.Polynomial>
+        <class 'ruffini.polynomials.Polynomial'>
 
         :rtype: Polynomial
         """

@@ -12,9 +12,11 @@ class Polynomial (tuple):
     With a Polynomial() instance, you can do sums,
     subtractions, multiplications and divisions.
 
-    You can also assign a value to the variables and
+    You can assign a value to the variables and
     calculate the value of that polynomial with the
     value you assigned.
+
+    I'm working on factorization.
 
     **NB** The Polynomial class is a subclass of tuple,
     so all the methods of tuple are automatically
@@ -22,7 +24,7 @@ class Polynomial (tuple):
     are not in this docs.
     """
 
-    def __new__ (cls, *terms):
+    def __new__(cls, *terms):
         """
         Create the polynomial giving it a list
         of terms (a term can be a Monomial or a
@@ -54,7 +56,7 @@ class Polynomial (tuple):
 
         return super().__new__(cls, terms)
 
-    def __init__ (self, *terms):
+    def __init__(self, *terms):
         """
         Initialize the polynomial, then calculate
         the polynomial degree (the highest degree
@@ -80,6 +82,7 @@ class Polynomial (tuple):
         >>> m1 = Monomial(-6, x=1, y=3)
         >>> m2 = Monomial(8, x=1, y=1)
         >>> p = Polynomial(m0, m1, m2)
+        >>>
         >>> p.term_coefficient(x=1, y=1)
         10
 
@@ -115,12 +118,15 @@ class Polynomial (tuple):
         >>> m3 = Monomial(9, x=1)
         >>> m4 = Monomial(-13, y=1)
         >>> p = Polynomial(m1, m2, m4) # -4a**4 -6y
+        >>>
         >>> # polynomial + polynomial
         >>> print(p + Polynomial(m0, m3, m2))
         6a**4 + y + 9x
+        >>>
         >>> # polynomial + monomial
         >>> print(p + m3)
         -4a**4 - 6y + 9x
+        >>>
         >>> # polynomial + number
         >>> print(p + 9)
         -4a**4 - 6y + 9
@@ -162,12 +168,15 @@ class Polynomial (tuple):
         >>> m3 = Monomial(9, x=1)
         >>> m4 = Monomial(-13, y=1)
         >>> p = Polynomial(m1, m2, m4) # -4a**4 -6y
+        >>>
         >>> # polynomial - polynomial
         >>> print(p - Polynomial(m0, m3, m2))
         -14a**4 - 13y - 9x
+        >>>
         >>> # polynomial - monomial
         >>> print(p - m3)
         -4a**4 - 6y - 9x
+        >>>
         >>> # polynomial - number
         >>> print(p - 9)
         -4a**4 - 6y - 9
@@ -208,12 +217,15 @@ class Polynomial (tuple):
         >>> m3 = Monomial(9, x=1)
         >>> m4 = Monomial(-13, y=1)
         >>> p = Polynomial(m1, m2, m4) # -4a**4 -6y
+        >>>
         >>> # polynomial * polynomial
         >>> print(p * Polynomial(m0, m1, m4))
         -24a**8 + 16a**4y + 78y**2
+        >>>
         >>> # polynomial * monomial
         >>> print(p * m3)
         -36a**4x - 54xy
+        >>>
         >>> # polynomial * number
         >>> print(p * 3)
         -12a**4 - 18y
@@ -365,6 +377,7 @@ class Polynomial (tuple):
         >>> p0 = Polynomial(Monomial(4, a=4, b=1))
         >>> p1 = Polynomial(Monomial(1, a=2), Monomial(-2, c=2))
         >>> p2 = Polynomial(Monomial(-2, c=2), Monomial(1, a=2))
+        >>>
         >>> p0 == p1
         False
         >>> p0 == p0
