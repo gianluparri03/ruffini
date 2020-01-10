@@ -4,8 +4,8 @@ from ruffini import Monomial as M
 from ruffini import Polynomial as P
 
 
-class Test (TestCase):
-    def setUp (self):
+class Test(TestCase):
+    def setUp(self):
         # Monomials
         self.m = [
                   M(10, a=4),
@@ -24,7 +24,7 @@ class Test (TestCase):
                   P(self.m[3], self.m[1]),            # 9x -4a**4
                  ]
 
-    def test_new_init (self):
+    def test_new_init(self):
         # terms must be monomials or number
         self.assertRaises(TypeError, P, "lol")
 
@@ -39,7 +39,7 @@ class Test (TestCase):
         # if term_coefficient find nothing, the result is 0
         self.assertEqual(self.p[0].term_coefficient(k=2, b=1), 0)
 
-    def test_add_sub (self):
+    def test_add_sub(self):
         # works only with monomials, polynomials and numbers
         self.assertRaises(TypeError, lambda: self.p[0] + "something")
         self.assertRaises(TypeError, lambda: self.p[0] - [])
@@ -56,7 +56,7 @@ class Test (TestCase):
         self.assertEqual(self.p[0] + self.p[2], P(M(16, a=4), M(-6, y=1)))
         self.assertEqual(self.p[0] - self.p[2], P(M(20, y=1), M(-4, a=4)))
 
-    def test_mul (self):
+    def test_mul(self):
         # works only with monomials, polynomials and numbers
         self.assertRaises(TypeError, lambda: self.p[0] * "something")
 

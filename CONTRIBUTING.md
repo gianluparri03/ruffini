@@ -33,6 +33,7 @@ The Makefile also has a coverage function: if you want to see the lines of code 
 - [X] Add `VariablesDict().__truediv__()`
 - [X] Implement `Monomial().__pow__()` with floating-point exponent
 - [X] Create the `FPolynomial` class
+- [ ] Adjust `FPolynomial().__eq__()`
 
 **Factoring algorythms:**
 - [ ] `AX + AY = A(X + Y)`

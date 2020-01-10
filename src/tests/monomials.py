@@ -5,7 +5,7 @@ from ruffini import Monomial as M
 from ruffini import Polynomial as P
 
 
-class Test (TestCase):
+class Test(TestCase):
     def setUp(self):
         # Monomials
         self.m = [
@@ -17,7 +17,7 @@ class Test (TestCase):
                   M(-9, y=3)
                  ]
 
-    def test_init (self):
+    def test_init(self):
         # Coefficient must be int or float
         self.assertRaises(TypeError, M, "3")
 

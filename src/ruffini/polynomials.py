@@ -104,6 +104,19 @@ class Polynomial (tuple):
         # if nothing is found
         return 0
 
+    def factorize(self):
+        """
+        With this method you can factorize the polynomial.
+
+        For more informations, see :func:`factorize` docs.
+
+        :rtype: FPolynomial
+        """
+
+        from .fpolynomials import FPolynomial, factorize
+
+        return factorize(self)
+
     ### Operations Methods ###
 
     def __add__(self, other):

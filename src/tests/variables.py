@@ -3,8 +3,8 @@ from unittest import TestCase
 from ruffini import VariablesDict as VD
 
 
-class Test (TestCase):
-    def test_general (self):
+class Test(TestCase):
+    def test_general(self):
         # Keys has to be made lowecasse
         self.assertEqual(VD(X=3), VD(x=3))
 
