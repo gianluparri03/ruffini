@@ -4,4 +4,6 @@ ruffini
 .. toctree::
    :maxdepth: 4
 
-   ruffini
+   variables
+   monomials
+   polynomials
