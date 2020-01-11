@@ -1,9 +1,8 @@
-ruffini
-===============
+Variables
+====================
 
-
-The VariablesDict() class
-------------------------
+VariablesDict objects
+---------------------
 
 .. autoclass:: ruffini.VariablesDict
     :members:
@@ -12,8 +11,12 @@ The VariablesDict() class
     :special-members:
     :exclude-members: __dict__,__module__,__weakref__
 
-The Monomial() class
-------------------------
+
+Monomials
+====================
+
+Monomial objects
+--------------------
 
 .. autoclass:: ruffini.Monomial
     :members:
@@ -22,8 +25,22 @@ The Monomial() class
     :special-members:
     :exclude-members: __dict__,__module__,__weakref__
 
-The Polynomial() class
---------------------------
+gcd()
+--------------------
+
+.. autofunction:: ruffini.gcd
+
+lcm()
+--------------------
+
+.. autofunction:: ruffini.lcm
+
+
+Polynomials
+====================
+
+Polynomial objects
+--------------------
 
 .. autoclass:: ruffini.Polynomial
     :members:
@@ -31,3 +48,28 @@ The Polynomial() class
     :show-inheritance:
     :special-members:
     :exclude-members: __dict__,__module__,__weakref__,__hash__
+
+FPolynomial objects
+--------------------
+
+.. autoclass:: ruffini.FPolynomial
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :special-members:
+    :exclude-members: __dict__,__module__,__weakref__,__hash__
+
+factorize()
+--------------------
+
+.. autofunction:: ruffini.factorize
+
+gcf()
+--------------------
+
+.. autofunction:: ruffini.gcf
+
+binomial_square()
+--------------------
+
+.. autofunction:: ruffini.binomial_square

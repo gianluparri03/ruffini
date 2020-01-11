@@ -130,7 +130,6 @@ class FPolynomial (tuple):
 
         return factors
 
-
     def eval(self):
         """
         Return the starting polynomial multiplying
@@ -152,86 +151,192 @@ class FPolynomial (tuple):
 
         return reduce(lambda x, y: x*y, self)
 
+
+def gcf(polynomial):
+    """
+    Factorize a polynomial with the gcf (greates common
+    facor) method. In theory, it works like this:
+
+    `AX + AY + ... = A(X + Y + ...)`
+
+    for example:
+
+    >>> print(gcf(Polynomial(Monomial(10, x=1), 15)))
+    5(2x + 3)
+
+    If there isn't a gcf, it will return the starting polynomial
+
+    >>> print(gcf(Polynomial(Monomial(11, x=1), 15)))
+    11x + 15
+
+    The function will always return a FPolynomial.
+
+    :type p: Polynomial
+    :rtype: FPolynomial
+    :raise: TypeError
+    """
+
+    # raise a TypeError if polynomial isn't a polynomial
+    if not isinstance(polynomial, Polynomial):
+        raise TypeError(f"Can't use gcf with an object of type '{polynomial.__class__.__name__}'")
+
+    # Calculate the greatest common factor
+    gcd = reduce(lambda x, y: x.gcd(y), polynomial)
+
+    # If there is no gcf, return the given polynomial
+    if gcd == 1:
+        return FPolynomial(polynomial)
+
+    # Otherwise, return the gcf and the reduced polynomial
+    polynomial = Polynomial(*[t/gcd for t in polynomial])
+    return FPolynomial(gcd, polynomial)
+
+
+def binomial_square(polynomial):
+    """
+    Factorize a polynomial with the gcf (greates common
+    facor) method. In theory, it works like this:
+
+    `A**2 + B**2 + 2AB = (A + B)**2`
+
+    for example:
+
+    >>> p = Polynomial(Monomial(4, x=2), Monomial(9, y=4), Monomial(-12, x=1, y=2))
+    >>> print(binomial_square(p))
+    (2x - 3y**2)**2
+
+    *NB:* order of terms doesn't matter.
+
+    If the given argument isn't an instance of Polynomial,
+    it will raise a TypeError
+
+    >>> binomial_square('a doggo')
+    Traceback (most recent call last):
+    ...
+    TypeError: Can't use binomial_square with an object of type 'str'
+
+    It can raise also ValueError, in three cases:
+
+    1. When polynomial's length isn't 3:
+
+    >>> binomial_square(Polynomial())
+    Traceback (most recent call last):
+    ...
+    ValueError: Not a binomial square
+
+    2. When there aren't at least two squares:
+
+    >>> p = Polynomial(Monomial(4, x=2), Monomial(9, y=5), Monomial(3))
+    >>> binomial_square(Polynomial())
+    Traceback (most recent call last):
+    ...
+    ValueError: Not a binomial square
+
+    3. When the third term isn't the product of the firsts:
+
+    >>> p = Polynomial(Monomial(4, x=2), Monomial(9, y=4), Monomial(3))
+    >>> binomial_square(Polynomial())
+    Traceback (most recent call last):
+    ...
+    ValueError: Not a binomial square
+
+    :type p: Polynomial
+    :rtype: FPolynomial
+    :raise: TypeError, ValueError
+    """
+
+    # raise a TypeError if polynomial isn't a polynomial instance
+    if not isinstance(polynomial, Polynomial):
+        raise TypeError(f"Can't use binomial_square with an object of type '{polynomial.__class__.__name__}'")
+
+    # Raise a ValueError if polynomial's length isn't 3 (not a binomial square)
+    if len(polynomial) != 3:
+        raise ValueError("Not a binomial square")
+
+    # Sort the polynomial
+    polynomial = sorted(polynomial, key=lambda t: t.is_square, reverse=True)
+
+    # Check if there are two squares (otherwise raise a ValueError)
+    if not polynomial[1].is_square:
+        raise ValueError("Not a binomial square")
+
+    # Calculate squares
+    a = polynomial[0] ** (1/2)
+    b = polynomial[1] ** (1/2)
+
+    # Check if the third term is the product of the first two
+    if 2*a*b != abs(polynomial[2]):
+        raise ValueError("Not a binomial square")
+
+    # If the third term is negative, make negative one of the firsts
+    if polynomial[2].coefficient < 0:
+        b = -b
+
+    return FPolynomial(Polynomial(a, b), Polynomial(a, b))
+
+
 def factorize(polynomial):
     """
     Factorize the given polynomial using some algorythms
     (sub functions), such as
 
-    :func:`factorize.gcf`, group [todo], squares difference [todo],
+    :func:`gcf`, group [todo], squares difference [todo],
     cubes sum [todo], cubes difference [todo],
-    binomial square [todo], binomial cube [todo],
+    binomial square [todo], :func:`factorize_binomia_square`,
     trinomial square [todo].
 
     It works in recursive mode.
 
-    >>> print(factorize(Polynomial(Monomial(10, x=1), 15)))
-    5(2x + 3)
+    #>>> print(factorize(Polynomial(Monomial(10, x=1), 15)))
+    #5(2x + 3)
 
-    If you polynomial is not a Polynomial instance, it raises
-    a TypeError
+    If you pass a monomial or a number at the function
+    instead of a polynomial, it will return exactly the same
+    monomial/number
 
-    >>> print(factorize('John'))
-    Traceback (most recent call last):
-    ...
-    TypeError: Can't factorize object of type 'str'
+    #>>> print(factorize(Monomial(5, x=1)))
+    #5x
 
-    :type polynomial: Polynomial
-    :rtype: FPolynomial
+    Otherwise, it will raise a TypeError
+
+    #>>> print(factorize('John'))
+    #Traceback (most recent call last):
+    #...
+    #TypeError: Can't factorize object of type 'str'
+
+    :type polynomial: Polynomial, Monomial, int, float
+    :rtype: FPolynomial, Monomial, int, float
     :raises: TypeError
     """
 
-    def gcf(p, fp=()):
-        """
-        Factorize a polynomial with the gcf (greates common
-        facor) method. In theory, it works like this:
-
-        `AX + AY + ... = A(X + Y + ...)`
-
-        for example:
-        
-        >>> gcf((), Polynomial(Monomial(10, x=1), 15))
-        (5,), Polynomial(Monomial(2, x=1), 3)
-
-        The first argument is the polynomial to factorize.
-        The second one, is an optional list of factors; if you pass it
-        at the function, it will just add factors to it.
-        The results are, in order, the factors and the resulting
-        polynomial, that could be factorized again.
-
-        For example, if you pass some factors in the function call...
-
-        >>> gcf((3), Polynomial(Monomial(10, x=1), 15))
-        (3, 5), Polynomial(Monomial(2, x=1), 3)
-
-        ... you'll se that the factor 5 is added to the list of
-        factors passed in the function call
-
-        :type p: Polynomial
-        :type fp: tuple
-        :rtype: tuple
-        """
-
-        # Calculate the greatest common factor
-        gcd = reduce(lambda x, y: x.gcd(y), p)
-
-        # If there is no gcf, return the given arguments
-        if gcd == 1:
-            return p, fp
-
-        # Otherwise, return the new factors and the polynomial
-        p = Polynomial(*[t/gcd for t in p])
-        return p, fp + (gcd,)
-
-    # Raise a TypeError if it's not a polynomial
+    # Raise a TypeError if polynomial is not a polynomial
     if not isinstance(polynomial, Polynomial):
         raise TypeError(f"Can't factorize object of type '{polynomial.__class__.__name__}'")
 
-    # Initialize the factors list
-    factors = []
+    # initialize factors
+    factors = tuple()
 
-    while True:
-        polynomial, factors = gcf(polynomial)
-        break
+    # apply gcf() to polynomial, then iterate the result
+    for factor in gcf(polynomial):
+
+        # if the factor is not a polynomial, add it to the factors list
+        if not isinstance(factor, Polynomial):
+            factors += (factor, )
+
+        # if it's a polynomial of length one, add it to the list
+        elif len(factor) == 1:
+            factors += (factor[0], )
+
+        # if it's a polynomial of length one, try binomial square
+        elif len(factor) == 3:
+            try:
+                factors += binomial_square(factor)
+            except ValueError:
+                pass
+
+        # otherwise, add it to the list
+        else:
+            factors += (factor, )
 
     # Return the result
-    return FPolynomial(*factors, polynomial)
+    return FPolynomial(*factors)

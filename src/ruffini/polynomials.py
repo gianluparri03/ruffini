@@ -352,9 +352,9 @@ class Polynomial (tuple):
 
         result = str(self[0])
         for term in self[1:]:
-            if term.coefficient == abs(term.coefficient): # positive
+            if term.coefficient == abs(term.coefficient):  # positive
                 result += " + " + str(term)
-            else: # negative
+            else:  # negative
                 result += " - " + str(term)[1:]
         return result
 

@@ -38,7 +38,7 @@ class Monomial:
 
         - all the letters will be made lowercase
         - the letters can be only alphabetical and
-          with a lenght of one character
+          with a length of one character
         - the exponent must be positive and integer
 
         >>> type(Monomial(3, a=5).variables)

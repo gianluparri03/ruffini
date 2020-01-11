@@ -11,6 +11,8 @@ del polynomials
 del fpolynomials
 
 # Define some shorthands
+
+
 def gcd(*args):
     """
     A shorthand to calculate the gcd between two or more monomials.
@@ -21,6 +23,7 @@ def gcd(*args):
         args = (Monomial(args[0]),) + args[1:]
 
     return reduce(lambda x, y: x.gcd(y), args)
+
 
 def lcm(*args):
     """

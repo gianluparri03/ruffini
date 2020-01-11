@@ -10,7 +10,7 @@ class VariablesDict(dict):
     - All the keys (wich are the letters) will
       be made lowercase
     - The letters must be alphabetical and with
-      a lenght of one
+      a length of one
     - The values (wich are the exponent) have to be
       integer (5.0 is allowed) and positive
 
@@ -48,12 +48,12 @@ class VariablesDict(dict):
 
         It can raise an error if:
 
-        - the variable's name lenght is grater than 1
+        - the variable's name length is grater than 1
 
         >>> VariablesDict(xy=3)
         Traceback (most recent call last):
         ...
-        ValueError: Variable name lenght must be one
+        ValueError: Variable name length must be one
 
         - the variable's name is not alphabetical
 
@@ -100,7 +100,7 @@ class VariablesDict(dict):
             if not key.isalpha():
                 raise ValueError("Variable name must be alphabetical")
             elif len(key) > 1:
-                raise ValueError("Variable name lenght must be one")
+                raise ValueError("Variable name length must be one")
 
             value = kwargs[key]
 
@@ -357,7 +357,7 @@ class VariablesDict(dict):
         elif other < 0:
             raise ValueError("Second operator must be positive")
 
-        return all(l%other==0 for l in self.values())
+        return all(l % other == 0 for l in self.values())
 
     ### HASH ###
 

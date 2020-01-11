@@ -14,7 +14,7 @@ class Test(TestCase):
         self.assertRaises(TypeError, lambda: VD().clear())
         self.assertRaises(TypeError, lambda: VD().pop('c'))
 
-        # Keys' lenght must be 1
+        # Keys' length must be 1
         self.assertRaises(ValueError, lambda: VD(ab=5))
 
         # Keys must be alphabetical
