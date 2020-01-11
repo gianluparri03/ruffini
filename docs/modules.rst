@@ -7,3 +7,4 @@ ruffini
    variables
    monomials
    polynomials
+   factorizations
