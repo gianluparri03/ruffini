@@ -23,7 +23,7 @@ class FPolynomial (tuple):
     are not in this docs.
     """
 
-    def __new__ (cls, *factors):
+    def __new__(cls, *factors):
         """
         Create the factorized polynomial giving it a list
         of factors (int, float, Monomial or Polynomial).
@@ -72,63 +72,9 @@ class FPolynomial (tuple):
             else:
                 mapped_factors.append(Polynomial(factor))
 
-        # Sort the factors by frequency
-        mapped_factors = sorted(mapped_factors, key=mapped_factors.count, reverse=True)
-
         return super().__new__(cls, mapped_factors)
 
-    def __str__ (self):
-        """
-        Return the factorized polynomial as a string.
-
-        >>> p1 = Polynomial(2, Monomial(3, x=1))
-        >>> p2 = Polynomial(Monomial(2, y=1), 7)
-        >>> print(FPolynomial(p1, p2))
-        (2 + 3x)(2y + 7)
-
-        If the first element is a monomial, an integer
-        or a float, its brackets will be omitted
-
-        >>> print(FPolynomial(5, p1))
-        5(2 + 3x)
-
-        Otherwise, if a factor appears two times, the result
-        will be like this
-
-        >>> print(FPolynomial(p2, p2))
-        (2y + 7)**2
-
-        :rtype: str
-        """
-
-        factors = ""
-        done = []
-
-        # Return the result without parenthesis if there
-        # is only a factor and its exponent is 1
-        if len(self) == 1:
-            return str(self[0])
-
-        for factor in self:
-            # Check if it is already written
-            if factor in done:
-                continue
-
-            exponent = self.count(factor)
-
-            # if exponent is greater than one
-            if exponent > 1:
-                factors += f'({factor})**{exponent}'
-            # if it's a monomial
-            elif len(factor) == 1 and len(done) == 0:
-                factors += f'{factor}'
-            # default
-            else:
-                factors += f'({factor})'
-
-            done.append(factor)
-
-        return factors
+    ### Utilty Methods ###
 
     def eval(self):
         """
@@ -151,6 +97,130 @@ class FPolynomial (tuple):
 
         return reduce(lambda x, y: x*y, self)
 
+    ### Magic Methods ###
+
+    def __str__(self):
+        """
+        Return the factorized polynomial as a string.
+
+        >>> p1 = Polynomial(2, Monomial(3, x=1))
+        >>> p2 = Polynomial(Monomial(2, y=1), 17)
+        >>> print(FPolynomial(p1, p2))
+        (2 + 3x)(2y + 17)
+
+        If the first element is a monomial, an integer
+        or a float, its brackets will be omitted
+
+        >>> print(FPolynomial(5, p1))
+        5(2 + 3x)
+
+        Otherwise, if a factor appears two times, the result
+        will be like this
+
+        >>> print(FPolynomial(p2, p2))
+        (2y + 17)**2
+
+        >>> print(FPolynomial(p2, p2, 5))
+        5(2y + 17)**2
+
+        :rtype: str
+        """
+
+        # if there is only a factor, print it without parenthesis
+        if len(self) == 1:
+            return str(self[0])
+
+        # initialize variables
+        monomials = []
+        polynomials = []
+        result = ""
+
+        # divide factors in monomials and polynomials
+        for f in self:
+            if len(f) == 1:
+                monomials.append(f)
+            else:
+                polynomials.append(f)
+
+        # sort them
+        sorting_factor = lambda f: (self.count(f), len(str(f)))
+        monomials = sorted(list(set(monomials)), key=sorting_factor)
+        polynomials = sorted(list(set(polynomials)), key=sorting_factor)
+
+        # iterate the factors
+        for sublist in (monomials, polynomials):
+            for factor in sublist:
+                # if its exponent is 1...
+                if self.count(factor) == 1:
+                    # ...if it's a monomial and result is
+                    # empty, add the monomial without parenthesis
+                    if sublist == monomials and result == "":
+                        result += str(factor)
+                    # ... otherwise add it, but without exponent
+                    else:
+                        result += f"({factor})"
+                # in all the other cases, add it with exponent notation
+                else:
+                    result += f"({factor})**{self.count(factor)}"
+
+        return result
+
+    def __eq__(self, other):
+        """
+        Compare two factorized polynomials to see if they're
+        equivalent.
+
+        >>> p = Polynomial(Monomial(5, x=2), 3)
+        >>> m = Monomial(2, y=1)
+        >>> FPolynomial(p, m) == FPolynomial(p, m)
+        True
+
+        If we swap factors, the result doesn't change
+
+        >>> FPolynomial(p, m) == FPolynomial(m, p)
+        True
+
+        Also, if we compare two factorized polynomials
+        with different factors, but which - once evaluated - they
+        are equivalent, the result is true. For example:
+
+        >>> p = Polynomial(Monomial(4, x=2), Monomial(9, y=4), Monomial(-12, x=1, y=2))
+        >>> result_1 = factorize(p)
+        >>> print(result_1)
+        (2x - 3y**2)**2
+
+        Now, let's "shuffle" the terms' order in the polynomial
+        and factorize it again
+
+        >>> p = Polynomial(*p[::-1])
+        >>> result_2 = factorize(p)
+        >>> print(result_2)
+        (3y**2 - 2x)**2
+
+        that could be considered different from the first. __But__, if we
+        evaluate them, we'll see they're equivalent
+
+        >>> print(result_1.eval())
+        4x**2 - 12xy**2 + 9y**4
+        >>> print(result_2.eval())
+        9y**4 - 12xy**2 + 4x**2
+        >>> result_1.eval() == result_2.eval()
+        True
+
+        In fact, if we compared them without evaluating, the
+        result will still be the same
+
+        >>> result_1 == result_2
+        True
+
+        :type other: FPolynomial
+        :rtype: bool
+        """
+
+        if not isinstance(other, FPolynomial):
+            return False
+
+        return self.eval() == other.eval()
 
 def gcf(polynomial):
     """
@@ -202,10 +272,36 @@ def binomial_square(polynomial):
     for example:
 
     >>> p = Polynomial(Monomial(4, x=2), Monomial(9, y=4), Monomial(-12, x=1, y=2))
-    >>> print(binomial_square(p))
+    >>> result_1 = binomial_square(p)
+    >>> print(result_1)
     (2x - 3y**2)**2
 
-    *NB:* order of terms doesn't matter.
+    *NB:* order of terms doesn't matter. Let's use the case above
+    as example. If you factorize it in that order, the result, as
+    we said, is `(2x - 3y**2)**2`. If we try swapping the terms' order,
+    the result will be
+
+    >>> p = Polynomial(*p[::-1])
+    >>> result_2 = binomial_square(p)
+    >>> print(result_2)
+    (3y**2 - 2x)**2
+
+    that could be considered different from the first. __But__, if we
+    evaluate them, we'll see they're equivalent
+
+    >>> print(result_1.eval())
+    4x**2 - 12xy**2 + 9y**4
+    >>> print(result_2.eval())
+    9y**4 - 12xy**2 + 4x**2
+    >>> result_1.eval() == result_2.eval()
+    True
+
+    In fact, if we compared them without evaluating, the
+    result will still be the same
+
+    >>> result_1 == result_2
+    True
+
 
     If the given argument isn't an instance of Polynomial,
     it will raise a TypeError

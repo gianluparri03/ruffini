@@ -120,7 +120,7 @@ class VariablesDict(dict):
         # Check if it's empty
         self.is_empty = not bool(len(self))
 
-    ### ITEMS ###
+    ### Methods about Item storing ###
 
     def __setitem__(self, key, value):
         """
@@ -182,7 +182,7 @@ class VariablesDict(dict):
         except KeyError:
             return 0
 
-    ### REPRESENTATION ###
+    ### Methods about Representation ###
 
     def __str__(self):
         """
@@ -215,7 +215,7 @@ class VariablesDict(dict):
         pairs = [f"{k}={self[k]}" for k in sorted(self.keys())]
         return f"{self.__class__.__name__}({', '.join(pairs)})"
 
-    ### OPERATIONS ###
+    ### Operations Methods ###
 
     def __add__(self, other):
         """
@@ -359,13 +359,17 @@ class VariablesDict(dict):
 
         return all(l % other == 0 for l in self.values())
 
-    ### HASH ###
+    ### Hashing Methods ###
 
     def __hash__(self):
         """
         Return the hash for the VariablesDict.
         It's equal to the tuple of the items.
 
+        >>> hash(VariablesDict(x=2)) == hash((('x', 2),))
+        True
+
         :rtype: int
         """
-        return hash(tuple(list((k, self[k]) for k in self)))
+
+        return hash(tuple(list((k, self[k]) for k in sorted(self.keys())))) 

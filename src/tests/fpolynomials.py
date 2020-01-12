@@ -35,7 +35,7 @@ class Test(TestCase):
         self.assertRaises(TypeError, FP, "", self.p[1])
 
         # default string representation
-        self.assertEqual(str(self.fp[0]), '(10x + 15)(2x + 3)')
+        self.assertEqual(str(self.fp[0]), '(2x + 3)(10x + 15)')
 
         # if the first factor is a monomial there are no brackets
         self.assertEqual(str(self.fp[1]), '5(2x + 3)')
@@ -45,11 +45,17 @@ class Test(TestCase):
         self.assertEqual(str(FP(self.p[1], self.p[1])), '(10x + 15)**2')
         self.assertEqual(str(FP(self.p[0], M(2, x=1), M(2, x=1))), '(2x)**2(2x + 3)')
 
+        # with factors that appears more times and a monomial
+        self.assertEqual(str(FP(self.p[0], self.p[0], 5)), '5(2x + 3)**2')
+
         # if there is only a factor with exponent 1, str() returns that factor
         self.assertEqual(str(FP(self.p[0])), str(self.p[0]))
 
         # eval
         self.assertEqual(self.fp[1].eval(), P(M(10, x=1), 15))
+
+        # eq
+        self.assertEqual(FP(self.p[1], 5), FP(5, self.p[1]))
 
     def test_factorization(self):
         # test shorthand
@@ -99,5 +105,9 @@ class Test(TestCase):
 
         # test with a negative binomial square
         polynomial -= M(24, x=2, y=1)
-        factorized = FP(*(P(self.p[2][0], -self.p[2][1]), ) * 2)
+        factorized = FP(*[P(self.p[2][0], -self.p[2][1])] * 2)
+        self.assertEqual(binomial_square(polynomial), factorized)
+
+        # commutative property
+        polynomial = P(*polynomial[::-1])
         self.assertEqual(binomial_square(polynomial), factorized)

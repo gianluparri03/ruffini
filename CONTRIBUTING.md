@@ -18,12 +18,6 @@ The Makefile also has a coverage function: if you want to see the lines of code 
 - [ ] Look for a solution to `__repr__` (too verbose)
 - [ ] Create a new logo
 - [ ] Add `Polynomial().eval()`
-- [ ] Adjust `FPolynomial().__eq__()`
-
-**Variables:**
-- [ ] Change variables implementation
-- [ ] Create `Variable` class
-- [ ] Make `VariablesDict()` keys istance of `Variable`
 
 **Factoring algorythms:**
 - [ ] `AX + BX + AY + BY = (A + B)(X + Y)`
@@ -45,6 +39,7 @@ The Makefile also has a coverage function: if you want to see the lines of code 
 - [X] Add `VariablesDict().__truediv__()`
 - [X] Implement `Monomial().__pow__()` with floating-point exponent
 - [X] Create the `FPolynomial` class
+- [X] Adjust `FPolynomial().__eq__()`
 
 - [X] `AX + AY = A(X + Y)`
 - [X] `A**2 +2AB + B**2 = (A + B)**2`
