@@ -25,7 +25,7 @@ class VariablesDict(dict):
         Initialize the VariablesDict by giving
         the pairs key:value as keyword-arguments.
 
-        >>> print(VariablesDict(x=5, y=3))
+        >>> VariablesDict(x=5, y=3)
         {'x': 5, 'y': 3}
 
         While inserting the pairs key: value, it
@@ -34,17 +34,17 @@ class VariablesDict(dict):
         - automatically makes the key lowercase.
 
         >>> VariablesDict(Y=3)
-        VariablesDict(y=3)
+        {'y': 3}
 
         - doesn't insert the pair if the value is 0
 
         >>> VariablesDict(a=0, b=2)
-        VariablesDict(b=2)
+        {'b': 2}
 
         - convert the value in int if it's a whole number
 
         >>> VariablesDict(c=9.0)
-        VariablesDict(c=9)
+        {'c': 9}
 
         It can raise an error if:
 
@@ -205,15 +205,14 @@ class VariablesDict(dict):
         Return the dict as a string
 
         >>> repr(VariablesDict(Y=5))
-        'VariablesDict(y=5)'
-        >>> repr(VariablesDict(a=2, b=8, c=3))
-        'VariablesDict(a=2, b=8, c=3)'
+        "{'y': 5}"
+
+        For more informations see :func:`VariablesDict.__str__()`.
 
         :rtype: str
         """
 
-        pairs = [f"{k}={self[k]}" for k in sorted(self.keys())]
-        return f"{self.__class__.__name__}({', '.join(pairs)})"
+        return self.__str__()
 
     ### Operations Methods ###
 
@@ -224,11 +223,11 @@ class VariablesDict(dict):
         and the second VariablesDict
 
         >>> VariablesDict(x=5, y=3) + VariablesDict(y=5)
-        VariablesDict(x=5, y=8)
+        {'x': 5, 'y': 8}
         >>> VariablesDict(x=18) + VariablesDict(y=4)
-        VariablesDict(x=18, y=4)
+        {'x': 18, 'y': 4}
         >>> VariablesDict(a=36) + VariablesDict()
-        VariablesDict(a=36)
+        {'a': 36}
 
         :type other: VariablesDict
         :rtype: VariablesDict
@@ -251,9 +250,9 @@ class VariablesDict(dict):
         dict and the values of the second one
 
         >>> VariablesDict(x=5, y=3) - VariablesDict(x=1, y=2)
-        VariablesDict(x=4, y=1)
+        {'x': 4, 'y': 1}
         >>> VariablesDict(x=18) - VariablesDict(x=18)
-        VariablesDict()
+        {}
         >>> VariablesDict(c=2) - VariablesDict(c=3)
         Traceback (most recent call last):
         ...
@@ -280,7 +279,7 @@ class VariablesDict(dict):
         integer positive number
 
         >>> VariablesDict(a=2, b= 5) * 3
-        VariablesDict(a=6, b=15)
+        {'a': 6, 'b': 15}
 
         :type other: int
         :rtype: VariablesDict
@@ -303,7 +302,7 @@ class VariablesDict(dict):
         by the given number (other)
 
         >>> VariablesDict(a=4, b=2) / 2
-        VariablesDict(a=2, b=1)
+        {'a': 2, 'b': 1}
 
         If the variablesdict is not divisible
         by the number, it will raise a ValueError
@@ -372,4 +371,4 @@ class VariablesDict(dict):
         :rtype: int
         """
 
-        return hash(tuple(list((k, self[k]) for k in sorted(self.keys())))) 
+        return hash(tuple(list((k, self[k]) for k in sorted(self.keys()))))

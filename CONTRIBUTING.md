@@ -15,7 +15,6 @@ The Makefile also has a coverage function: if you want to see the lines of code 
 ### Todo
 
 **General:**
-- [ ] Look for a solution to `__repr__` (too verbose)
 - [ ] Create a new logo
 - [ ] Add `Polynomial().eval()`
 
@@ -35,6 +34,7 @@ The Makefile also has a coverage function: if you want to see the lines of code 
 - [X] Add `Polynomial().__hash__()`
 - [X] Make legal `Monomial(2, {'x': 1}).eval(x=Monomial(2, {'y': 2}))`
 - [X] Add `gcd(*args)` and `lcm(*args)` in `__init__.py` as shortands
+- [X] Make `__repr__()` equals to `__str__()`
 
 - [X] Add `VariablesDict().__truediv__()`
 - [X] Implement `Monomial().__pow__()` with floating-point exponent

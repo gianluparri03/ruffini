@@ -31,7 +31,7 @@ class Monomial:
         stored in a dict (the keys are the letters
         and the values the degrees).
 
-        >>> print(Monomial(17, k=3))
+        >>> Monomial(17, k=3)
         17k**3
 
         The variables will be stored in a VariableDict, so:
@@ -62,7 +62,7 @@ class Monomial:
         be transformed in 18
 
         >>> Monomial(7.0, a=2)
-        Monomial(7, a=2)
+        7a**2
 
         :type coefficient: int, float
         :type coefficient: dict, VariablesDict
@@ -147,7 +147,7 @@ class Monomial:
         >>> a = Monomial(5, x=1, y=1)
         >>> b = Monomial(15, x=1)
         >>> a.gcd(b)
-        Monomial(5, x=1)
+        5x
 
         It works only with integer coefficient/numbers
         different from zero
@@ -169,7 +169,7 @@ class Monomial:
 
         >>> c = Monomial(-30, x=1, y=1)
         >>> b.gcd(c)
-        Monomial(15, x=1)
+        15x
 
         If you want to calculate the gcd with more
         operators, you can use the shorthand :func:`gcd`.
@@ -213,7 +213,7 @@ class Monomial:
         >>> a = Monomial(2, x=1, y=1)
         >>> b = Monomial(-9, y=3)
         >>> a.lcm(b)
-        Monomial(18, x=1, y=3)
+        18xy**3
 
         If you want to know others informations
         like errors and limits, please check the
@@ -242,14 +242,14 @@ class Monomial:
         variables will remain there
 
         >>> m.eval(x=2)
-        Monomial(10, y=1)
+        10y
 
         You can declare some variables values
         which aren't in the monomial and the
         result won't change
 
         >>> m.eval(b=7)
-        Monomial(5, x=1, y=1)
+        5xy
 
         **NB** as for the initialization, the variable
         isn't case sensitive
@@ -290,16 +290,16 @@ class Monomial:
         to sum two monomials, or a number, too
 
         >>> Monomial(5, x=1, y=3) + Monomial(-1.52, x=1, y=3)
-        Monomial(3.48, x=1, y=3)
+        3.48xy**3
 
         >>> Monomial(1, z=1) + 17
-        Polynomial(Monomial(z=1), Monomial(17))
+        z + 17
 
         You can also add a polynomial (in this case,
         it will use the :func:`Polynomial.__add__` method)
 
         >>> from ruffini import Polynomial
-        >>> print(Monomial(1, a=2) + Polynomial(Monomial(2, b=1)))
+        >>> Monomial(1, a=2) + Polynomial(Monomial(2, b=1))
         2b + a**2
 
         Otherwise, it will raise a TypeError
@@ -348,22 +348,22 @@ class Monomial:
         and another one
 
         >>> Monomial(5, x=1) - Monomial(3, x=1)
-        Monomial(2, x=1)
+        2x
 
         If the monomials are not similar or the second
         operator is a number, the result will be a
         polynomial
 
         >>> Monomial(5, x=1, y=3) - Monomial(3, x=1)
-        Polynomial(Monomial(5, x=1, y=3), Monomial(-3, x=1))
+        5xy**3 - 3x
         >>> Monomial(17, a=1, b=1) - 2.5
-        Polynomial(Monomial(17, a=1, b=1), Monomial(-2.5))
+        17ab - 2.5
 
         You can also subtract a polynomial (in this case,
         it will use the :func:`Polynomial.__sub__` method)
 
         >>> from ruffini import Polynomial
-        >>> print(Monomial(1, a=2) - Polynomial(Monomial(2, b=1)))
+        >>> Monomial(1, a=2) - Polynomial(Monomial(2, b=1))
         -2b + a**2
 
         Otherwise, it will raise a TypeError
@@ -392,17 +392,17 @@ class Monomial:
         monomial or a number (int / float)
 
         >>> Monomial(5, x=1, y=2) * Monomial(2, a=1, b=1)
-        Monomial(10, a=1, b=1, x=1, y=2)
+        10abxy**2
         >>> Monomial(3, c=2) * 5
-        Monomial(15, c=2)
+        15c**2
         >>> Monomial(k=3) * Monomial(k=3)
-        Monomial(k=6)
+        k**6
 
         Also multiplication by a polynomial is legal
         (it will use the :func:`Polynomial.__mul__` method)
 
         >>> from ruffini import Polynomial
-        >>> print(Monomial(a=2) * Polynomial(Monomial(2, b=1)))
+        >>> Monomial(a=2) * Polynomial(Monomial(2, b=1))
         2a**2b
 
         If the second operator isn't mentioned
@@ -444,11 +444,11 @@ class Monomial:
         by a number (int / float)
 
         >>> Monomial(6, a=3) / Monomial(3, a=1)
-        Monomial(2, a=2)
+        2a**2
         >>> Monomial(18, k=3) / 6
-        Monomial(3, k=3)
+        3k**3
         >>> Monomial(27, x=6) / Monomial(3, x=6)
-        Monomial(9)
+        9
 
         If second monomial's variable's exponent
         are higher than first's, it will raise a
@@ -488,9 +488,9 @@ class Monomial:
         Raise a monomial to power
 
         >>> Monomial(5, x=1) ** 2
-        Monomial(25, x=2)
+        25x**2
         >>> Monomial(4, c=6) ** 3
-        Monomial(64, c=18)
+        64c**18
 
         If the exponent is 0, the result will be always 1
 
@@ -503,14 +503,14 @@ class Monomial:
         >>> Monomial(4, x=2).is_square
         True
         >>> Monomial(4, x=2) ** (1/2)
-        Monomial(2, x=1)
+        2x
 
         You can do the same thing with a cube
 
         >>> Monomial(27, y=6).is_cube
         True
         >>> Monomial(27, y=6) ** (1/3)
-        Monomial(3, y=2)
+        3y**2
 
         In all the other cases, a float exponent
         will raise a TypeError
@@ -569,7 +569,7 @@ class Monomial:
         of the addition:
 
         >>> 18 + Monomial(3)
-        Monomial(21)
+        21
 
         For more informations, see :func:`Monomial.__add__` docs.
 
@@ -590,7 +590,7 @@ class Monomial:
         of the subtraction:
 
         >>> 9 - Monomial(4)
-        Monomial(5)
+        5
 
         For more informations, see :func:`Monomial.__sub__` docs.
 
@@ -611,7 +611,7 @@ class Monomial:
         of the multiplication:
 
         >>> 5 * Monomial(2, x=2)
-        Monomial(10, x=2)
+        10x**2
 
         For more informations, see :func:`Monomial.__mul__` docs.
 
@@ -632,7 +632,7 @@ class Monomial:
         of the division:
 
         >>> 8 / Monomial(4)
-        Monomial(2)
+        2
 
         For more informations, see :func:`Monomial.__truediv__ docs`.
 
@@ -662,39 +662,39 @@ class Monomial:
 
         Normal monomial:
 
-        >>> print(Monomial(5, x=1, y=1))
-        5xy
+        >>> str(Monomial(5, x=1, y=1))
+        '5xy'
 
         coefficient = 1 and there are variables
 
-        >>> print(Monomial(a=2))
-        a**2
+        >>> str(Monomial(a=2))
+        'a**2'
 
         coefficient = -1 and there are variables
 
-        >>> print(Monomial(-1, k=3))
-        -k**3
+        >>> str(Monomial(-1, k=3))
+        '-k**3'
 
         coefficient = 0
 
-        >>> print(Monomial(0, s=5))
-        0
+        >>> str(Monomial(0, s=5))
+        '0'
 
         coefficient = 1 and there aren't variables
 
-        >>> print(Monomial())
-        1
+        >>> str(Monomial())
+        '1'
 
         coefficient = -1 and there aren't variables
 
-        >>> print(Monomial(-1))
-        -1
+        >>> str(Monomial(-1))
+        '-1'
 
         **NB** the variables are displayed in
         alphabetical order
 
-        >>> print(Monomial(5, k=2, b=3))
-        5b**3k**2
+        >>> str(Monomial(5, k=2, b=3))
+        '5b**3k**2'
 
         :rtype: str
         """
@@ -737,30 +737,16 @@ class Monomial:
         Return the monomial as a string
 
         >>> Monomial(5, x=5)
-        Monomial(5, x=5)
+        5x**5
         >>> Monomial(-1, a=2, c=3)
-        Monomial(-1, a=2, c=3)
+        -a**2c**3
 
-        **NB** the variables are displayed in
-        alphabetical order
-
-        >>> Monomial(5, k=2, b=3)
-        Monomial(5, b=3, k=2)
+        For more informations, see :func:Monomial.__str__()`.
 
         :rtype: str
         """
 
-        variables = sorted(self.variables.keys())
-        variables = [f"{l}={self.variables[l]}" for l in variables]
-        variables = ', '.join(variables)
-
-        if self.coefficient == 1 and variables:
-            return f"Monomial({variables})"
-
-        elif variables == "":
-            return f"Monomial({self.coefficient})"
-
-        return f"Monomial({self.coefficient}, {variables})"
+        return self.__str__()
 
     def __eq__(self, other):
         """
@@ -795,9 +781,9 @@ class Monomial:
         inverting the coefficient
 
         >>> - Monomial(5, x=1, y=1)
-        Monomial(-5, x=1, y=1)
+        -5xy
         >>> - Monomial(-3, a=1, b=4)
-        Monomial(3, a=1, b=4)
+        3ab**4
 
         :rtype: Monomial
         """
@@ -809,9 +795,9 @@ class Monomial:
         calculating the absolute value of the coefficient
 
         >>> abs(Monomial(-3, a=1, b=4))
-        Monomial(3, a=1, b=4)
+        3ab**4
         >>> abs(Monomial(5, x=1, y=1))
-        Monomial(5, x=1, y=1)
+        5xy
 
         :rtype: Monomial
         """

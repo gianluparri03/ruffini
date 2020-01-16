@@ -52,14 +52,14 @@ class Test(TestCase):
         # str() work as a normal dict
         self.assertEqual(str(VD(x=2)), str({'x': 2}))
 
-        # repr()
-        self.assertEqual(repr(VD(y=7)), 'VariablesDict(y=7)')
+        # repr() == str()
+        self.assertEqual(repr(VD(y=7)), str(VD(y=7)))
 
+    def test_operations(self):
         # subtraction and sum only between VariablesDict
         self.assertRaises(TypeError, lambda: VD() + {})
         self.assertRaises(TypeError, lambda: VD() - {})
 
-    def test_operations(self):
         # test sum
         self.assertEqual(VD(x=2, y=3) + VD(x=6), VD(x=8, y=3))
 

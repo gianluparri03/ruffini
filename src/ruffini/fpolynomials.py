@@ -30,7 +30,7 @@ class FPolynomial (tuple):
 
         >>> p = Polynomial(Monomial(2, x=2, y=2))
         >>> fp = FPolynomial(5, p)
-        >>> print(fp)
+        >>> fp
         5(2x**2y**2)
 
         Every factor that is equal to 1 is not inserted
@@ -82,9 +82,9 @@ class FPolynomial (tuple):
         all the factors
 
         >>> f = FPolynomial(5, Polynomial(Monomial(2, x=1), 3))
-        >>> print(f)
+        >>> f
         5(2x + 3)
-        >>> print(f.eval())
+        >>> f.eval()
         10x + 15
 
         The result will always be a Polynomial
@@ -165,6 +165,22 @@ class FPolynomial (tuple):
 
         return result
 
+    def __repr__(self):
+        """
+        Return the factorized polynomial as a string.
+
+        >>> p1 = Polynomial(2, Monomial(3, x=1))
+        >>> p2 = Polynomial(Monomial(2, y=1), 17)
+        >>> repr(FPolynomial(p1, p2))
+        (2 + 3x)(2y + 17)
+
+        For more informations, see :func:FPolynomial.__str__()`.
+
+        :rtype: str
+        """
+
+        return self.__str__()
+
     def __eq__(self, other):
         """
         Compare two factorized polynomials to see if they're
@@ -186,7 +202,7 @@ class FPolynomial (tuple):
 
         >>> p = Polynomial(Monomial(4, x=2), Monomial(9, y=4), Monomial(-12, x=1, y=2))
         >>> result_1 = factorize(p)
-        >>> print(result_1)
+        >>> result_1
         (2x - 3y**2)**2
 
         Now, let's "shuffle" the terms' order in the polynomial
@@ -194,15 +210,15 @@ class FPolynomial (tuple):
 
         >>> p = Polynomial(*p[::-1])
         >>> result_2 = factorize(p)
-        >>> print(result_2)
+        >>> result_2
         (3y**2 - 2x)**2
 
         that could be considered different from the first. __But__, if we
         evaluate them, we'll see they're equivalent
 
-        >>> print(result_1.eval())
+        >>> result_1.eval()
         4x**2 - 12xy**2 + 9y**4
-        >>> print(result_2.eval())
+        >>> result_2.eval()
         9y**4 - 12xy**2 + 4x**2
         >>> result_1.eval() == result_2.eval()
         True
@@ -231,12 +247,12 @@ def gcf(polynomial):
 
     for example:
 
-    >>> print(gcf(Polynomial(Monomial(10, x=1), 15)))
+    >>> gcf(Polynomial(Monomial(10, x=1), 15))
     5(2x + 3)
 
     If there isn't a gcf, it will return the starting polynomial
 
-    >>> print(gcf(Polynomial(Monomial(11, x=1), 15)))
+    >>> gcf(Polynomial(Monomial(11, x=1), 15))
     11x + 15
 
     The function will always return a FPolynomial.
@@ -273,7 +289,7 @@ def binomial_square(polynomial):
 
     >>> p = Polynomial(Monomial(4, x=2), Monomial(9, y=4), Monomial(-12, x=1, y=2))
     >>> result_1 = binomial_square(p)
-    >>> print(result_1)
+    >>> result_1
     (2x - 3y**2)**2
 
     *NB:* order of terms doesn't matter. Let's use the case above
@@ -283,15 +299,15 @@ def binomial_square(polynomial):
 
     >>> p = Polynomial(*p[::-1])
     >>> result_2 = binomial_square(p)
-    >>> print(result_2)
+    >>> result_2
     (3y**2 - 2x)**2
 
     that could be considered different from the first. __But__, if we
     evaluate them, we'll see they're equivalent
 
-    >>> print(result_1.eval())
+    >>> result_1.eval()
     4x**2 - 12xy**2 + 9y**4
-    >>> print(result_2.eval())
+    >>> result_2.eval()
     9y**4 - 12xy**2 + 4x**2
     >>> result_1.eval() == result_2.eval()
     True
@@ -383,22 +399,22 @@ def factorize(polynomial):
 
     It works in recursive mode.
 
-    #>>> print(factorize(Polynomial(Monomial(10, x=1), 15)))
-    #5(2x + 3)
+    >>> factorize(Polynomial(Monomial(10, x=1), 15))
+    5(2x + 3)
 
     If you pass a monomial or a number at the function
     instead of a polynomial, it will return exactly the same
     monomial/number
 
-    #>>> print(factorize(Monomial(5, x=1)))
-    #5x
+    >>> factorize(Monomial(5, x=1))
+    5x
 
     Otherwise, it will raise a TypeError
 
-    #>>> print(factorize('John'))
-    #Traceback (most recent call last):
-    #...
-    #TypeError: Can't factorize object of type 'str'
+    >>> factorize('John')
+    Traceback (most recent call last):
+    ...
+    TypeError: Can't factorize object of type 'str'
 
     :type polynomial: Polynomial, Monomial, int, float
     :rtype: FPolynomial, Monomial, int, float

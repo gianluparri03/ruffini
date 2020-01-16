@@ -202,11 +202,9 @@ class Test(TestCase):
     def test_str_repr(self):
         # normal monomial
         self.assertEqual(str(M(5, x=1, y=4)), '5xy**4')
-        self.assertEqual(repr(M(5, x=1, y=4)), 'Monomial(5, x=1, y=4)')
 
         # coefficient == 1 w/ variables
         self.assertEqual(str(M(a=2)), 'a**2')
-        self.assertEqual(repr(M(a=2)), 'Monomial(a=2)')
 
         # coefficient == -1 and w/ variables
         self.assertEqual(str(M(-1, k=3)), '-k**3')
@@ -216,14 +214,15 @@ class Test(TestCase):
 
         # w/o variables
         self.assertEqual(str(M(7)), '7')
-        self.assertEqual(repr(M(7)), 'Monomial(7)')
 
         # coefficient == 1 w/o variables
         self.assertEqual(str(M()), '1')
-        self.assertEqual(repr(M()), 'Monomial(1)')
 
         # coefficient == -1 w/o variables
         self.assertEqual(str(M(-1)), '-1')
+
+        # repr is the same as str
+        self.assertEqual(str(self.m[2]), repr(self.m[2]))
 
     def test_eq(self):
         # same coefficient, same variables

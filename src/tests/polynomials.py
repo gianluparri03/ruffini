@@ -90,8 +90,8 @@ class Test(TestCase):
         # a negative term is preceded by '-'
         self.assertEqual(str(self.p[2]), "9x - 4a**4")
 
-        # test repr
-        self.assertEqual(repr(self.p[1]), "Polynomial(Monomial(-13, y=1), Monomial(10, a=4))")
+        # repr() == str()
+        self.assertEqual(repr(self.p[1]), str(self.p[1]))
 
     def test_eq_hash(self):
         # two polynomials are not equal if
