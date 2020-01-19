@@ -457,7 +457,7 @@ class Monomial:
         >>> Monomial(5) / Monomial(4, x=1)
         Traceback (most recent call last):
         ...
-        ValueError: Exponent must be positive
+        ValueError: variable's exponent must be positive
 
         Otherwise, if the second operator isn't a monomial
         or a number, it will raise a TypeError
