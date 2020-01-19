@@ -172,7 +172,7 @@ class FPolynomial (tuple):
         >>> p1 = Polynomial(2, Monomial(3, x=1))
         >>> p2 = Polynomial(Monomial(2, y=1), 17)
         >>> repr(FPolynomial(p1, p2))
-        (2 + 3x)(2y + 17)
+        '(2 + 3x)(2y + 17)'
 
         For more informations, see :func:FPolynomial.__str__()`.
 
@@ -366,15 +366,15 @@ def binomial_square(polynomial):
         raise ValueError("Not a binomial square")
 
     # Sort the polynomial
-    polynomial = sorted(polynomial, key=lambda t: t.is_square, reverse=True)
+    polynomial = sorted(polynomial, key=lambda t: t.has_root(2), reverse=True)
 
     # Check if there are two squares (otherwise raise a ValueError)
-    if not polynomial[1].is_square:
+    if not polynomial[1].has_root(2):
         raise ValueError("Not a binomial square")
 
     # Calculate squares
-    a = polynomial[0] ** (1/2)
-    b = polynomial[1] ** (1/2)
+    a = polynomial[0].root(2)
+    b = polynomial[1].root(2)
 
     # Check if the third term is the product of the first two
     if 2*a*b != abs(polynomial[2]):
@@ -402,14 +402,7 @@ def factorize(polynomial):
     >>> factorize(Polynomial(Monomial(10, x=1), 15))
     5(2x + 3)
 
-    If you pass a monomial or a number at the function
-    instead of a polynomial, it will return exactly the same
-    monomial/number
-
-    >>> factorize(Monomial(5, x=1))
-    5x
-
-    Otherwise, it will raise a TypeError
+    If polynomial isn't a polynomial, it will raise a TypeError
 
     >>> factorize('John')
     Traceback (most recent call last):

@@ -37,7 +37,7 @@ The Makefile also has a coverage function: if you want to see the lines of code 
 - [X] Make `__repr__()` equals to `__str__()`
 
 - [X] Add `VariablesDict().__truediv__()`
-- [X] Implement `Monomial().__pow__()` with floating-point exponent
+- [X] Implement `Monomial().root()`
 - [X] Create the `FPolynomial` class
 - [X] Adjust `FPolynomial().__eq__()`
 

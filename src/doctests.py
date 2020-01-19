@@ -7,7 +7,7 @@ suite = unittest.TestSuite()
 suite.addTest(doctest.DocTestSuite(variables))
 suite.addTest(doctest.DocTestSuite(monomials))
 suite.addTest(doctest.DocTestSuite(polynomials))
-#suite.addTest(doctest.DocTestSuite(fpolynomials))
+suite.addTest(doctest.DocTestSuite(fpolynomials))
 
 # Test it
 runner = unittest.TextTestRunner()

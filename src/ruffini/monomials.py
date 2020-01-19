@@ -5,10 +5,9 @@ from .variables import VariablesDict
 
 class Monomial:
     """
-    A Monomial object is composed by variables
-    and coefficient; the coefficient can be
-    whathever you want, but it has to be numerical
-    (instance of int or float). The variables
+    A Monomial object is composed by some variables
+    and a coefficient; the coefficient has to be
+    a number (instance of int or float). The variables
     instead must have three features:
     - positive and integer exponent
     - all the variables names must be a letter
@@ -27,12 +26,18 @@ class Monomial:
     def __init__(self, coefficient=1, **variables):
         """
         Create a Monomial object by giving the
-        numerical coefficient and the variables,
-        stored in a dict (the keys are the letters
-        and the values the degrees).
+        numerical coefficient and the variables
+        as keyword arguments.
 
         >>> Monomial(17, k=3)
         17k**3
+
+        If the coefficient is instance of float but
+        it's a whole number (like 18.0), it will be
+        transformed in int (in this case, 18)
+
+        >>> Monomial(7.0, a=2)
+        7a**2
 
         The variables will be stored in a VariableDict, so:
 
@@ -41,28 +46,14 @@ class Monomial:
           with a length of one character
         - the exponent must be positive and integer
 
-        >>> type(Monomial(3, a=5).variables)
-        <class 'ruffini.variables.VariablesDict'>
+        (for more infos, see :func:`VariablesDict.__init__()`.)
 
-        When initialized the monomial, this method calculates
-        the monomial's total degree (the sum of all the degrees)
+        After initialized the monomial, this method
+        also calculates the monomial's total degree
+        (which is the sum of the variables' degrees)
 
         >>> Monomial(-2, a=2, b=1, c=3).degree
         6
-
-        It also calculates if the monomial is a cube or a square
-
-        >>> Monomial(4, a=2, k=4).is_square
-        True
-        >>> Monomial(6, b=27).is_cube
-        False
-
-        **NB** if the coefficient is instance of float
-        but it's a whole number (such as 18.0), it will
-        be transformed in 18
-
-        >>> Monomial(7.0, a=2)
-        7a**2
 
         :type coefficient: int, float
         :type coefficient: dict, VariablesDict
@@ -82,19 +73,6 @@ class Monomial:
 
         # Calculate the degree
         self.degree = sum(self.variables.values())
-
-        # Check if it's a square or a cube
-        if self.coefficient < 0:
-            self.is_square = False
-            self.is_cube = ((-self.coefficient) ** (1./3.)).is_integer() and self.variables % 3
-
-        elif self.coefficient > 0:
-            self.is_square = sqrt(self.coefficient).is_integer() and self.variables % 2
-            self.is_cube = (self.coefficient ** (1./3.)).is_integer() and self.variables % 3
-
-        else:
-            self.is_square = False
-            self.is_cube = False
 
     ### Utility Methods ###
 
@@ -138,6 +116,96 @@ class Monomial:
             return False
 
         return self.variables == other.variables
+
+    def has_root(self, index):
+        """
+        Check if the monomial "has" the root: I'll
+        explain better. The monomial `4x**2`, for example,
+        we can say it has the 2 root, because `(4x**2)**(1/2)`
+        is a monomial (=`2x`).
+
+        >>> Monomial(4, x=2).has_root(2)
+        True
+
+        We can't say the same thing for `16a**4b`:
+
+        >>> Monomial(16, a=4, b=1).has_root(2)
+        False
+
+        Zero "has" all the roots
+
+        >>> Monomial(0).has_root(700)
+        True
+    
+        If `index` is not an integer, it will raise
+        a TypeError
+
+        >>> Monomial(5, c=3).has_root({})
+        Traceback (most recent call last):
+        ...
+        TypeError: root index must be int, not dict
+
+        :raises: TypeError
+        :type index: int
+        :rtype: bool
+        """
+
+        # check if index is int
+        if not isinstance(index, int):
+            raise TypeError(f"root index must be int, not {index.__class__.__name__}")
+
+        # return always true if the coefficient is 0
+        elif not self.coefficient:
+            return True
+
+        # return always false if index is even and
+        # coefficient is negative
+        elif not index % 2 and self.coefficient < 0:
+            return False
+
+        # try to apply the root to the index
+        coefficient = abs(self.coefficient) ** (1/index)
+
+        return coefficient.is_integer() and self.variables % index
+
+    def root(self, index):
+        """
+        Calculate the root of the given index of the monomial.
+        For example:
+
+        >>> Monomial(4, x=2).root(2)
+        2x
+        >>> Monomial(-27, a=9).root(3)
+        -3a**3
+        >>> Monomial(0).root(700)
+        0
+
+        If a monomial hasn't a root, it will raise a ValueError
+
+        >>> Monomial(5, b=2).root(3)
+        Traceback (most recent call last):
+        ...
+        ValueError: this monomial hasn't root 3
+
+        To see if a monomial has a root, use :func:`Monomial.has_root()`.
+
+        :raises: ValueError
+        :rtype: Monomial
+        """
+
+        # check if the monomial has the root
+        if not self.has_root(index):
+            raise ValueError(f"this monomial hasn't root {index}")
+
+        # apply the root
+        coefficient = abs(self.coefficient) ** (1/index)
+        variables = self.variables / index
+
+        # check if the coefficient is negative
+        if self.coefficient < 0:
+            coefficient = - coefficient
+
+        return Monomial(coefficient, **variables)
 
     def gcd(self, other):
         """
@@ -497,23 +565,7 @@ class Monomial:
         >>> Monomial(5, k=6) ** 0
         1
 
-        If the monomial is a square, you can
-        calcolate the square root
-
-        >>> Monomial(4, x=2).is_square
-        True
-        >>> Monomial(4, x=2) ** (1/2)
-        2x
-
-        You can do the same thing with a cube
-
-        >>> Monomial(27, y=6).is_cube
-        True
-        >>> Monomial(27, y=6) ** (1/3)
-        3y**2
-
-        In all the other cases, a float exponent
-        will raise a TypeError
+        A float exponent will raise a TypeError
 
         >>> Monomial(3.14, a=3) ** 2.5
         Traceback (most recent call last):
@@ -534,24 +586,12 @@ class Monomial:
         :raise: ValueError, TypeError
         """
 
-        # if the exponent is not an integer...
+        # if the exponent is not an integer raise a typeerror
         if not isinstance(exp, int):
-            # if the monomial is a square and the exponent
-            # is 1/2, return the square root
-            if exp == 1/2 and self.is_square:
-                return Monomial(int(sqrt(self.coefficient)), **(self.variables / 2))
-
-            # if the monomial is a cube and the exponent
-            # is 1/3, return the cube root
-            elif exp == 1/3 and self.is_cube:
-                return Monomial(int(self.coefficient ** (1/3)), **(self.variables / 3))
-
-            # otherwise raise an error
-            else:
-                raise TypeError(f"unsupported operand type(s) for ** or pow(): 'Monomial' and '{exp.__class__.__name__}'")
+            raise TypeError(f"unsupported operand type(s) for ** or pow(): 'Monomial' and '{exp.__class__.__name__}'")
 
         # return 1 if the exponent is 0
-        if exp == 0:
+        elif exp == 0:
             return 1
 
         # Raise an error if exponent is negative

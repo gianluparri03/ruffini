@@ -34,16 +34,6 @@ class Test(TestCase):
         # check the degree
         self.assertEqual(M(2, x=2, y=7).degree, 9)
 
-        # check is_square
-        self.assertFalse(self.m[0].is_square)
-        self.assertTrue(M(4, a=2, b=4).is_square)
-        self.assertFalse(M(-4, a=2, b=4).is_square)
-
-        # check is_cube
-        self.assertFalse(self.m[1].is_cube)
-        self.assertTrue(M(27, a=3).is_cube)
-        self.assertTrue(M(-27, a=3).is_cube)
-
     def test_similarity(self):
         # two monomials are simimlar if they have the
         # same variables
@@ -136,7 +126,21 @@ class Test(TestCase):
         # second operator's exponent must be lower than first's
         self.assertRaises(ValueError, lambda: self.m[3] / self.m[4])
 
-    def test_pow(self):
+    def test_pow_root(self):
+        ### has_root()
+        # check even roots' indexes
+        self.assertFalse(self.m[0].has_root(2))
+        self.assertTrue(M(4, a=2, b=4).has_root(2))
+        self.assertFalse(M(-4, a=2, b=4).has_root(2))
+        self.assertTrue(M(0).has_root(2))
+
+        # check odd roots' indexes
+        self.assertFalse(self.m[1].has_root(3))
+        self.assertTrue(M(27, a=3).has_root(3))
+        self.assertTrue(M(-27, a=3).has_root(3))
+        self.assertTrue(M(0).has_root(3))
+        
+        ### __pow__()
         # works only with whole positive exponents
         self.assertRaises(ValueError, lambda: M(5) ** (-3))
         self.assertRaises(TypeError, lambda: M(17) ** 2.14)
@@ -144,16 +148,21 @@ class Test(TestCase):
         # if the exponentn is 0, the result is 1
         self.assertEqual(self.m[5]**0, 1)
 
-        # you can calculate square/cube root if the
-        # monomial is a square/cube
-        self.assertEqual(M(4, x=2) ** (1/2), M(2, x=1))
-        self.assertEqual(M(8, y=9) ** (1/3), M(2, y=3))
-
-        # you can't do it if the monomial isn't a square or a cube
-        self.assertRaises(TypeError, lambda: M(8, y=27) ** (1/2))
-
         # test result
         self.assertEqual(self.m[5] ** 3, M(-729, y=9))
+
+        ### root()
+        self.assertEqual(M(4, x=2).root(2), M(2, x=1))
+        self.assertEqual(M(8, y=9).root(3), M(2, y=3))
+
+        # raises TypeError if index is not int
+        self.assertRaises(TypeError, self.m[2].root, 'blob')
+
+        # raises ValueError if that monomial hasn't that root
+        self.assertRaises(ValueError, self.m[3].root, 5)
+
+        # root of 0
+        self.assertEqual(M(0).root(7), 0)
 
     def test_reverses(self):
         # reverse add
