@@ -18,6 +18,9 @@ class Test(TestCase):
                  ]
 
     def test_init(self):
+        # can be initialized with a dict
+        self.assertEqual(M({'x': 2}), M(x=2))
+
         # Coefficient must be int or float
         self.assertRaises(TypeError, M, "3")
 
@@ -139,7 +142,7 @@ class Test(TestCase):
         self.assertTrue(M(27, a=3).has_root(3))
         self.assertTrue(M(-27, a=3).has_root(3))
         self.assertTrue(M(0).has_root(3))
-        
+
         ### __pow__()
         # works only with whole positive exponents
         self.assertRaises(ValueError, lambda: M(5) ** (-3))
@@ -163,6 +166,9 @@ class Test(TestCase):
 
         # root of 0
         self.assertEqual(M(0).root(7), 0)
+
+        # root of odd index
+        self.assertEqual(M(-27, x=3).root(3), M(-3, x=1))
 
     def test_reverses(self):
         # reverse add
@@ -256,10 +262,10 @@ class Test(TestCase):
 
     def test_neg_abs(self):
         # neg
-        self.assertEqual(-self.m[0], M(-self.m[0].coefficient, **self.m[0].variables))
+        self.assertEqual(-self.m[0], M(-self.m[0].coefficient, self.m[0].variables))
 
         # abs
-        self.assertEqual(abs(self.m[1]), M(abs(self.m[1].coefficient), **self.m[1].variables))
+        self.assertEqual(abs(self.m[1]), M(abs(self.m[1].coefficient), self.m[1].variables))
 
     def test_hash(self):
         # w/ variables

@@ -23,7 +23,7 @@ class Monomial:
     value you assigned.
     """
 
-    def __init__(self, coefficient=1, **variables):
+    def __init__(self, coefficient=1, variables={}, **kwargs):
         """
         Create a Monomial object by giving the
         numerical coefficient and the variables
@@ -60,6 +60,13 @@ class Monomial:
         :raise: ValueError, TypeError
         """
 
+        # adjust arguments' order
+        if isinstance(coefficient, dict) and not variables:
+            variables = coefficient
+            coefficient = 1
+        elif not variables:
+            variables = kwargs
+
         # Check the coefficient
         if isinstance(coefficient, float) and coefficient.is_integer():
             self.coefficient = int(coefficient)
@@ -69,7 +76,7 @@ class Monomial:
             raise TypeError("Coefficient must be int or float")
 
         # Check the variables
-        self.variables = VariablesDict(**variables)
+        self.variables = VariablesDict(variables)
 
         # Calculate the degree
         self.degree = sum(self.variables.values())
@@ -136,7 +143,7 @@ class Monomial:
 
         >>> Monomial(0).has_root(700)
         True
-    
+
         If `index` is not an integer, it will raise
         a TypeError
 
@@ -203,9 +210,9 @@ class Monomial:
 
         # check if the coefficient is negative
         if self.coefficient < 0:
-            coefficient = - coefficient
+            coefficient = -coefficient
 
-        return Monomial(coefficient, **variables)
+        return Monomial(coefficient, variables)
 
     def gcd(self, other):
         """
@@ -271,7 +278,7 @@ class Monomial:
                 variables[variable] = min(self.variables[variable],
                                           other.variables[variable])
 
-        return Monomial(coefficient, **variables)
+        return Monomial(coefficient, variables)
 
     def lcm(self, other):
         """
@@ -297,7 +304,7 @@ class Monomial:
 
         return abs(self * other) / self.gcd(other)
 
-    def eval(self, **values):
+    def eval(self, values={}, **kwargs):
         """
         Evaluate the monomial, giving the values
         of the variables to the method
@@ -330,9 +337,13 @@ class Monomial:
         :raise: TypeError
         """
 
+        # use multiple initializations
+        if not values:
+            values = kwargs
+
         # lowerize the variables and prepare the result
         values = {v.lower(): values[v] for v in values}
-        result = Monomial(self.coefficient, **self.variables)
+        result = Monomial(self.coefficient, self.variables)
 
         # for every variable that is in the result
         for variable in values:
@@ -342,7 +353,7 @@ class Monomial:
                 # the variable
                 exp = result.variables[variable.lower()]
                 result *= (values[variable] ** exp)
-                result /= Monomial(**{variable: exp})
+                result /= Monomial({variable: exp})
 
         # If there are no variables, return only the coefficient
         if result.variables.is_empty:
@@ -391,7 +402,7 @@ class Monomial:
 
             # Simil monomial
             elif self.similar_to(other):
-                return Monomial(self.coefficient + other.coefficient, **self.variables)
+                return Monomial(self.coefficient + other.coefficient, self.variables)
 
             # Generic monomial
             else:
@@ -497,7 +508,7 @@ class Monomial:
             coefficient = self.coefficient * other.coefficient
             variables = self.variables + other.variables
 
-            return Monomial(coefficient, **variables)
+            return Monomial(coefficient, variables)
 
         # polynomials
         elif isinstance(other, Polynomial):
@@ -546,7 +557,7 @@ class Monomial:
         if isinstance(other, Monomial):
             coefficient = self.coefficient / other.coefficient
             variables = self.variables - other.variables
-            return Monomial(coefficient, **variables)
+            return Monomial(coefficient, variables)
 
         else:
             raise TypeError(f"unsupported operand type(s) for /: 'Monomial' and '{other.__class__.__name__}'")
@@ -598,7 +609,7 @@ class Monomial:
         elif not exp > 0:
             raise ValueError("Exponent can't be negative")
 
-        return Monomial(self.coefficient ** exp, **(self.variables * exp))
+        return Monomial(self.coefficient ** exp, self.variables * exp)
 
     ### Reversed Operations Method ###
 
@@ -827,7 +838,7 @@ class Monomial:
 
         :rtype: Monomial
         """
-        return Monomial(-self.coefficient, **self.variables)
+        return Monomial(-self.coefficient, self.variables)
 
     def __abs__(self):
         """
@@ -841,7 +852,7 @@ class Monomial:
 
         :rtype: Monomial
         """
-        return Monomial(abs(self.coefficient), **self.variables)
+        return Monomial(abs(self.coefficient), self.variables)
 
     def __hash__(self):
         """

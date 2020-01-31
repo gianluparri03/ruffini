@@ -4,7 +4,7 @@ from .polynomials import Polynomial
 from functools import reduce
 
 
-class FPolynomial (tuple):
+class FPolynomial(tuple):
     """
     A FPolynomial (factorized polynomial) object
     is a multiplication of two or more polynomials.
@@ -53,11 +53,15 @@ class FPolynomial (tuple):
         :raise: TypeError
         """
 
+        # adjust argument's order
+        if len(factors) == 1 and type(factors[0]) in (tuple, list, set):
+            factors = factors[0]
+
         mapped_factors = []
 
         # Check if there's at least a polynomial
-        if not any((isinstance(f, Polynomial) for f in factors)):
-            raise TypeError("There must be at least a polynomial")
+        if not any([isinstance(f, Polynomial) for f in factors]):
+            raise TypeError(f"There must be at least a polynomial {factors}")
 
         for factor in factors:
             # Check if its type is valid
@@ -238,6 +242,7 @@ class FPolynomial (tuple):
 
         return self.eval() == other.eval()
 
+
 def gcf(polynomial):
     """
     Factorize a polynomial with the gcf (greates common
@@ -274,23 +279,22 @@ def gcf(polynomial):
         return FPolynomial(polynomial)
 
     # Otherwise, return the gcf and the reduced polynomial
-    polynomial = Polynomial(*[t/gcd for t in polynomial])
+    polynomial = Polynomial([t/gcd for t in polynomial])
     return FPolynomial(gcd, polynomial)
-
 
 def binomial_square(polynomial):
     """
     Factorize a polynomial with the gcf (greates common
     facor) method. In theory, it works like this:
 
-    `A**2 + B**2 + 2AB = (A + B)**2`
+    `A*2 + B**2 + 2AB = (A + B)**2`
 
     for example:
 
     >>> p = Polynomial(Monomial(4, x=2), Monomial(9, y=4), Monomial(-12, x=1, y=2))
     >>> result_1 = binomial_square(p)
     >>> result_1
-    (2x - 3y**2)**2
+    (2x - 3y*2)**2
 
     *NB:* order of terms doesn't matter. Let's use the case above
     as example. If you factorize it in that order, the result, as
@@ -386,7 +390,6 @@ def binomial_square(polynomial):
 
     return FPolynomial(Polynomial(a, b), Polynomial(a, b))
 
-
 def factorize(polynomial):
     """
     Factorize the given polynomial using some algorythms
@@ -444,4 +447,4 @@ def factorize(polynomial):
             factors += (factor, )
 
     # Return the result
-    return FPolynomial(*factors)
+    return FPolynomial(factors)

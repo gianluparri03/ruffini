@@ -16,7 +16,7 @@ class VariablesDict(dict):
     many of these methods are not in this docs.
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, variables={}, **kwargs):
         """
         Initialize the VariablesDict by giving it
         the pairs key: value as keyword-arguments.
@@ -89,16 +89,19 @@ class VariablesDict(dict):
         :raise: TypeError, ValueError
         """
 
-        variables = {}
+        if not variables:
+            variables = kwargs
 
-        for key in kwargs:
+        new_variables = {}
+
+        for key in variables:
             # Check variable name
             if not key.isalpha():
                 raise ValueError("variable's name must be alphabetical")
             elif len(key) > 1:
                 raise ValueError("variable's name length must be one")
 
-            value = kwargs[key]
+            value = variables[key]
 
             # Check variable exponent
             if not isinstance(value, (int, float)):
@@ -109,9 +112,9 @@ class VariablesDict(dict):
                 raise ValueError("variable's exponent must be positive")
 
             if not value == 0:
-                variables[key.lower()] = int(value)
+                new_variables[key.lower()] = int(value)
 
-        super().__init__(variables)
+        super().__init__(new_variables)
 
         # Check if it's empty
         self.is_empty = not bool(len(self))
@@ -248,7 +251,7 @@ class VariablesDict(dict):
         result = {}
         for letter in set(self) | set(other):
             result[letter] = self[letter] + other[letter]
-        return VariablesDict(**result)
+        return VariablesDict(result)
 
     def __sub__(self, other):
         """
@@ -287,7 +290,7 @@ class VariablesDict(dict):
         result = {}
         for letter in set(self) | set(other):
             result[letter] = self[letter] - other[letter]
-        return VariablesDict(**result)
+        return VariablesDict(result)
 
     def __mul__ (self, other):
         """
@@ -326,7 +329,7 @@ class VariablesDict(dict):
         variables = {}
         for l in self:
             variables[l] = self[l] * other
-        return VariablesDict(**variables)
+        return VariablesDict(variables)
 
     def __truediv__ (self, other):
         """
@@ -368,7 +371,7 @@ class VariablesDict(dict):
         if not self % other:
             raise ValueError(f"can't divide a VariablesDict by {other}")
 
-        return VariablesDict(**dict(map(lambda k: (k, self[k] / other), self)))
+        return VariablesDict(dict(map(lambda k: (k, self[k] / other), self)))
 
     def __mod__ (self, other):
         """

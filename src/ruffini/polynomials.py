@@ -4,7 +4,7 @@ from .monomials import Monomial
 from collections import Counter
 
 
-class Polynomial (tuple):
+class Polynomial(tuple):
     """
     A Polynomial object is the sum of two or more
     monomials and/or numbers.
@@ -24,7 +24,7 @@ class Polynomial (tuple):
     are not in this docs.
     """
 
-    def __new__(cls, *terms):
+    def __new__(cls, terms=(), *args):
         """
         Create the polynomial giving it a list
         of terms (a term can be a Monomial or a
@@ -37,6 +37,10 @@ class Polynomial (tuple):
         :type *terms: Monomials, int, float
         :raise: TypeError
         """
+
+        # adjust arguments' order
+        if not isinstance(terms, (tuple, list, set)):
+            terms = (terms, ) + args
 
         counter = Counter()
 
@@ -52,11 +56,11 @@ class Polynomial (tuple):
             counter[term.variables] += term.coefficient
 
         # Rewrite them
-        terms = [Monomial(c, **v) for v, c in counter.items()]
+        terms = [Monomial(c, v) for v, c in counter.items()]
 
         return super().__new__(cls, terms)
 
-    def __init__(self, *terms):
+    def __init__(self, terms, *args):
         """
         Initialize the polynomial, then calculate
         the polynomial degree (the highest degree
@@ -73,7 +77,7 @@ class Polynomial (tuple):
 
     ### Utility Methods ###
 
-    def term_coefficient(self, **variables):
+    def term_coefficient(self, variables={}, **kwargs):
         """
         Return the coefficient of the term with
         the given variables
@@ -95,7 +99,11 @@ class Polynomial (tuple):
         :rtype: int, float
         """
 
-        variables = VariablesDict(**variables)
+        # adjust arguments
+        if not variables:
+            variables = kwargs
+        
+        variables = VariablesDict(variables)
 
         for term in self:
             if term.variables == variables:
@@ -130,7 +138,7 @@ class Polynomial (tuple):
         >>> m2 = Monomial(7, y=1)
         >>> m3 = Monomial(9, x=1)
         >>> m4 = Monomial(-13, y=1)
-        >>> p = Polynomial(m1, m2, m4) # -4a**4 -6y
+        >>> p = (m1, m2, m4) # -4a**4 -6y
         >>>
         >>> # polynomial + polynomial
         >>> p + Polynomial(m0, m3, m2)
@@ -257,10 +265,10 @@ class Polynomial (tuple):
         """
 
         if isinstance(other, (Monomial, int, float)):
-            return Polynomial(*(t*other for t in self))
+            return Polynomial([t*other for t in self])
 
         elif isinstance(other, Polynomial):
-            return Polynomial(*(a*b for a in self for b in other))
+            return Polynomial([a*b for a in self for b in other])
 
         else:
             raise TypeError(f"unsupported operand type(s) for *: 'Polynomial' and '{other.__class__.__name__}'")
@@ -434,7 +442,7 @@ class Polynomial (tuple):
 
         :rtype: Polynomial
         """
-        return Polynomial(*(-m for m in self))
+        return Polynomial([-m for m in self])
 
     def __hash__(self):
         """

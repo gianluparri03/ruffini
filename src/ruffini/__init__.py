@@ -10,8 +10,8 @@ del monomials
 del polynomials
 del fpolynomials
 
-# Define some shorthands
 
+# Define some shorthands
 
 def gcd(*args):
     """
@@ -23,7 +23,6 @@ def gcd(*args):
         args = (Monomial(args[0]),) + args[1:]
 
     return reduce(lambda x, y: x.gcd(y), args)
-
 
 def lcm(*args):
     """

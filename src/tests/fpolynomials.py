@@ -37,6 +37,9 @@ class Test(TestCase):
         # default string representation
         self.assertEqual(str(self.fp[0]), '(2x + 3)(10x + 15)')
 
+        # repr is the same of str
+        self.assertEqual(str(self.fp[0]), repr(self.fp[0]))
+
         # if the first factor is a monomial there are no brackets
         self.assertEqual(str(self.fp[1]), '5(2x + 3)')
         self.assertEqual(str(FP(M(2, x=1), self.p[0])), '2x(2x + 3)')
@@ -56,6 +59,7 @@ class Test(TestCase):
 
         # eq
         self.assertEqual(FP(self.p[1], 5), FP(5, self.p[1]))
+        self.assertNotEqual(self.fp[0], {'a', 'b', 'x'})
 
     def test_factorization(self):
         # test shorthand
