@@ -1,8 +1,8 @@
 Polynomials
 ===========
 
-Polynomial objects
-------------------
+Polynomials
+-----------
 
 .. autoclass:: ruffini.Polynomial
     :members:

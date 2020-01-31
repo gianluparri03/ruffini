@@ -1,10 +1,9 @@
-ruffini
-=======
+Reference
+============
 
 .. toctree::
-   :maxdepth: 4
 
    variables
    monomials
    polynomials
-   factorizations
+   factorization

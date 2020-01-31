@@ -1,8 +1,8 @@
 Polynomials Factorization
 =========================
 
-FPolynomial objects
--------------------
+FPolynomials
+------------
 
 .. autoclass:: ruffini.FPolynomial
     :members:

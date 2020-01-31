@@ -1,8 +1,8 @@
 Variables
 =========
 
-VariablesDict objects
----------------------
+VariablesDicts
+--------------
 
 .. autoclass:: ruffini.VariablesDict
     :members:

@@ -1,8 +1,8 @@
 Monomials
 =========
 
-Monomial objects
-----------------
+Monomials
+---------
 
 .. autoclass:: ruffini.Monomial
     :members:
