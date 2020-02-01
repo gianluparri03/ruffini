@@ -61,7 +61,7 @@ class FPolynomial(tuple):
 
         # Check if there's at least a polynomial
         if not any([isinstance(f, Polynomial) for f in factors]):
-            raise TypeError(f"There must be at least a polynomial {factors}")
+            raise TypeError("There must be at least a polynomial")
 
         for factor in factors:
             # Check if its type is valid
@@ -294,7 +294,7 @@ def binomial_square(polynomial):
     >>> p = Polynomial(Monomial(4, x=2), Monomial(9, y=4), Monomial(-12, x=1, y=2))
     >>> result_1 = binomial_square(p)
     >>> result_1
-    (2x - 3y*2)**2
+    (2x - 3y**2)**2
 
     *NB:* order of terms doesn't matter. Let's use the case above
     as example. If you factorize it in that order, the result, as
@@ -335,7 +335,7 @@ def binomial_square(polynomial):
 
     1. When polynomial's length isn't 3:
 
-    >>> binomial_square(Polynomial())
+    >>> binomial_square(Polynomial(1))
     Traceback (most recent call last):
     ...
     ValueError: Not a binomial square
@@ -343,7 +343,7 @@ def binomial_square(polynomial):
     2. When there aren't at least two squares:
 
     >>> p = Polynomial(Monomial(4, x=2), Monomial(9, y=5), Monomial(3))
-    >>> binomial_square(Polynomial())
+    >>> binomial_square(p)
     Traceback (most recent call last):
     ...
     ValueError: Not a binomial square
@@ -351,7 +351,7 @@ def binomial_square(polynomial):
     3. When the third term isn't the product of the firsts:
 
     >>> p = Polynomial(Monomial(4, x=2), Monomial(9, y=4), Monomial(3))
-    >>> binomial_square(Polynomial())
+    >>> binomial_square(p)
     Traceback (most recent call last):
     ...
     ValueError: Not a binomial square

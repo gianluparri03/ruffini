@@ -60,7 +60,7 @@ class Polynomial(tuple):
 
         return super().__new__(cls, terms)
 
-    def __init__(self, terms, *args):
+    def __init__(self, terms=(), *args):
         """
         Initialize the polynomial, then calculate
         the polynomial degree (the highest degree
@@ -138,7 +138,7 @@ class Polynomial(tuple):
         >>> m2 = Monomial(7, y=1)
         >>> m3 = Monomial(9, x=1)
         >>> m4 = Monomial(-13, y=1)
-        >>> p = (m1, m2, m4) # -4a**4 -6y
+        >>> p = Polynomial(m1, m2, m4) # -4a**4 -6y
         >>>
         >>> # polynomial + polynomial
         >>> p + Polynomial(m0, m3, m2)

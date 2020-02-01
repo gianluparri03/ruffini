@@ -3,4 +3,4 @@
 *.pyc
 env
 **coverage**
-**wip**
+docs/build

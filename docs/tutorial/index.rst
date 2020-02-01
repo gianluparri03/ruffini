@@ -1,12 +1,10 @@
-How To
-=========
+Tutorial
+========
 
-I'm working on it.
+>>> import ruffini
 
-Stay tuned.
 
-*as if there's a way to stay tuned...*
+.. toctree::
 
-*anyway, there's nothing here now.*
-
-See you soon <3
+   part_one
+   part_two
