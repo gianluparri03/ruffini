@@ -17,23 +17,26 @@ Done. Now we can finally create a monomial!
 
 \*thinks\*
 
->>> y = ruffini.variables['y']
+>>> y = ruffini.variable('y')
 >>> -5*y
 -5y
 
 Uhm, yea... f-funny... uhm... what could we do next? Oh, yes, we can
 do operations with them!
 
->>> 3*x + 5*x # Sum!
+>>> (3*x) + (5*x) # Sum!
 8x
 >>> 
->>> 7y - (-3y) # Subtraction!
+>>> (7*y) - (-3*y) # Subtraction!
 10y
 >>> 
->>> 7y * 2x # Multiplication!
+>>> (7*y) * (2*x) # Multiplication!
 14xy
 >>> 
->>> 5x / 3y # Division!
+>>> (7*y) ** 2 # Power!
+49y**2
+>>> 
+>>> 5*x / 3*y # Division!
 Traceback (most recent call last):
 ...
 ValueError: variable's exponent must be positive
@@ -41,7 +44,7 @@ ValueError: variable's exponent must be positive
 ouch, we can't divide by ``3y`` if there are no ``y`` in
 the first term... let's try another time:
 
->>> 15xy / 3y # Division! Again!
+>>> (15*x*y) / (3*y) # Division! Again!
 5x
 
 It worked!
@@ -73,7 +76,9 @@ Yes, we can also set a variable's value to a monomial:
 
 Nice!
 
-**NB** in this tutorial, we created monomials by doing operations
+----
+
+**NB:** in this tutorial, we created monomials by doing operations
 with variables. We can also initialize it directly with
 
 >>> ruffini.Monomial(5, x=1, y=2)
@@ -86,6 +91,6 @@ or
 
 It's just more verbose and less readable.
 
-
+----
 
 Ok, I think we're done with monomials: let's jump to polynomials!

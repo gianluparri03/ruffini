@@ -77,7 +77,7 @@ class Polynomial(tuple):
 
     ### Utility Methods ###
 
-    def term_coefficient(self, variables=VariablesDict(), **kwargs):
+    def term_coefficient(self, variables=None, **kwargs):
         """
         Return the coefficient of the term with
         the given variables
@@ -102,6 +102,9 @@ class Polynomial(tuple):
         # adjust arguments
         if not variables:
             variables = kwargs
+
+        if isinstance(variables, Monomial) and variables.coefficient == 1:
+            variables = variables.variables
 
         if not isinstance(variables, VariablesDict):
             variables = VariablesDict(variables)

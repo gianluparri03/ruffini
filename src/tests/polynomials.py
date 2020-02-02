@@ -1,5 +1,6 @@
 from unittest import TestCase
 
+from ruffini import variable
 from ruffini import Monomial as M
 from ruffini import Polynomial as P
 
@@ -37,6 +38,9 @@ class Test(TestCase):
 
         # if term_coefficient find nothing, the result is 0
         self.assertEqual(self.p[0].term_coefficient(k=2, b=1), 0)
+
+        # term_coefficient argument can be a monomial with coefficient 1
+        self.assertEqual(P(M(2, x=1), 3).term_coefficient(variable('x')), 2)
 
     def test_add_sub(self):
         # works only with monomials, polynomials and numbers

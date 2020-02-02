@@ -192,7 +192,7 @@ class VariablesDict(dict):
         "{'y': 5}"
 
         NB: Letters are sorted alphabetically:
-        
+
         >>> str(VariablesDict(k=2, b=3))
         "{'b': 3, 'k': 2}"
 
