@@ -1,6 +1,6 @@
 class VariablesDict(dict):
     """
-    A VariablesDict is a dictionary with special 
+    A VariablesDict is a dictionary with special
     features, created to manage in a better way
     the variables of a monomial. These features are:
 
@@ -16,7 +16,7 @@ class VariablesDict(dict):
     many of these methods are not in this docs.
     """
 
-    def __init__(self, variables={}, **kwargs):
+    def __init__(self, variables=None, **kwargs):
         """
         Initialize the VariablesDict by giving it
         the pairs key: value as keyword-arguments.
@@ -340,7 +340,7 @@ class VariablesDict(dict):
 
         If the variablesdict is not divisible
         by the number, it will raise a ValueError
-        
+
         >>> VariablesDict(x=7) / 3
         Traceback (most recent call last):
         ...

@@ -11,8 +11,11 @@ del polynomials
 del fpolynomials
 
 
-# Define some shorthands
+# Variables shorthands
+def variable(letter):
+    return Monomial(1, {str(letter): 1})
 
+# GCD shorthand
 def gcd(*args):
     """
     A shorthand to calculate the gcd between two or more monomials.
@@ -24,6 +27,7 @@ def gcd(*args):
 
     return reduce(lambda x, y: x.gcd(y), args)
 
+# LCM shorthand
 def lcm(*args):
     """
     A shorthand to calculate the lcm between two or more monomials.

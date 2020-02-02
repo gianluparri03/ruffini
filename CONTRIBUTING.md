@@ -29,11 +29,12 @@ The Makefile also has a coverage function: if you want to see the lines of code 
 
 ### Done
 
-- [X] Change monomial initialization (`Monomial(5, {'x': 1})` -> `Monomial(5, x=1)`) _NB: variables will be transformed in VariablesDict however_
-- [X] Add monomial's default values (`coefficient=1`, `variables={}`)
+- [X] Added multiple initializations (`Monomial(5, {'x': 1})` and `Monomial(5, x=1)`)
+- [X] Add monomial's default values (`coefficient=1`, `variables=VariablesDict()`)
 - [X] Add `Polynomial().__hash__()`
 - [X] Make legal `Monomial(2, {'x': 1}).eval(x=Monomial(2, {'y': 2}))`
 - [X] Add `gcd(*args)` and `lcm(*args)` in `__init__.py` as shortands
+- [X] Created `variable()` shorthand
 - [X] Make `__repr__()` equals to `__str__()`
 
 - [X] Add `VariablesDict().__truediv__()`

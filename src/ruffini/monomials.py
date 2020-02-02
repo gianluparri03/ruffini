@@ -1,4 +1,4 @@
-from math import gcd, sqrt
+from math import gcd
 
 from .variables import VariablesDict
 
@@ -23,7 +23,7 @@ class Monomial:
     value you assigned.
     """
 
-    def __init__(self, coefficient=1, variables={}, **kwargs):
+    def __init__(self, coefficient=1, variables=VariablesDict(), **kwargs):
         """
         Create a Monomial object by giving the
         numerical coefficient and the variables
@@ -304,7 +304,7 @@ class Monomial:
 
         return abs(self * other) / self.gcd(other)
 
-    def eval(self, values={}, **kwargs):
+    def eval(self, values=VariablesDict(), **kwargs):
         """
         Evaluate the monomial, giving the values
         of the variables to the method
