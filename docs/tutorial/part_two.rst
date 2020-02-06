@@ -24,8 +24,7 @@ wow! a polynomial!
 another polynomial!
 
 *"C-Can I do operations between polynomials?"*
-It depends.
-You can do sums, subtractions and multiplications:
+Well, you can do sums, subtractions and multiplications:
 
 >>> ((3*x) + (5*y)) + ((-3*y) - 2) # Sum!
 3x + 2y - 2
@@ -44,9 +43,7 @@ Traceback (most recent call last):
 ...
 TypeError: unsupported operand type(s) for /: 'Polynomial' and 'int'
 
-sad.
-
-Before you go crying in your bed, let me show you few other things.
+yeah, I know, it's a sad story.
 
 We know polynomials are a sum of monomials, so they could
 be considered tuples. In fact, they are. Therefore, indexing
@@ -87,15 +84,9 @@ more verbous!
 
 convinced?
 
-.. doctest::
-	>>> 2+ 3
-	7
-
-
-
 ----
 
 Eww, as I said before, factoring isn't finished yet, so
-our tutorial should end here...
-
-\*goes crying in his bed\*
+our tutorial ends here.
+If you have any question or everything else, you can can
+contact me at gianluparri03@gmail.com

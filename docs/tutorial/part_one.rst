@@ -21,8 +21,8 @@ Done. Now we can finally create a monomial!
 >>> -5*y
 -5y
 
-Uhm, yea... f-funny... uhm... what could we do next? Oh, yes, we can
-do operations with them!
+Uhm, yea... f-funny... uhm... what could we do next? We can
+do operations with them:
 
 >>> (3*x) + (5*x) # Sum!
 8x
@@ -50,7 +50,7 @@ the first term... let's try another time:
 It worked!
 
 We can also calculate gcd *(greatest common divisor)* or
-lcm *(least common multiplier)*, I'll let you see:
+lcm *(least common multiplier)*, like this:
 
 >>> gcd(15*x*y, 3*x, 3)
 3
@@ -69,7 +69,7 @@ will 3x be equal to? You're right, 21!
 >>> monomial.eval(x=7)
 21
 
-Yes, we can also set a variable's value to a monomial:
+And yes, we can also set a variable's value to a monomial:
 
 >>> monomial.eval(x=(3*y)) # 3(3y) = 9y
 9y

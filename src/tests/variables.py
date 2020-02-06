@@ -9,39 +9,36 @@ class Test(TestCase):
         self.assertEqual(VD(X=3), VD(x=3))
 
         # VariablesDict is immutable
-        self.assertRaises(TypeError, lambda: VD().__setitem__('b', 2))
-        self.assertRaises(TypeError, lambda: VD().__delitem__('s'))
-        self.assertRaises(TypeError, lambda: VD().clear())
-        self.assertRaises(TypeError, lambda: VD().pop('c'))
+        self.assertRaises(AttributeError, lambda: VD().__setitem__('b', 2))
+        self.assertRaises(AttributeError, lambda: VD().__delitem__('s'))
+        self.assertRaises(AttributeError, lambda: VD().clear())
+        self.assertRaises(AttributeError, lambda: VD().pop('c'))
 
-        # Keys' length must be 1
+        # Vriables' length must be 1
         self.assertRaises(ValueError, lambda: VD(ab=5))
 
-        # Keys must be alphabetical
+        # Variables must be alphabetical
         self.assertRaises(ValueError, lambda: VD(_5a=1))
 
-        # If a pair key:value doesn't exist,
-        # the exponent is 0
+        # If a variable isn't in the dict its exponent is 0
         self.assertEqual(VD()['x'], 0)
 
-        # Exponent must be int or float
+        # Exponents must be int or float
         self.assertRaises(TypeError, lambda: VD(a=[]))
 
-        # Exponent must be a whole number
-        self.assertRaises(ValueError, lambda: VD(b=5.3))
+        # Exponents must be a whole number
+        self.assertRaises(TypeError, lambda: VD(b=5.3))
 
-        # Exponent must be positive
+        # Exponents must be positive
         self.assertRaises(ValueError, lambda: VD(c=-2))
 
-        # If exponent is float and has no decimals
-        # it will be made int
+        # If exponent is float but it's a whole number it will be made int
         self.assertEqual(VD(a=5.0), VD(a=5))
 
-        # If the exponent is 0 the variables won't
-        # be inserted into the dictionary
+        # If exponent is 0 the variable won't be inserted
         self.assertEqual(VD(c=0), VD())
 
-        # check empty
+        # check is_empty
         self.assertTrue(VD(b=0).is_empty)
         self.assertFalse(VD(c=1).is_empty)
 

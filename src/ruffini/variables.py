@@ -2,14 +2,19 @@ class VariablesDict(dict):
     """
     A VariablesDict is a dictionary with special
     features, created to manage in a better way
-    the variables of a monomial. These features are:
+    the variables of a monomial.
+    
+    In this case, we'll call keys variables and
+    values exponents.
 
-    - If a key isn't in the dictionary, its value is 0
-    - All the keys (representing letters) will be made lowercase
-    - Letters must be alphabetical (only letter) and with a length
-      of one
-    - The values (representing exponents) have to be
-      integer (things like 5.0 are allowed) and positive
+    Anyway, the changes are:
+
+    - If a variable isn't in the dictionary, its exponent is 0
+    - Therefore, variables with exponent 0 won't be inserted
+    - Variables are made lowercase
+    - Variables must be letters from the latin alphabet
+      and one-character long
+    - Exponents must be integer
 
     **NB** VariablesDict is a sublass of dict, so all
     the methods of dict are inherited rom VariablesDict;
@@ -19,67 +24,63 @@ class VariablesDict(dict):
     def __init__(self, variables=None, **kwargs):
         """
         Initialize the VariablesDict by giving it
-        the pairs key: value as keyword-arguments.
+        the pairs variable: exponent storing them
+        in a dict (variables) or as keyword arguments:
 
+        >>> VariablesDict({'x': 5, 'y': 3})
+        {'x': 5, 'y': 3}
         >>> VariablesDict(x=5, y=3)
         {'x': 5, 'y': 3}
 
-        While inserting the pairs key: value, it
-        also:
+        As said above, it asserts if  variables are
+        lowercase; if not they'll be transformed
+        automatically:
 
-        - automatically makes the key lowercase.
-
-        >>> VariablesDict(Y=3)
-        {'y': 3}
-
-        - doesn't insert the pair if the value is 0
-
-        >>> VariablesDict(a=0, b=2)
-        {'b': 2}
-
-        - convert the value in int if it's a whole number
+        It also converts the exponent in integer if
+        it's a whole number
 
         >>> VariablesDict(c=9.0)
         {'c': 9}
 
         It can raise an error if:
 
-        - the variable's name length is grater than 1
+        - variable's name is too long (ValueError)
 
         >>> VariablesDict(xy=3)
         Traceback (most recent call last):
         ...
         ValueError: variable's name length must be one
 
-        - the variable's name is not alphabetical
+        - variable's name is not alphabetical (ValueError)
 
         >>> VariablesDict(x2=9)
         Traceback (most recent call last):
         ...
         ValueError: variable's name must be alphabetical
 
-        - the exponent is not int or float
+        - exponent is not int (or a whole number) (TypeError)
 
         >>> VariablesDict(k=[])
         Traceback (most recent call last):
         ...
-        TypeError: variable's exponent must be int or float
+        TypeError: variable's exponent must be int
 
-        - the exponent is not a whole number
+        - exponent is not a whole number (TypeError)
 
         >>> VariablesDict(z=7.13)
         Traceback (most recent call last):
         ...
-        ValueError: variable's exponent must be a whole number
+        TypeError: variable's exponent must be a whole number
 
-        - the exponent is negative
+        - exponent is negative (ValueError)
 
         >>> VariablesDict(f=-3)
         Traceback (most recent call last):
         ...
         ValueError: variable's exponent must be positive
 
-        It also check if the dictionary is empty.
+
+        After that, it checks if the dictionary is empty:
 
         >>> VariablesDict(a=2, b=8, c=3).is_empty
         False
@@ -89,6 +90,7 @@ class VariablesDict(dict):
         :raise: TypeError, ValueError
         """
 
+        # look for variables
         if not variables:
             variables = kwargs
 
@@ -105,9 +107,9 @@ class VariablesDict(dict):
 
             # Check variable exponent
             if not isinstance(value, (int, float)):
-                raise TypeError("variable's exponent must be int or float")
+                raise TypeError("variable's exponent must be int")
             elif isinstance(value, float) and not value.is_integer():
-                raise ValueError("variable's exponent must be a whole number")
+                raise TypeError("variable's exponent must be a whole number")
             elif value < 0:
                 raise ValueError("variable's exponent must be positive")
 
@@ -119,48 +121,47 @@ class VariablesDict(dict):
         # Check if it's empty
         self.is_empty = not bool(len(self))
 
-    ### Methods about Item storing ###
+    ###  Item storing ###
 
     def __setitem__(self, key, value):
         """
-        Raise TypeError: VariablesDict is immutable
+        Raises AttributeError: VariablesDict is immutable
 
-        :raise: TypeError
+        :raise: AttributeError
         """
 
-        raise TypeError("VariablesDict is immutable")
+        raise AttributeError("VariablesDict is immutable")
 
     def __delitem__(self, key):
         """
-        Raise TypeError: VariablesDict is immutable
+        Raises AttributeError: VariablesDict is immutable
 
-        :raise: TypeError
+        :raise: AttributeError
         """
 
-        raise TypeError("VariablesDict is immutable")
+        raise AttributeError("VariablesDict is immutable")
 
     def pop(self, key):
         """
-        Raise TypeError: VariablesDict is immutable
+        Raises AttributeError: VariablesDict is immutable
 
-        :raise: TypeError
+        :raise: AttributeError
         """
 
-        raise TypeError("VariablesDict is immutable")
+        raise AttributeError("VariablesDict is immutable")
 
     def clear(self):
         """
-        Raise TypeError: VariablesDict is immutable
+        Raises AttributeError: VariablesDict is immutable
 
-        :raise: TypeError
+        :raise: AttributeError
         """
 
-        raise TypeError("VariablesDict is immutable")
+        raise AttributeError("VariablesDict is immutable")
 
     def __getitem__(self, key):
         """
-        Get the exponent of a variable by giving
-        it the variable's name
+        Gets the exponent of a variable from the variable's name
 
         >>> v = VariablesDict(a=2, b=3)
         >>> v['a']
@@ -180,11 +181,11 @@ class VariablesDict(dict):
         except KeyError:
             return 0
 
-    ### Methods about Representation ###
+    ### Representation ###
 
     def __str__(self):
         """
-        Return the dict as a string (as a normal dict)
+        Returns the dict as a string (as a normal dict)
 
         >>> str(VariablesDict(x=5, y=3))
         "{'x': 5, 'y': 3}"
@@ -205,7 +206,7 @@ class VariablesDict(dict):
 
     def __repr__(self):
         """
-        Return the dict as a string
+        Returns the dict as a string
 
         >>> repr(VariablesDict(Y=5))
         "{'y': 5}"
@@ -221,9 +222,8 @@ class VariablesDict(dict):
 
     def __add__(self, other):
         """
-        Sum two VariablesDict, returning a VariablesDict
-        whose values are the sum of the values of the two
-        VariablesDicts
+        Sums two VariablesDict, returning a VariablesDict
+        whose exponents are the sum of the starting VariablesDicts' ones
 
         >>> VariablesDict(x=5, y=3) + VariablesDict(y=5)
         {'x': 5, 'y': 8}
@@ -232,7 +232,7 @@ class VariablesDict(dict):
         >>> VariablesDict(a=36) + VariablesDict()
         {'a': 36}
 
-        If the second operator isn't a VariablesDict
+        If the second operator isn't a VariablesDict it will
         raise a TypeError
 
         >>> VariablesDict() + "-"
@@ -245,25 +245,29 @@ class VariablesDict(dict):
         :raise: TypeError
         """
 
+        # check if other is a VariablesDict
         if not isinstance(other, VariablesDict):
             raise TypeError(f"unsupported operand type(s) for +: 'VariablesDict' and '{other.__class__.__name__}'")
 
         result = {}
-        for letter in set(self) | set(other):
-            result[letter] = self[letter] + other[letter]
+
+        # sum the variables' exponents
+        for variable in set(self) | set(other):
+            result[variable] = self[variable] + other[variable]
+
         return VariablesDict(result)
 
     def __sub__(self, other):
         """
-        Return a VariablesDict whose values are the subtraction
-        of this ones and the second's ones:
+        Return a VariablesDict whose values are the difference
+        between the starting VariablesDicts' ones
 
         >>> VariablesDict(x=5, y=3) - VariablesDict(x=1, y=2)
         {'x': 4, 'y': 1}
         >>> VariablesDict(x=18) - VariablesDict(x=18)
         {}
 
-        If any exponent will be negative, a ValueError
+        If any exponent becomes negative, a ValueError
         will be raised instead:
 
         >>> VariablesDict(c=2) - VariablesDict(c=3)
@@ -271,8 +275,8 @@ class VariablesDict(dict):
         ...
         ValueError: variable's exponent must be positive
 
-        If the second operator isn't a VariablesDict
-        raise a TypeError
+        It can raise a TypeError if the second argument
+        isn't a VariablesDict
 
         >>> VariablesDict() - "-"
         Traceback (most recent call last):
@@ -288,14 +292,17 @@ class VariablesDict(dict):
             raise TypeError(f"unsupported operand type(s) for -: 'VariablesDict' and '{other.__class__.__name__}'")
 
         result = {}
-        for letter in set(self) | set(other):
-            result[letter] = self[letter] - other[letter]
+
+        # compute difference
+        for variable in set(self) | set(other):
+            result[variable] = self[variable] - other[variable]
+
         return VariablesDict(result)
 
     def __mul__ (self, other):
         """
-        Returns a VariablesDict whose exponent are
-        equivalent to this ones multiplied by a given
+        Returns a VariablesDict whose exponents are
+        this one's, but multiplied by a given (integer)
         number
 
         >>> VariablesDict(a=2, b= 5) * 3
@@ -307,9 +314,9 @@ class VariablesDict(dict):
         >>> VariablesDict() * (-15)
         Traceback (most recent call last):
         ...
-        ValueError: can't multiply a VariablesDict and a negative number
+        ValueError: can't multiply a VariablesDict by a negative number
 
-        Otherwise, a TypeError will be raised
+        If `other` is not an integer, a TypeError is raised
 
         >>> VariablesDict() * {}
         Traceback (most recent call last):
@@ -321,39 +328,44 @@ class VariablesDict(dict):
         :raise: TypeError, ValueError
         """
 
+        # check other's type
         if not isinstance(other, int):
             raise TypeError(f"unsupported operand type(s) for *: 'VariablesDict' and '{other.__class__.__name__}'")
         elif other < 0:
-            raise ValueError("can't multiply a VariablesDict and a negative number")
+            raise ValueError("can't multiply a VariablesDict by a negative number")
 
         variables = {}
-        for l in self:
-            variables[l] = self[l] * other
+
+        # multiply exponents
+        for variable in self:
+            variables[variable] = self[variable] * other
+
         return VariablesDict(variables)
 
     def __truediv__ (self, other):
         """
-        Divide the variables' exponents by the given number
+        Returns a VariablesDict whose values are
+        this one's, but divided by a given (integer)
+        number
 
         >>> VariablesDict(a=4, b=2) / 2
         {'a': 2, 'b': 1}
 
-        If the variablesdict is not divisible
-        by the number, it will raise a ValueError
+        If the VariableDict is not divisible
+        by the given number, it will raise a ValueError
 
         >>> VariablesDict(x=7) / 3
         Traceback (most recent call last):
         ...
-        ValueError: can't divide a VariablesDict by 3
+        ValueError: can't divide this VariablesDict by 3
 
-        To see if a variables dict is divisible by a number,
-        you can use modulus:
+        To see if a VariablesDict is divisible by a number,
+        you can use modulus operator (see more at :func:`VariablesDict.__mod__()`):
 
         >>> VariablesDict(x=7) % 3
         False
 
-        Instead, if the second operator is not an integer
-        number, it will raise a TypeError
+        If `other` is not an integer, it will raise a TypeError
 
         >>> VariablesDict(k=2) / 1.5
         Traceback (most recent call last):
@@ -369,21 +381,21 @@ class VariablesDict(dict):
             raise TypeError(f"unsupported operand type(s) for /: 'VariablesDict' and '{other.__class__.__name__}'")
 
         if not self % other:
-            raise ValueError(f"can't divide a VariablesDict by {other}")
+            raise ValueError(f"can't divide this VariablesDict by {other}")
 
         return VariablesDict(dict(map(lambda k: (k, self[k] / other), self)))
 
     def __mod__ (self, other):
         """
-        Check if the VariablesDict can be
-        divided for a number
+        Checks if the VariablesDict can be divided by a number
+        (True => can be divided by `other`).
 
         >>> VariablesDict(a=2, b=4) % 2
         True
         >>> VariablesDict(a=2, b=4) % 3
         False
 
-        Can raise a TypeError when `other` is not
+        It raises a TypeError when `other` is not
         an integer
 
         >>> VariablesDict(k=2) % []
@@ -391,7 +403,7 @@ class VariablesDict(dict):
         ...
         TypeError: unsupported operand type(s) for %: 'VariablesDict' and 'list'
 
-        Or ValueError when `other` isn't positive
+        Or ValueError when it isn't positive
 
         >>> VariablesDict(k=2) % (-7)
         Traceback (most recent call last):
@@ -414,7 +426,7 @@ class VariablesDict(dict):
 
     def __hash__(self):
         """
-        Return the hash of a VariablesDict.
+        Returns the hash of the VariablesDict.
         It's equal to the tuple of its items.
 
         >>> hash(VariablesDict(x=2)) == hash((('x', 2),))
