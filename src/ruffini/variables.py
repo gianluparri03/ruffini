@@ -1,9 +1,11 @@
-class VariablesDict(dict):
+from collections import frozendict
+
+class VariablesDict(frozendict):
     """
     A VariablesDict is a dictionary with special
     features, created to manage in a better way
     the variables of a monomial.
-    
+
     In this case, we'll call keys variables and
     values exponents.
 

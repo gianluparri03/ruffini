@@ -5,13 +5,8 @@ from .variables import VariablesDict
 
 class Monomial:
     """
-    A Monomial object is composed by some variables
-    and a coefficient; the coefficient has to be
-    a number (instance of int or float). The variables
-    instead must have three features:
-    - positive and integer exponent
-    - all the variables names must be a letter
-    of the alphabet (a, b, c, d, e, f...)
+    A Monomial is the product of a coefficient and
+    some variables.
 
     Monomials can be added, subtracted, multiplied
     and divided togheter (and with numbers).
@@ -25,28 +20,28 @@ class Monomial:
 
     def __init__(self, coefficient=1, variables=VariablesDict(), **kwargs):
         """
-        Create a Monomial object by giving the
-        numerical coefficient and the variables
-        as keyword arguments.
+        Creates a new Monomial.
+        The default `coefficient` value is 1 (so it can be omitted);
+        variables instead 
 
         >>> Monomial(17, k=3)
         17k**3
 
-        If the coefficient is instance of float but
+        If `coefficient` is an instance of float but
         it's a whole number (like 18.0), it will be
         transformed in int (in this case, 18)
 
         >>> Monomial(7.0, a=2)
         7a**2
 
-        The variables will be stored in a VariableDict, so:
+        Monomials can also be initialized by passing a dictionary
+        (or any subclass) where are stored the variables:
 
-        - all the letters will be made lowercase
-        - the letters can be only alphabetical and
-          with a length of one character
-        - the exponent must be positive and integer
+        >>> Monomial(2, {'x': 2, 'y': 1})
+        2x**2y
 
-        (for more infos, see :func:`VariablesDict.__init__()`.)
+        The variables will be stored in a `VariableDict`.
+        For more infos, see :func:`VariablesDict.__init__()`.)
 
         After initialized the monomial, this method
         also calculates the monomial's total degree
@@ -85,7 +80,7 @@ class Monomial:
 
     def similar_to(self, other):
         """
-        Check if two monomials are similar (if
+        Checks if two monomials are similar (if
         the have the same variables).
 
         >>> m1 = Monomial(3, x=1, y=1)
@@ -98,17 +93,15 @@ class Monomial:
         True
 
         If the second operand is not a monomial
-        the result will always be False
+        the result will always be `False`
 
         >>> m3.similar_to("")
         False
         >>> m4.similar_to({})
         False
 
-        The only one exception is when the
-        monomial has no variables and it's
-        compared to an int or a float; in this
-        case, the result will be positive
+        When a monomial has no variables, if
+        compared to a number the result will be `True`
 
         >>> m4.similar_to(6.28)
         True
@@ -126,9 +119,9 @@ class Monomial:
 
     def has_root(self, index):
         """
-        Check if the monomial "has" the root: I'll
-        explain better. The monomial `4x**2`, for example,
-        we can say it has the 2 root, because `(4x**2)**(1/2)`
+        Checks if the monomial "has" the root: 
+        the monomial `4x**2`, for example, is a square,
+        so we can say it has root 2, because `(4x**2)**(1/2)`
         is a monomial (=`2x`).
 
         >>> Monomial(4, x=2).has_root(2)
@@ -139,7 +132,7 @@ class Monomial:
         >>> Monomial(16, a=4, b=1).has_root(2)
         False
 
-        Zero "has" all the roots
+        Zero has all the roots
 
         >>> Monomial(0).has_root(700)
         True
@@ -177,8 +170,7 @@ class Monomial:
 
     def root(self, index):
         """
-        Calculate the root of the given index of the monomial.
-        For example:
+        Calculates the root of given index of the monomial
 
         >>> Monomial(4, x=2).root(2)
         2x
@@ -187,7 +179,7 @@ class Monomial:
         >>> Monomial(0).root(700)
         0
 
-        If a monomial hasn't a root, it will raise a ValueError
+        If a monomial hasn't a root, it raises a `ValueError`
 
         >>> Monomial(5, b=2).root(3)
         Traceback (most recent call last):
@@ -216,8 +208,8 @@ class Monomial:
 
     def gcd(self, other):
         """
-        Calculate the greatest common divisor
-        of two monomials (or numbers)
+        Calculates the greatest common divisor of two
+        monomials or numbers
 
         >>> a = Monomial(5, x=1, y=1)
         >>> b = Monomial(15, x=1)
@@ -240,14 +232,14 @@ class Monomial:
         ...
         ValueError: Value can't be equal to zero
 
-        **NB** the result will be always positive
+        The result is always positive
 
         >>> c = Monomial(-30, x=1, y=1)
         >>> b.gcd(c)
         15x
 
         If you want to calculate the gcd with more
-        operators, you can use the shorthand :func:`gcd`.
+        factors, you can use the shorthand :func:`gcd`.
 
         :type others: Monomial, int, float
         :rtype: Monomial, int
@@ -282,8 +274,7 @@ class Monomial:
 
     def lcm(self, other):
         """
-        Calculate the least common multiple
-        of two or monomials (or numbers)
+        Calculates the least common multiple of two monomials or numbers
 
         >>> a = Monomial(2, x=1, y=1)
         >>> b = Monomial(-9, y=3)
@@ -306,15 +297,26 @@ class Monomial:
 
     def eval(self, values=VariablesDict(), **kwargs):
         """
-        Evaluate the monomial, giving the values
-        of the variables to the method
+        Evaluates the monomial, giving values
+        for each variable
 
         >>> m = Monomial(5, x=1, y=1)
         >>> m.eval(x=2, y=3)
         30
 
-        If you omit some variables values, the
-        variables will remain there
+        **NB:** *if there are no variables left,
+        it returns only the coefficient, as instance
+        of `int` or `float`*
+
+        You can also assign variables' values
+        with a dictionary (or any subclass)
+
+        >>> m.eval({'x': 2, 'y': 3})
+        30
+
+        If you omit some variables' values,
+        those variables will remain as they
+        were
 
         >>> m.eval(x=2)
         10y
@@ -326,8 +328,8 @@ class Monomial:
         >>> m.eval(b=7)
         5xy
 
-        **NB** as for the initialization, the variable
-        isn't case sensitive
+        As for the initialization, variables
+        aren't case sensitive
 
         >>> m.eval(x=2) == m.eval(X=2)
         True
@@ -365,23 +367,19 @@ class Monomial:
 
     def __add__(self, other):
         """
-        As the name say, this method is used
-        to sum two monomials, or a number, too
+        Sums two monomials.
 
         >>> Monomial(5, x=1, y=3) + Monomial(-1.52, x=1, y=3)
         3.48xy**3
 
+        You can also sum a monomial and a number, but the
+        result will be an instance of `Polynomial`.
+
         >>> Monomial(1, z=1) + 17
         z + 17
 
-        You can also add a polynomial (in this case,
-        it will use the :func:`Polynomial.__add__` method)
-
-        >>> from ruffini import Polynomial
-        >>> Monomial(1, a=2) + Polynomial(Monomial(2, b=1))
-        2b + a**2
-
-        Otherwise, it will raise a TypeError
+        If `oher` isn't a monomial or a number,
+        it raises a `TypeError`
 
         >>> Monomial(2, z=1) - ""
         Traceback (most recent call last):
@@ -423,8 +421,8 @@ class Monomial:
 
     def __sub__(self, other):
         """
-        Return the subtraction between this monomial
-        and another one
+        Returns the subtraction between this monomial
+        and `other`
 
         >>> Monomial(5, x=1) - Monomial(3, x=1)
         2x
@@ -438,14 +436,7 @@ class Monomial:
         >>> Monomial(17, a=1, b=1) - 2.5
         17ab - 2.5
 
-        You can also subtract a polynomial (in this case,
-        it will use the :func:`Polynomial.__sub__` method)
-
-        >>> from ruffini import Polynomial
-        >>> Monomial(1, a=2) - Polynomial(Monomial(2, b=1))
-        -2b + a**2
-
-        Otherwise, it will raise a TypeError
+        Of `other` isn't a monomial or a number, it will raise a `TypeError`
 
         >>> Monomial(2, z=1) - ""
         Traceback (most recent call last):
@@ -467,8 +458,8 @@ class Monomial:
 
     def __mul__(self, other):
         """
-        Multiplicate this monomial by another
-        monomial or a number (int / float)
+        Multiplicates this monomial by `other`,
+        which can be a monomial or a number
 
         >>> Monomial(5, x=1, y=2) * Monomial(2, a=1, b=1)
         10abxy**2
@@ -477,15 +468,7 @@ class Monomial:
         >>> Monomial(k=3) * Monomial(k=3)
         k**6
 
-        Also multiplication by a polynomial is legal
-        (it will use the :func:`Polynomial.__mul__` method)
-
-        >>> from ruffini import Polynomial
-        >>> Monomial(a=2) * Polynomial(Monomial(2, b=1))
-        2a**2b
-
-        If the second operator isn't mentioned
-        above, it will raise a TypeError
+        If `other` isn't a monomial or a number, it raises a `TypeError`
 
         >>> Monomial(4) * {}
         Traceback (most recent call last):
@@ -520,7 +503,7 @@ class Monomial:
     def __truediv__(self, other):
         """
         Divide this monomial by another monomial or
-        by a number (int / float)
+        a number
 
         >>> Monomial(6, a=3) / Monomial(3, a=1)
         2a**2
@@ -529,17 +512,16 @@ class Monomial:
         >>> Monomial(27, x=6) / Monomial(3, x=6)
         9
 
-        If second monomial's variable's exponent
-        are higher than first's, it will raise a
-        ValueError
+        If `other`'s variable's exponents
+        are higher than this monomial's, it raises a
+        `ValueError`
 
         >>> Monomial(5) / Monomial(4, x=1)
         Traceback (most recent call last):
         ...
         ValueError: variable's exponent must be positive
 
-        Otherwise, if the second operator isn't a monomial
-        or a number, it will raise a TypeError
+        If `other` isn't a monomial or a number, it will raise a `TypeError`
 
         >>> Monomial(30) / {}
         Traceback (most recent call last):
@@ -564,33 +546,31 @@ class Monomial:
 
     def __pow__(self, exp):
         """
-        Raise a monomial to power
+        Raises a monomial to power
 
         >>> Monomial(5, x=1) ** 2
         25x**2
         >>> Monomial(4, c=6) ** 3
         64c**18
 
-        If the exponent is 0, the result will be always 1
+        If the exponent is 0, the result will always be 1
 
         >>> Monomial(5, k=6) ** 0
         1
 
-        A float exponent will raise a TypeError
+        It raises a `TypeError` if `exp` is an istance of `float`.
 
         >>> Monomial(3.14, a=3) ** 2.5
         Traceback (most recent call last):
         ...
         TypeError: unsupported operand type(s) for ** or pow(): 'Monomial' and 'float'
 
-        When the exponent is negative, it will raise
-        a ValueError
+        It can also raise a `ValueError` if it's negative
 
         >>> Monomial(17, k=1) ** (-1)
         Traceback (most recent call last):
         ...
         ValueError: Exponent can't be negative
-
 
         :type exp: int
         :rtype: Monomial
@@ -704,39 +684,40 @@ class Monomial:
 
     def __str__(self):
         """
-        Return the monomial as a string in a human-readable
-        mode. Normally, it will return the coefficient and
+        Returns the monomial as a string.
+        Normally, it will return the coefficient and
         the variables without spaces or *.
+
         The power is indicated with **.
 
         Examples:
 
-        Normal monomial:
+        - Normal monomial:
 
         >>> str(Monomial(5, x=1, y=1))
         '5xy'
 
-        coefficient = 1 and there are variables
+        - coefficient = 1 and there are variables
 
         >>> str(Monomial(a=2))
         'a**2'
 
-        coefficient = -1 and there are variables
+        - coefficient = -1 and there are variables
 
         >>> str(Monomial(-1, k=3))
         '-k**3'
 
-        coefficient = 0
+        - coefficient = 0
 
         >>> str(Monomial(0, s=5))
         '0'
 
-        coefficient = 1 and there aren't variables
+        - coefficient = 1 and there aren't variables
 
         >>> str(Monomial())
         '1'
 
-        coefficient = -1 and there aren't variables
+        - coefficient = -1 and there aren't variables
 
         >>> str(Monomial(-1))
         '-1'
@@ -785,7 +766,7 @@ class Monomial:
 
     def __repr__(self):
         """
-        Return the monomial as a string
+        Returns the monomial as a string
 
         >>> Monomial(5, x=5)
         5x**5
@@ -801,7 +782,7 @@ class Monomial:
 
     def __eq__(self, other):
         """
-        Check if two monomials are equivalent,
+        Checks if two monomials are equivalent,
         comparing coefficients and variables
 
         >>> Monomial(5, x=1) == Monomial(5, x=1)
@@ -814,7 +795,7 @@ class Monomial:
         True
 
         If the second operator isn't a monomial or
-        a number, it will return False.
+        a number, it will return `False`.
 
         :type other: Monomial, int, float
         :rtype: bool
@@ -828,7 +809,7 @@ class Monomial:
 
     def __neg__(self):
         """
-        Return the opposite of the monomial,
+        Returns the opposite of the monomial
         inverting the coefficient
 
         >>> - Monomial(5, x=1, y=1)
@@ -842,7 +823,7 @@ class Monomial:
 
     def __abs__(self):
         """
-        Return the absolute value of the monomial,
+        Returns the absolute value of the monomial,
         calculating the absolute value of the coefficient
 
         >>> abs(Monomial(-3, a=1, b=4))
@@ -858,8 +839,11 @@ class Monomial:
         """
         Return the hash for the Monomial
 
-        The hash for 8xy, for example, is equal
-        to the hash of (8, ('x', 1), ('y', 1)).
+        The hash for `8xy`, for example, is equivalent
+        to the hash of `(8, ('x', 1), ('y', 1))`.
+
+        >>> hash(Monomial(8, x=1, y=1)) == hash((8, ('x', 1), ('y', 1)))
+        True
 
         If the monomial has no variables, its hash
         will be equal to the coefficient's hash
