@@ -1,6 +1,4 @@
-from collections import frozendict
-
-class VariablesDict(frozendict):
+class VariablesDict(dict):
     """
     A VariablesDict is a dictionary with special
     features, created to manage in a better way
