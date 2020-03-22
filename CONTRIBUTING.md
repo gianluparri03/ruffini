@@ -14,33 +14,29 @@ The Makefile also has a coverage function: if you want to see the lines of code 
 
 ### Todo
 
-**General:**
 - [ ] Create a new logo
 - [ ] Add `Polynomial().eval()`
+- [ ] Make `Polynomial().term_coefficient(x**2)` legal
 
-**Factoring algorythms:**
-- [ ] `AX + BX + AY + BY = (A + B)(X + Y)`
-- [ ] `X**2 + (P + Q)X + PQ = (X + P)(X + Q)`
-- [ ] `A**3 + 3A**2B + 3AB**2 + B**2 = (A + B)**3`
-- [ ] `A**2 + B**2 + C**2 + 2AB + 2BC + 2AC = (A + B + C)**2`
-- [ ] `A**3 + B**3 = (A + B)(A**2 - AB + B**2)`
-- [ ] `A**3 - B**3 = (A - B)(A**2 + AB + B**2)`
-- [ ] Ruffini's Rule
+#### Done
 
-### Done
+- [X] Created tutorials in docs
+- [X] Adjusted references
+
+- [X] Added `VariablesDict().__truediv__()`
+- [X] Added `Monomial().root()`
+- [X] Added `Polynomial().__hash__()`
+- [X] Added `FPolynomial` class
+
+- [X] Added `gcd(*args)` and `lcm(*args)` shortands
+- [X] Added `Variable()` shorthand
+
+- [X] Made legal `Monomial(2, {'x': 1}).eval(x=Monomial(2, {'y': 2}))`
+- [X] Made `__repr__()` equals to `__str__()`
 
 - [X] Added multiple initializations (`Monomial(5, {'x': 1})` and `Monomial(5, x=1)`)
 - [X] Add monomial's default values (`coefficient=1`, `variables=VariablesDict()`)
-- [X] Add `Polynomial().__hash__()`
-- [X] Make legal `Monomial(2, {'x': 1}).eval(x=Monomial(2, {'y': 2}))`
-- [X] Add `gcd(*args)` and `lcm(*args)` in `__init__.py` as shortands
-- [X] Created `variable()` shorthand
-- [X] Make `__repr__()` equals to `__str__()`
-
-- [X] Add `VariablesDict().__truediv__()`
-- [X] Implement `Monomial().root()`
-- [X] Create the `FPolynomial` class
-- [X] Adjust `FPolynomial().__eq__()`
 
 - [X] `AX + AY = A(X + Y)`
 - [X] `A**2 +2AB + B**2 = (A + B)**2`
+- [X] Ruffini's Rule

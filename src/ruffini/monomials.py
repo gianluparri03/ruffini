@@ -22,10 +22,12 @@ class Monomial:
         """
         Creates a new Monomial.
         The default `coefficient` value is 1 (so it can be omitted);
-        variables instead 
+        variables instead are empty for default
 
         >>> Monomial(17, k=3)
         17k**3
+        >>> Monomial()
+        1
 
         If `coefficient` is an instance of float but
         it's a whole number (like 18.0), it will be
@@ -35,16 +37,16 @@ class Monomial:
         7a**2
 
         Monomials can also be initialized by passing a dictionary
-        (or any subclass) where are stored the variables:
+        (or anything similar) where are stored the variables:
 
         >>> Monomial(2, {'x': 2, 'y': 1})
         2x**2y
 
-        The variables will be stored in a `VariableDict`.
+        Variables will be stored in a `VariableDict`.
         For more infos, see :func:`VariablesDict.__init__()`.)
 
-        After initialized the monomial, this method
-        also calculates the monomial's total degree
+        Once initialized the monomial, it
+        calculates the monomial's total degree
         (which is the sum of the variables' degrees)
 
         >>> Monomial(-2, a=2, b=1, c=3).degree
@@ -83,27 +85,22 @@ class Monomial:
         Checks if two monomials are similar (if
         the have the same variables).
 
-        >>> m1 = Monomial(3, x=1, y=1)
-        >>> m2 = Monomial(-6, x=1, y=3)
-        >>> m3 = Monomial(2.6, x=1, y=1)
-        >>> m4 = Monomial(3.14)
-        >>> m1.similar_to(m4)
+        >>> m = Monomial(3, x=1, y=1)
+        >>> m.similar_to(Monomial(3.14))
         False
-        >>> m1.similar_to(m3)
+        >>> m.similar_to(Monomial(2, x=1, y=1))
         True
 
         If the second operand is not a monomial
         the result will always be `False`
 
-        >>> m3.similar_to("")
-        False
-        >>> m4.similar_to({})
+        >>> m.similar_to("")
         False
 
         When a monomial has no variables, if
         compared to a number the result will be `True`
 
-        >>> m4.similar_to(6.28)
+        >>> Monomial(6).similar_to(6.28)
         True
 
         :type other: Monomial, int, float
@@ -119,10 +116,10 @@ class Monomial:
 
     def has_root(self, index):
         """
-        Checks if the monomial "has" the root: 
+        Checks if the monomial "has" the root:
         the monomial `4x**2`, for example, is a square,
         so we can say it has root 2, because `(4x**2)**(1/2)`
-        is a monomial (=`2x`).
+        is a monomial (`2x`).
 
         >>> Monomial(4, x=2).has_root(2)
         True
@@ -136,14 +133,6 @@ class Monomial:
 
         >>> Monomial(0).has_root(700)
         True
-
-        If `index` is not an integer, it will raise
-        a TypeError
-
-        >>> Monomial(5, c=3).has_root({})
-        Traceback (most recent call last):
-        ...
-        TypeError: root index must be int, not dict
 
         :raises: TypeError
         :type index: int
@@ -230,7 +219,7 @@ class Monomial:
         >>> b.gcd(0)
         Traceback (most recent call last):
         ...
-        ValueError: Value can't be equal to zero
+        ValueError: Coefficient can't be zero
 
         The result is always positive
 
@@ -258,7 +247,7 @@ class Monomial:
 
         # Check value of the operators
         if self.coefficient == 0 or other.coefficient == 0:
-            raise ValueError("Value can't be equal to zero")
+            raise ValueError("Coefficient can't be zero")
 
         # Calculate the gcd of the coefficients
         coefficient = int(gcd(self.coefficient, other.coefficient))
@@ -328,12 +317,6 @@ class Monomial:
         >>> m.eval(b=7)
         5xy
 
-        As for the initialization, variables
-        aren't case sensitive
-
-        >>> m.eval(x=2) == m.eval(X=2)
-        True
-
         :type values: int, float, Monomial
         :rtype: int, float, Monomial
         :raise: TypeError
@@ -377,14 +360,6 @@ class Monomial:
 
         >>> Monomial(1, z=1) + 17
         z + 17
-
-        If `oher` isn't a monomial or a number,
-        it raises a `TypeError`
-
-        >>> Monomial(2, z=1) - ""
-        Traceback (most recent call last):
-        ...
-        TypeError: unsupported operand type(s) for -: 'Monomial' and 'str'
 
         :type other: Monomial, Polynomial, int, float
         :rtype: Monomial, Polynomial
@@ -436,13 +411,6 @@ class Monomial:
         >>> Monomial(17, a=1, b=1) - 2.5
         17ab - 2.5
 
-        Of `other` isn't a monomial or a number, it will raise a `TypeError`
-
-        >>> Monomial(2, z=1) - ""
-        Traceback (most recent call last):
-        ...
-        TypeError: unsupported operand type(s) for -: 'Monomial' and 'str'
-
         :type other: Polynomial, Monomial, int, float
         :rtype: Monomial, Polynomial
         :raise: TypeError
@@ -467,13 +435,6 @@ class Monomial:
         15c**2
         >>> Monomial(k=3) * Monomial(k=3)
         k**6
-
-        If `other` isn't a monomial or a number, it raises a `TypeError`
-
-        >>> Monomial(4) * {}
-        Traceback (most recent call last):
-        ...
-        TypeError: unsupported operand type(s) for *: 'Monomial' and 'dict'
 
         :type other: Polynomial, Monomial, int, float
         :rtype: Polynomial, Monomial
@@ -521,13 +482,6 @@ class Monomial:
         ...
         ValueError: variable's exponent must be positive
 
-        If `other` isn't a monomial or a number, it will raise a `TypeError`
-
-        >>> Monomial(30) / {}
-        Traceback (most recent call last):
-        ...
-        TypeError: unsupported operand type(s) for /: 'Monomial' and 'dict'
-
         :type other: Monomial, int, float
         :rtype: Monomial
         :raise: ValueError, TypeError
@@ -546,14 +500,14 @@ class Monomial:
 
     def __pow__(self, exp):
         """
-        Raises a monomial to power
+        Raises a monomial to a given power
 
         >>> Monomial(5, x=1) ** 2
         25x**2
         >>> Monomial(4, c=6) ** 3
         64c**18
 
-        If the exponent is 0, the result will always be 1
+        If the exponent is 0, the result will be 1
 
         >>> Monomial(5, k=6) ** 0
         1
@@ -565,7 +519,7 @@ class Monomial:
         ...
         TypeError: unsupported operand type(s) for ** or pow(): 'Monomial' and 'float'
 
-        It can also raise a `ValueError` if it's negative
+        It raises a `ValueError` if the exponent is negative
 
         >>> Monomial(17, k=1) ** (-1)
         Traceback (most recent call last):
@@ -691,39 +645,20 @@ class Monomial:
         The power is indicated with **.
 
         Examples:
-
-        - Normal monomial:
-
         >>> str(Monomial(5, x=1, y=1))
         '5xy'
-
-        - coefficient = 1 and there are variables
-
         >>> str(Monomial(a=2))
         'a**2'
-
-        - coefficient = -1 and there are variables
-
         >>> str(Monomial(-1, k=3))
         '-k**3'
-
-        - coefficient = 0
-
         >>> str(Monomial(0, s=5))
         '0'
-
-        - coefficient = 1 and there aren't variables
-
         >>> str(Monomial())
         '1'
-
-        - coefficient = -1 and there aren't variables
-
         >>> str(Monomial(-1))
         '-1'
 
-        **NB** the variables are displayed in
-        alphabetical order
+        Variables are displayed in alphabetical order
 
         >>> str(Monomial(5, k=2, b=3))
         '5b**3k**2'
@@ -814,8 +749,6 @@ class Monomial:
 
         >>> - Monomial(5, x=1, y=1)
         -5xy
-        >>> - Monomial(-3, a=1, b=4)
-        3ab**4
 
         :rtype: Monomial
         """
@@ -828,8 +761,6 @@ class Monomial:
 
         >>> abs(Monomial(-3, a=1, b=4))
         3ab**4
-        >>> abs(Monomial(5, x=1, y=1))
-        5xy
 
         :rtype: Monomial
         """
@@ -860,3 +791,7 @@ class Monomial:
         variables = ((k, self.variables[k]) for k in sorted(self.variables.keys()))
 
         return hash((self.coefficient, ) + tuple(list(variables)))
+
+# Variables shorthands
+def Variable(letter):
+    return Monomial(1, {str(letter): 1})

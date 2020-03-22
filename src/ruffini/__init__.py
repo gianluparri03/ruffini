@@ -11,10 +11,6 @@ del polynomials
 del fpolynomials
 
 
-# Variables shorthands
-def variable(letter):
-    return Monomial(1, {str(letter): 1})
-
 # GCD shorthand
 def gcd(*args):
     """

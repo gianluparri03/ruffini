@@ -5,10 +5,9 @@ Ok, so:
 we have imported ruffini because we wanted to use monomials
 and polynomials in python, right? Then, let's create a monomial!
 
-But, hey, how should we can create a monomial without any variable?
-Nah, we can't, so first of all we're initializing variables:
+First of all we're initializing variables:
 
->>> x = ruffini.variable('x')
+>>> x = ruffini.Variable('x')
 
 Done. Now we can finally create a monomial!
 
@@ -17,7 +16,7 @@ Done. Now we can finally create a monomial!
 
 \*thinks\*
 
->>> y = ruffini.variable('y')
+>>> y = ruffini.Variable('y')
 >>> -5*y
 -5y
 

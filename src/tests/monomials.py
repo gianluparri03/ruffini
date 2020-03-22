@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from ruffini import gcd, lcm, variable
+from ruffini import gcd, lcm, Variable
 from ruffini import Monomial as M
 from ruffini import Polynomial as P
 
@@ -38,7 +38,7 @@ class Test(TestCase):
         self.assertEqual(M(2, x=2, y=7).degree, 9)
 
         # test variable()
-        self.assertEqual(variable('x'), M(1, x=1))
+        self.assertEqual(Variable('x'), M(1, x=1))
 
     def test_similarity(self):
         # two monomials are simimlar if they have the

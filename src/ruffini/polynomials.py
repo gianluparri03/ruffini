@@ -1,5 +1,5 @@
 from .variables import VariablesDict
-from .monomials import Monomial
+from .monomials import Monomial, Variable
 
 from collections import Counter
 
@@ -9,14 +9,12 @@ class Polynomial(tuple):
     A Polynomial object is the sum of two or more
     monomials and/or numbers.
 
-    With a Polynomial() instance, you can do sums,
-    subtractions, multiplications and divisions.
+    You can sum, subtract and multiplicate instances
+    of Polynomial.
 
     You can assign a value to the variables and
     calculate the value of that polynomial with the
     value you assigned.
-
-    I'm working on factorization.
 
     **NB** The Polynomial class is a subclass of tuple,
     so all the methods of tuple are automatically
@@ -26,13 +24,13 @@ class Polynomial(tuple):
 
     def __new__(cls, terms=(), *args):
         """
-        Create the polynomial giving it a list
+        Create the polynomial by giving it a list
         of terms (a term can be a Monomial or a
         number); if two or more terms have the
         same variables, it will sum them toghether
 
-        >>> Polynomial(Monomial(2, x=2, y=2))
-        2x**2y**2
+        >>> Polynomial(Monomial(2, x=2, y=2), Monomial(3, x=2, y=2))
+        5x**2y**2
 
         :type *terms: Monomials, int, float
         :raise: TypeError
@@ -63,11 +61,13 @@ class Polynomial(tuple):
     def __init__(self, terms=(), *args):
         """
         Initialize the polynomial, then calculate
-        the polynomial degree (the highest degree
-        of the terms)
+        its degree (the highest degree between terms' ones)
 
-        >>> Polynomial(Monomial(1, a=1), Monomial(3))
+        >>> p = Polynomial(Monomial(a=1), Monomial(3))
+        >>> p
         a + 3
+        >>> p.degree
+        1
 
         :type *terms: Monomials, int, float
         """
@@ -82,10 +82,12 @@ class Polynomial(tuple):
         Return the coefficient of the term with
         the given variables
 
-        >>> m0 = Monomial(2, x=1, y=1)
-        >>> m1 = Monomial(-6, x=1, y=3)
-        >>> m2 = Monomial(8, x=1, y=1)
-        >>> p = Polynomial(m0, m1, m2)
+        >>> x = Variable('x')
+        >>> y = Variable('y')
+        >>>
+        >>> p = 2*x*y - 6*x*y**3 + 8*x*y
+        >>> p
+        10xy - 6xy**3
         >>>
         >>> p.term_coefficient(x=1, y=1)
         10
@@ -133,36 +135,21 @@ class Polynomial(tuple):
 
     def __add__(self, other):
         """
-        As the name say, this method will sum this
-        polynomial with another polynomial, a monomial
+        Sum the polynomial with another polynomial, a monomial
         or a number, too.
 
-        >>> m0 = Monomial(10, a=4)
-        >>> m1 = Monomial(-4, a=4)
-        >>> m2 = Monomial(7, y=1)
-        >>> m3 = Monomial(9, x=1)
-        >>> m4 = Monomial(-13, y=1)
-        >>> p = Polynomial(m1, m2, m4) # -4a**4 -6y
+        >>> x = Variable('x')
+        >>> y = Variable('y')
+        >>> p = 3*x + 2*y
         >>>
-        >>> # polynomial + polynomial
-        >>> p + Polynomial(m0, m3, m2)
-        6a**4 + y + 9x
+        >>> p + (3*y + 2)
+        3x + 5y + 2
         >>>
-        >>> # polynomial + monomial
-        >>> p + m3
-        -4a**4 - 6y + 9x
+        >>> p + 2*x
+        5x + 2y
         >>>
-        >>> # polynomial + number
-        >>> p + 9
-        -4a**4 - 6y + 9
-
-        If the second operator isn't in the list above,
-        it will raise a TypeError
-
-        >>> p + "placeholder"
-        Traceback (most recent call last):
-        ...
-        TypeError: unsupported operand type(s) for +: 'Polynomial' and 'str'
+        >>> p + 1
+        3x + 2y + 1
 
         :type other: Polynomial, Monomial, int, float
         :rtype: Polynomial
@@ -183,36 +170,22 @@ class Polynomial(tuple):
 
     def __sub__(self, other):
         """
-        As the name say, this method will subtract this
-        polynomial from another polynomial, a monomial
-        or a number, too.
+        Subtract the polynomial from another polynomial,
+        a monomial or a number.
 
-        >>> m0 = Monomial(10, a=4)
-        >>> m1 = Monomial(-4, a=4)
-        >>> m2 = Monomial(7, y=1)
-        >>> m3 = Monomial(9, x=1)
-        >>> m4 = Monomial(-13, y=1)
-        >>> p = Polynomial(m1, m2, m4) # -4a**4 -6y
+        >>> x = Variable('x')
+        >>> y = Variable('y')
         >>>
-        >>> # polynomial - polynomial
-        >>> p - Polynomial(m0, m3, m2)
-        -14a**4 - 13y - 9x
+        >>> p = 3*x + 2*y
         >>>
-        >>> # polynomial - monomial
-        >>> p - m3
-        -4a**4 - 6y - 9x
+        >>> p - (3*y + 2)
+        3x - y - 2
         >>>
-        >>> # polynomial - number
-        >>> p - 9
-        -4a**4 - 6y - 9
-
-        If the second operator isn't in the list above,
-        it will raise a TypeError
-
-        >>> p - []
-        Traceback (most recent call last):
-        ...
-        TypeError: unsupported operand type(s) for -: 'Polynomial' and 'list'
+        >>> p - 2*x
+        x + 2y
+        >>>
+        >>> p - 1
+        3x + 2y - 1
 
         :type other: Polynomial, Monomial, int, float
         :rtype: Polynomial
@@ -236,32 +209,19 @@ class Polynomial(tuple):
         This method is used to multiply a polynomial
         by a polynomial, a monomial or a number:
 
-        >>> m0 = Monomial(10, a=4)
-        >>> m1 = Monomial(-4, a=4)
-        >>> m2 = Monomial(7, y=1)
-        >>> m3 = Monomial(9, x=1)
-        >>> m4 = Monomial(-13, y=1)
-        >>> p = Polynomial(m1, m2, m4) # -4a**4 -6y
+        >>> x = Variable('x')
+        >>> y = Variable('y')
         >>>
-        >>> # polynomial * polynomial
-        >>> p * Polynomial(m0, m1, m4)
-        -24a**8 + 16a**4y + 78y**2
+        >>> p = 3*x + 2*y
         >>>
-        >>> # polynomial * monomial
-        >>> p * m3
-        -36a**4x - 54xy
+        >>> p * (3*y + 2)
+        9xy + 6x + 6y**2 + 4y
         >>>
-        >>> # polynomial * number
-        >>> p * 3
-        -12a**4 - 18y
-
-        If the second operator type is not mentioned
-        above, it will raise a TypeError
-
-        >>> p * {}
-        Traceback (most recent call last):
-        ...
-        TypeError: unsupported operand type(s) for *: 'Polynomial' and 'dict'
+        >>> p * x
+        3x**2 + 2xy
+        >>>
+        >>> p * 4
+        12x + 8y
 
         :type other: Monomial, Polynomial, int, float
         :rtype: Polynomial
@@ -347,7 +307,7 @@ class Polynomial(tuple):
     def __str__(self):
         """
         Return the polynomial as a string.
-        The exponent for the variables is indicated with a **.
+        Powers are indicated with **.
 
         >>> str(Polynomial(Monomial(4, a=4, b=1)))
         '4a**4b'
@@ -376,10 +336,6 @@ class Polynomial(tuple):
 
         >>> repr(Polynomial(Monomial(4, a=4, b=1)))
         '4a**4b'
-        >>> repr(Polynomial(Monomial(1, a=2), Monomial(-2, c=2)))
-        'a**2 - 2c**2'
-        >>> repr(Polynomial(Monomial(3, x=2), Monomial(6, y=3)))
-        '3x**2 + 6y**3'
 
         For more informations, see :func:`Polynomial.__str__`.
 
@@ -391,7 +347,7 @@ class Polynomial(tuple):
     def __eq__(self, other):
         """
         Check if two polynomials are equivalent,
-        comparating each term
+        comparing each term
 
         >>> p0 = Polynomial(Monomial(4, a=4, b=1))
         >>> p1 = Polynomial(Monomial(1, a=2), Monomial(-2, c=2))
@@ -410,16 +366,15 @@ class Polynomial(tuple):
         >>> Polynomial(Monomial(3, f=2)) == Monomial(3, f=2)
         True
 
-        **NB** Since a monomial with no variables can be
+        Since a monomial with no variables can be
         compared to a number, if a polynomial has only
-        a term, which is a monomial with no variables,
-        it can be compared to a number, too!
+        a term - which is a monomial with no variables -
+        it can be compared to a number
 
         >>> Polynomial(Monomial(7)) == 7
         True
 
-        If the second operator in not mentione above,
-        the result will be False.
+        In any other case, the result will be False.
 
         >>> Polynomial() == {1, 2, 3}
         False
@@ -435,14 +390,11 @@ class Polynomial(tuple):
 
     def __neg__(self):
         """
-        This method return the opposite of
-        the polynomial, changing the sign of
-        each term of the polynomial
+        Return the opposite of the polynomial, changing
+        the sign of each term of the polynomial
 
         >>> -Polynomial(Monomial(4, x=1), Monomial(2, y=2))
         -4x - 2y**2
-        >>> -Polynomial(Monomial(-6, b=2), Monomial(3, k=3))
-        6b**2 - 3k**3
 
         :rtype: Polynomial
         """

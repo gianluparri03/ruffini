@@ -7,7 +7,7 @@ class VariablesDict(dict):
     In this case, we'll call keys variables and
     values exponents.
 
-    Anyway, the changes are:
+    The changes are:
 
     - If a variable isn't in the dictionary, its exponent is 0
     - Therefore, variables with exponent 0 won't be inserted
@@ -58,14 +58,12 @@ class VariablesDict(dict):
         ...
         ValueError: variable's name must be alphabetical
 
-        - exponent is not int (or a whole number) (TypeError)
+        - exponent is not an integer (or a whole number) (TypeError)
 
         >>> VariablesDict(k=[])
         Traceback (most recent call last):
         ...
         TypeError: variable's exponent must be int
-
-        - exponent is not a whole number (TypeError)
 
         >>> VariablesDict(z=7.13)
         Traceback (most recent call last):
@@ -192,7 +190,7 @@ class VariablesDict(dict):
         >>> str(VariablesDict(Y=5))
         "{'y': 5}"
 
-        NB: Letters are sorted alphabetically:
+        Variables are sorted alphabetically:
 
         >>> str(VariablesDict(k=2, b=3))
         "{'b': 3, 'k': 2}"
@@ -232,14 +230,6 @@ class VariablesDict(dict):
         >>> VariablesDict(a=36) + VariablesDict()
         {'a': 36}
 
-        If the second operator isn't a VariablesDict it will
-        raise a TypeError
-
-        >>> VariablesDict() + "-"
-        Traceback (most recent call last):
-        ...
-        TypeError: unsupported operand type(s) for +: 'VariablesDict' and 'str'
-
         :type other: VariablesDict
         :rtype: VariablesDict
         :raise: TypeError
@@ -275,14 +265,6 @@ class VariablesDict(dict):
         ...
         ValueError: variable's exponent must be positive
 
-        It can raise a TypeError if the second argument
-        isn't a VariablesDict
-
-        >>> VariablesDict() - "-"
-        Traceback (most recent call last):
-        ...
-        TypeError: unsupported operand type(s) for -: 'VariablesDict' and 'str'
-
         :type other: VariablesDict
         :rtype: VariablesDict
         :raise: ValueError, TypeError
@@ -315,13 +297,6 @@ class VariablesDict(dict):
         Traceback (most recent call last):
         ...
         ValueError: can't multiply a VariablesDict by a negative number
-
-        If `other` is not an integer, a TypeError is raised
-
-        >>> VariablesDict() * {}
-        Traceback (most recent call last):
-        ...
-        TypeError: unsupported operand type(s) for *: 'VariablesDict' and 'dict'
 
         :type other: int
         :rtype: VariablesDict
@@ -365,13 +340,6 @@ class VariablesDict(dict):
         >>> VariablesDict(x=7) % 3
         False
 
-        If `other` is not an integer, it will raise a TypeError
-
-        >>> VariablesDict(k=2) / 1.5
-        Traceback (most recent call last):
-        ...
-        TypeError: unsupported operand type(s) for /: 'VariablesDict' and 'float'
-
         :type other: int
         :rtype: VariablesDict
         :raises: ValueError, TypeError
@@ -395,15 +363,7 @@ class VariablesDict(dict):
         >>> VariablesDict(a=2, b=4) % 3
         False
 
-        It raises a TypeError when `other` is not
-        an integer
-
-        >>> VariablesDict(k=2) % []
-        Traceback (most recent call last):
-        ...
-        TypeError: unsupported operand type(s) for %: 'VariablesDict' and 'list'
-
-        Or ValueError when it isn't positive
+        It raises ValueError if `other` isn't a positive integer
 
         >>> VariablesDict(k=2) % (-7)
         Traceback (most recent call last):

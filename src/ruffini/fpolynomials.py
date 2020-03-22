@@ -1,4 +1,4 @@
-from .monomials import Monomial
+from .monomials import Monomial, Variable
 from .polynomials import Polynomial
 
 from functools import reduce
@@ -29,8 +29,7 @@ class FPolynomial(tuple):
         of factors (int, float, Monomial or Polynomial).
 
         >>> p = Polynomial(Monomial(2, x=2, y=2))
-        >>> fp = FPolynomial(5, p)
-        >>> fp
+        >>> FPolynomial(5, p)
         5(2x**2y**2)
 
         Every factor that is equal to 1 is not inserted
@@ -46,7 +45,7 @@ class FPolynomial(tuple):
         ...
         TypeError: There must be at least a polynomial
 
-        **NB:** It converts all the factors to Polynomial
+        It converts all the factors to Polynomial
         and sort them by frequency.
 
         :type *factors: int, float, Monomial, Polynomial
@@ -200,37 +199,19 @@ class FPolynomial(tuple):
         >>> FPolynomial(p, m) == FPolynomial(m, p)
         True
 
-        Also, if we compare two factorized polynomials
+        If we compare two factorized polynomials
         with different factors, but which - once evaluated - they
         are equivalent, the result is true. For example:
 
-        >>> p = Polynomial(Monomial(4, x=2), Monomial(9, y=4), Monomial(-12, x=1, y=2))
-        >>> result_1 = factorize(p)
-        >>> result_1
-        (2x - 3y**2)**2
-
-        Now, let's "shuffle" the terms' order in the polynomial
-        and factorize it again
-
-        >>> p = Polynomial(*p[::-1])
-        >>> result_2 = factorize(p)
-        >>> result_2
-        (3y**2 - 2x)**2
-
-        that could be considered different from the first. __But__, if we
-        evaluate them, we'll see they're equivalent
-
-        >>> result_1.eval()
-        4x**2 - 12xy**2 + 9y**4
-        >>> result_2.eval()
-        9y**4 - 12xy**2 + 4x**2
-        >>> result_1.eval() == result_2.eval()
+        >>> x = Variable("x")
+        >>> y = Variable("y")
+        >>>
+        >>> fp1 = FPolynomial(2*x - 3*y**2, 2*x - 3*y**2)
+        >>> fp2 = FPolynomial(3*y**2 - 2*x, 3*y**2 - 2*x)
+        >>>
+        >>> fp1.eval() == fp2.eval()
         True
-
-        In fact, if we compared them without evaluating, the
-        result will still be the same
-
-        >>> result_1 == result_2
+        >>> fp1 == fp2
         True
 
         :type other: FPolynomial
@@ -246,7 +227,7 @@ class FPolynomial(tuple):
 def gcf(polynomial):
     """
     Factorize a polynomial with the gcf (greates common
-    facor) method. In theory, it works like this:
+    facor) method. It works like this:
 
     `AX + AY + ... = A(X + Y + ...)`
 
@@ -284,54 +265,20 @@ def gcf(polynomial):
 
 def binomial_square(polynomial):
     """
-    Factorize a polynomial with the gcf (greates common
-    facor) method. In theory, it works like this:
+    Check if the polynomial is a binomial
+    square. It works like this:
 
     `A*2 + B**2 + 2AB = (A + B)**2`
 
     for example:
 
     >>> p = Polynomial(Monomial(4, x=2), Monomial(9, y=4), Monomial(-12, x=1, y=2))
-    >>> result_1 = binomial_square(p)
-    >>> result_1
+    >>> p
+    4x**2 + 9y**4 - 12xy**2
+    >>> binomial_square(p)
     (2x - 3y**2)**2
 
-    *NB:* order of terms doesn't matter. Let's use the case above
-    as example. If you factorize it in that order, the result, as
-    we said, is `(2x - 3y**2)**2`. If we try swapping the terms' order,
-    the result will be
-
-    >>> p = Polynomial(*p[::-1])
-    >>> result_2 = binomial_square(p)
-    >>> result_2
-    (3y**2 - 2x)**2
-
-    that could be considered different from the first. __But__, if we
-    evaluate them, we'll see they're equivalent
-
-    >>> result_1.eval()
-    4x**2 - 12xy**2 + 9y**4
-    >>> result_2.eval()
-    9y**4 - 12xy**2 + 4x**2
-    >>> result_1.eval() == result_2.eval()
-    True
-
-    In fact, if we compared them without evaluating, the
-    result will still be the same
-
-    >>> result_1 == result_2
-    True
-
-
-    If the given argument isn't an instance of Polynomial,
-    it will raise a TypeError
-
-    >>> binomial_square('a doggo')
-    Traceback (most recent call last):
-    ...
-    TypeError: Can't use binomial_square with an object of type 'str'
-
-    It can raise also ValueError, in three cases:
+    It can raise ValueError in three cases:
 
     1. When polynomial's length isn't 3:
 
