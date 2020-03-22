@@ -35,12 +35,23 @@ class Test(TestCase):
         # if more terms have the same variables
         # they are summed together
         self.assertEqual(self.p[0].term_coefficient(a=4), 6)
+        self.assertEqual(self.p[0].term_coefficient({'a': 4}), 6)
 
         # if term_coefficient find nothing, the result is 0
         self.assertEqual(self.p[0].term_coefficient(k=2, b=1), 0)
 
         # term_coefficient argument can be a monomial with coefficient 1
         self.assertEqual(P(M(2, x=1), 3).term_coefficient(Variable('x')), 2)
+
+    def test_zeros_eval(self):
+        # test eval
+        self.assertEqual(self.p[0].eval(a=1), 6 + M(7, y=1))
+        self.assertEqual(self.p[0].eval({'y': 3}), 21+ M(6, a=4))
+
+        # test zeros
+        self.assertEqual(P(M(3, x=3), M(2, x=2), M(-3, x=1), -2).zeros, {-2/3, 1, -1})
+        self.assertRaises(ValueError, lambda: self.p[0].zeros)
+        self.assertRaises(ValueError, lambda: P(M(3, x=3), M(2, x=2)).zeros)
 
     def test_add_sub(self):
         # works only with monomials, polynomials and numbers

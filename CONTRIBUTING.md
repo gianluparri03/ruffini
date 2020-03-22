@@ -15,28 +15,33 @@ The Makefile also has a coverage function: if you want to see the lines of code 
 ### Todo
 
 - [ ] Create a new logo
-- [ ] Add `Polynomial().eval()`
-- [ ] Make `Polynomial().term_coefficient(x**2)` legal
 
 #### Done
 
+__Docs__
 - [X] Created tutorials in docs
 - [X] Adjusted references
 
-- [X] Added `VariablesDict().__truediv__()`
-- [X] Added `Monomial().root()`
-- [X] Added `Polynomial().__hash__()`
-- [X] Added `FPolynomial` class
+__New Classes__
+- [X] `FPolynomial`
 
-- [X] Added `gcd(*args)` and `lcm(*args)` shortands
-- [X] Added `Variable()` shorthand
+__New Methods__
+- [X] `Monomial().has_root()` and `Monomial().root()`
+- [X] `Polynomial().factorize()` shorthand
+- [X] `Polynomial().__hash__()`
+- [X] `Polynomial().eval()`
+- [X] `Polynomial().zeros`
 
-- [X] Made legal `Monomial(2, {'x': 1}).eval(x=Monomial(2, {'y': 2}))`
-- [X] Made `__repr__()` equals to `__str__()`
+__New Functions
+- [X] `gcd(*args)` and `lcm(*args)` shortands
+- [X] `Variable()` shorthand
+- [X] `factorize()`
+- [X] `gcf()`
+- [X] `binomial_square()`
 
-- [X] Added multiple initializations (`Monomial(5, {'x': 1})` and `Monomial(5, x=1)`)
+__Changes__
+- [X] Added multiple "initializations" (`Monomial(5, {'x': 1})` and `Monomial(5, x=1)`) for each function/class/method
 - [X] Add monomial's default values (`coefficient=1`, `variables=VariablesDict()`)
-
-- [X] `AX + AY = A(X + Y)`
-- [X] `A**2 +2AB + B**2 = (A + B)**2`
-- [X] Ruffini's Rule
+- [X] `Monomial().__call__()` -> `Monomial().eval()`
+- [X] Made `__repr__()` equals to `__str__()`
+- [X] Made legal `Monomial(2, {'x': 1}).eval(x=Monomial(2, {'y': 2}))`

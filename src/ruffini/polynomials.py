@@ -4,6 +4,12 @@ from .monomials import Monomial, Variable
 from collections import Counter
 
 
+def get_divisors(n):
+    n = abs(n)
+    divs = {m for m in range(1, int(n/2) + 1) if not n % m}
+    divs |=  {int(n / m) for m in divs}
+    return divs
+
 class Polynomial(tuple):
     """
     A Polynomial object is the sum of two or more
@@ -97,6 +103,11 @@ class Polynomial(tuple):
         >>> p.term_coefficient(k=1, b=2)
         0
 
+        You can also give directly the variables as an argument
+
+        >>> p.term_coefficient(x*y)
+        10
+
         :type variables: dict, VariablesDict
         :rtype: int, float
         """
@@ -105,10 +116,10 @@ class Polynomial(tuple):
         if not variables:
             variables = kwargs
 
-        if isinstance(variables, Monomial) and variables.coefficient == 1:
+        elif isinstance(variables, Monomial) and variables.coefficient == 1:
             variables = variables.variables
 
-        if not isinstance(variables, VariablesDict):
+        elif not isinstance(variables, VariablesDict):
             variables = VariablesDict(variables)
 
         for term in self:
@@ -130,6 +141,82 @@ class Polynomial(tuple):
         from .fpolynomials import factorize
 
         return factorize(self)
+
+    @property
+    def zeros(self):
+        """
+        Return a set of zeros for the polynomial
+
+        >>> x = Variable('x')
+        >>> p = 3*x**3 + 2*x**2 - 3*x - 2
+        >>> p.zeros
+        {-0.6666666666666666, 1.0, -1.0}
+
+        It works only with polynomials with only a variable
+        and a constant term
+
+        >>> Polynomial(3*x, Monomial(2, y=1)).zeros
+        Traceback (most recent call last):
+        ...
+        ValueError: Can't calculate zeros for polynomials with more than a variable
+
+        >>> Polynomial(3*x, 5*x**2).zeros
+        Traceback (most recent call last):
+        ...
+        ValueError: Can't calculate zeros for polynomials without a constant term
+
+        :rtype: set
+        :raises: ValueError
+        """
+
+        # Fetch variables and the constant term
+        variable = {v for m in self for v in m.variables.keys()}
+        constant_term = self.term_coefficient()
+
+        # Raise a ValueError if there are more than one variable
+        # or if there isn't a constant term
+        if len(set(variable)) != 1:
+            raise ValueError("Can't calculate zeros for polynomials with more than a variable")
+        elif not constant_term:
+            raise ValueError("Can't calculate zeros for polynomials without a constant term")
+
+        variable = tuple(variable)[0]
+        coefficient = self.term_coefficient({variable: self.degree})
+
+        # Create a list of candidates
+        constant_term_divs = {d for n in get_divisors(constant_term) for d in (+n, -n)}
+        coefficient_divs = get_divisors(coefficient)
+        candidates = {a/b for a in constant_term_divs for b in coefficient_divs}
+
+        # Try every candidate
+        zeros = set()
+
+        for candidate in candidates:
+            if self.eval({variable: candidate}) == 0:
+                zeros.add(candidate)
+
+        return zeros
+
+    def eval(self, values=VariablesDict(), **kwargs):
+        """
+        Evaluates the polynomial, giving values
+        for each variable
+
+        >>> p = Polynomial(Monomial(5, x=1), Monomial(3, y=1))
+        >>> p.eval(x=2, y=3)
+        19
+
+        For more informations, see :func:`Monomial.eval`.
+
+        :rtype: int, float, Monomial, Polynomial
+        """
+
+        # multiple initializations
+        if not values:
+            values = kwargs
+
+        # eval each term of the polynomial, then return it
+        return Polynomial([t.eval(values) for t in self])
 
     ### Operations Methods ###
 

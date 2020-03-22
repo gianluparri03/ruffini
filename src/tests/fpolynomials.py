@@ -59,7 +59,7 @@ class Test(TestCase):
 
         # eq
         self.assertEqual(FP(self.p[1], 5), FP(5, self.p[1]))
-        self.assertNotEqual(self.fp[0], {'a', 'b', 'x'})
+        self.assertFalse(self.fp[0] == {'a', 'b', 'x'})
 
     def test_factorization(self):
         # test shorthand
