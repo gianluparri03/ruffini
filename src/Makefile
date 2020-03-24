@@ -15,19 +15,11 @@ coverage:
 # PyPI
 
 delete-build:
-	rm ruffini-*
+	rm -rf dist
 
 build:
-	cp -r ../src/ruffini .
-	cp -r ../src/setup.py .
 	python3 setup.py sdist bdist_wheel
-	rm setup.py
-	mv dist/* .
-	rm -rf build ruffini.egg-info ruffini dist
+	rm -rf build ruffini.egg-info
 
 build-push:
-	mkdir to_upload
-	cp ruffini* to_upload
-	twine upload to_upload/*
-	rm -rf to_upload
-
+	twine upload dist/*
