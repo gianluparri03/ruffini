@@ -14,34 +14,4 @@ The Makefile also has a coverage function: if you want to see the lines of code 
 
 ### Todo
 
-- [ ] Create a new logo
-
 #### Done
-
-__Docs__
-- [X] Created tutorials in docs
-- [X] Adjusted references
-
-__New Classes__
-- [X] `FPolynomial`
-
-__New Methods__
-- [X] `Monomial().has_root()` and `Monomial().root()`
-- [X] `Polynomial().factorize()` shorthand
-- [X] `Polynomial().__hash__()`
-- [X] `Polynomial().eval()`
-- [X] `Polynomial().zeros`
-
-__New Functions
-- [X] `gcd(*args)` and `lcm(*args)` shortands
-- [X] `Variable()` shorthand
-- [X] `factorize()`
-- [X] `gcf()`
-- [X] `binomial_square()`
-
-__Changes__
-- [X] Added multiple "initializations" (`Monomial(5, {'x': 1})` and `Monomial(5, x=1)`) for each function/class/method
-- [X] Add monomial's default values (`coefficient=1`, `variables=VariablesDict()`)
-- [X] `Monomial().__call__()` -> `Monomial().eval()`
-- [X] Made `__repr__()` equals to `__str__()`
-- [X] Made legal `Monomial(2, {'x': 1}).eval(x=Monomial(2, {'y': 2}))`
