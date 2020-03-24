@@ -3,7 +3,7 @@ from setuptools import setup
 with open("../README.md") as f:
     readme = f.read()
 
-version = "1.4_wip"
+version = "v1.3"
 
 setup(
     name="ruffini",
