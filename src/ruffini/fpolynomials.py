@@ -2,6 +2,7 @@ from .monomials import Monomial, Variable
 from .polynomials import Polynomial
 
 from functools import reduce
+from fractions import Fraction
 
 
 class FPolynomial(tuple):
@@ -26,7 +27,7 @@ class FPolynomial(tuple):
     def __new__(cls, *factors):
         """
         Create the factorized polynomial giving it a list
-        of factors (int, float, Monomial or Polynomial).
+        of factors (int, float, Fraction, Monomial or Polynomial).
 
         >>> p = Polynomial(Monomial(2, x=2, y=2))
         >>> FPolynomial(5, p)
@@ -48,7 +49,7 @@ class FPolynomial(tuple):
         It converts all the factors to Polynomial
         and sort them by frequency.
 
-        :type *factors: int, float, Monomial, Polynomial
+        :type *factors: int, float, Fraction, Monomial, Polynomial
         :raise: TypeError
         """
 
@@ -64,7 +65,7 @@ class FPolynomial(tuple):
 
         for factor in factors:
             # Check if its type is valid
-            if not isinstance(factor, (int, float, Polynomial, Monomial)):
+            if not isinstance(factor, (int, float, Fraction, Polynomial, Monomial)):
                 raise TypeError("FPolynomial elements must be int, float, Polynomial or Monomial instance")
 
             # Ensure that all the factors are polynomials

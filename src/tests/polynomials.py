@@ -1,4 +1,5 @@
 from unittest import TestCase
+from fractions import Fraction as F
 
 from ruffini import Variable
 from ruffini import Monomial as M
@@ -49,7 +50,7 @@ class Test(TestCase):
         self.assertEqual(self.p[0].eval({'y': 3}), 21+ M(6, a=4))
 
         # test zeros
-        self.assertEqual(P(M(3, x=3), M(2, x=2), M(-3, x=1), -2).zeros, {-2/3, 1, -1})
+        self.assertEqual(P(M(3, x=3), M(2, x=2), M(-3, x=1), -2).zeros, {F(-2, 3), 1, -1})
         self.assertRaises(ValueError, lambda: self.p[0].zeros)
         self.assertRaises(ValueError, lambda: P(M(3, x=3), M(2, x=2)).zeros)
 

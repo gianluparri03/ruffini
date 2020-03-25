@@ -1,6 +1,8 @@
-from math import gcd
-
 from .variables import VariablesDict
+
+from functools import reduce
+from math import gcd as math_gcd
+from fractions import Fraction
 
 
 class Monomial:
@@ -29,12 +31,10 @@ class Monomial:
         >>> Monomial()
         1
 
-        If `coefficient` is an instance of float but
-        it's a whole number (like 18.0), it will be
-        transformed in int (in this case, 18)
+        Every `coefficient` will be transformed in an instance of :class:`Fraction`
 
-        >>> Monomial(7.0, a=2)
-        7a**2
+        >>> type(Monomial(7, a=2).coefficient)
+        <class 'fractions.Fraction'>
 
         Monomials can also be initialized by passing a dictionary
         (or anything similar) where are stored the variables:
@@ -52,7 +52,7 @@ class Monomial:
         >>> Monomial(-2, a=2, b=1, c=3).degree
         6
 
-        :type coefficient: int, float
+        :type coefficient: int, float, Fraction
         :type coefficient: dict, VariablesDict
         :raise: ValueError, TypeError
         """
@@ -65,9 +65,9 @@ class Monomial:
             variables = kwargs
 
         # Check the coefficient
-        if isinstance(coefficient, float) and coefficient.is_integer():
-            self.coefficient = int(coefficient)
-        elif isinstance(coefficient, (int, float)):
+        if isinstance(coefficient, (int, float)):
+            self.coefficient = Fraction(coefficient)
+        elif isinstance(coefficient, Fraction):
             self.coefficient = coefficient
         else:
             raise TypeError("Coefficient must be int or float")
@@ -100,14 +100,14 @@ class Monomial:
         When a monomial has no variables, if
         compared to a number the result will be `True`
 
-        >>> Monomial(6).similar_to(6.28)
+        >>> Monomial(6).similar_to(Fraction(1, 3))
         True
 
-        :type other: Monomial, int, float
+        :type other: Monomial, int, float, Fraction
         :rtype: bool
         """
 
-        if self.variables.is_empty and isinstance(other, (int, float)):
+        if self.variables.is_empty and isinstance(other, (int, float, Fraction)):
             return True
         elif not isinstance(other, Monomial):
             return False
@@ -153,7 +153,7 @@ class Monomial:
             return False
 
         # try to apply the root to the index
-        coefficient = abs(self.coefficient) ** (1/index)
+        coefficient = abs(self.coefficient) ** Fraction(1, index)
 
         return coefficient.is_integer() and self.variables % index
 
@@ -186,7 +186,7 @@ class Monomial:
             raise ValueError(f"this monomial hasn't root {index}")
 
         # apply the root
-        coefficient = abs(self.coefficient) ** (1/index)
+        coefficient = abs(self.coefficient) ** Fraction(1, index)
         variables = self.variables / index
 
         # check if the coefficient is negative
@@ -205,17 +205,17 @@ class Monomial:
         >>> a.gcd(b)
         5x
 
-        It works only with integer coefficient/numbers
-        different from zero
+        It works only with integer coefficient that
+        aren't equal to zero
 
         >>> a.gcd(3.14)
         Traceback (most recent call last):
         ...
-        TypeError: Can't calculate gcd between Monomial and float
+        ValueError: Monomial coefficient must be a whole number
         >>> a.gcd(Monomial(3.14))
         Traceback (most recent call last):
         ...
-        ValueError: Monomial coefficient must be int
+        ValueError: Monomial coefficient must be a whole number
         >>> b.gcd(0)
         Traceback (most recent call last):
         ...
@@ -230,34 +230,31 @@ class Monomial:
         If you want to calculate the gcd with more
         factors, you can use the shorthand :func:`gcd`.
 
-        :type others: Monomial, int, float
-        :rtype: Monomial, int
+        :type others: Monomial, int, float, Fraction
+        :rtype: Monomial, Fraction
         :raise: TypeError, ValueError
         """
 
-        # Check types of the operators
-        if isinstance(other, int):
+        # Check type of the second operand
+        if isinstance(other, (int, float, Fraction)):
             other = Monomial(other)
-        elif isinstance(other, Monomial):
-            if any(isinstance(m.coefficient, float) for m in [self, other]):
-                raise ValueError("Monomial coefficient must be int")
-        else:
-            raise TypeError("Can't calculate gcd between Monomial"
-                            f" and {type(other).__name__}")
+        elif not isinstance(other, Monomial):
+            raise TypeError(f"Can't calculate gcd between Monomial and {other.__class__.__name__}")
 
-        # Check value of the operators
-        if self.coefficient == 0 or other.coefficient == 0:
-            raise ValueError("Coefficient can't be zero")
+        # Check if operands are legal
+        for monomial in (self, other):
+            if not monomial.coefficient.denominator == 1:
+                raise ValueError("Monomial coefficient must be a whole number")
+            elif monomial.coefficient == 0:
+                raise ValueError("Coefficient can't be zero")
 
         # Calculate the gcd of the coefficients
-        coefficient = int(gcd(self.coefficient, other.coefficient))
+        coefficient = math_gcd(int(self.coefficient), int(other.coefficient))
 
         # Calculate the gcd of the variables
         variables = {}
         for variable in self.variables:
-            if variable in other.variables:
-                variables[variable] = min(self.variables[variable],
-                                          other.variables[variable])
+            variables[variable] = min(self.variables[variable], other.variables[variable])
 
         return Monomial(coefficient, variables)
 
@@ -270,15 +267,13 @@ class Monomial:
         >>> a.lcm(b)
         18xy**3
 
-        If you want to know others informations
-        like errors and limits, please check the
-        documentation of Monomial().gcd().
+        If you want to know more, please check :func:`Monomial.gcd`.
 
         If you want to calculate the lcm between more
         monomials, you can use the :func:`lcm` shorthand.
 
-        :type others: Monomial, int, float
-        :rtype: Monomial, int, float
+        :type others: Monomial, int, float, Fraction
+        :rtype: Monomial, Fraction
         :raise: TypeError, ValueError
         """
 
@@ -291,17 +286,17 @@ class Monomial:
 
         >>> m = Monomial(5, x=1, y=1)
         >>> m.eval(x=2, y=3)
-        30
+        Fraction(30, 1)
 
         **NB:** *if there are no variables left,
         it returns only the coefficient, as instance
-        of `int` or `float`*
+        of :class:`Fraction`.*
 
         You can also assign variables' values
         with a dictionary (or any subclass)
 
         >>> m.eval({'x': 2, 'y': 3})
-        30
+        Fraction(30, 1)
 
         If you omit some variables' values,
         those variables will remain as they
@@ -317,7 +312,12 @@ class Monomial:
         >>> m.eval(b=7)
         5xy
 
-        :type values: int, float, Monomial
+        The value for a variable can be a Monomial as well
+
+        >>> m.eval(x=Monomial(3, y=1))
+        15y**2
+
+        :type values: int, float, Fraction, Monomial
         :rtype: int, float, Monomial
         :raise: TypeError
         """
@@ -334,8 +334,7 @@ class Monomial:
         for variable in values:
             if variable in result.variables:
                 # multiply the result for the value
-                # raised to the exponent. then divide for
-                # the variable
+                # raised to the exponent, then remove the variable
                 exp = result.variables[variable.lower()]
                 result *= (values[variable] ** exp)
                 result /= Monomial({variable: exp})
@@ -350,10 +349,10 @@ class Monomial:
 
     def __add__(self, other):
         """
-        Sums two monomials.
+        Sums two monomials
 
-        >>> Monomial(5, x=1, y=3) + Monomial(-1.52, x=1, y=3)
-        3.48xy**3
+        >>> Monomial(5, x=1, y=3) + Monomial(-1.5, x=1, y=3)
+        7/2xy**3
 
         You can also sum a monomial and a number, but the
         result will be an instance of `Polynomial`.
@@ -361,13 +360,14 @@ class Monomial:
         >>> Monomial(1, z=1) + 17
         z + 17
 
-        :type other: Monomial, Polynomial, int, float
+        :type other: Monomial, Polynomial, int, float, Fraction
         :rtype: Monomial, Polynomial
         :raise: TypeError
         """
 
         from . import Polynomial
 
+        # monomial + monomial
         if isinstance(other, Monomial):
             # Opposite monomial
             if self == -other:
@@ -381,13 +381,15 @@ class Monomial:
             else:
                 return Polynomial(self, other)
 
-        elif isinstance(other, (int, float)):
+        # monomial + number
+        elif isinstance(other, (int, float, Fraction)):
             if self.variables.is_empty:
                 return Monomial(self.coefficient + other)
 
             else:
                 return Polynomial(self, other)
 
+        # monomial + polynomial
         elif isinstance(other, Polynomial):
             return other + self
 
@@ -396,47 +398,43 @@ class Monomial:
 
     def __sub__(self, other):
         """
-        Returns the subtraction between this monomial
-        and `other`
+        Subtracts two monomials
 
         >>> Monomial(5, x=1) - Monomial(3, x=1)
         2x
 
         If the monomials are not similar or the second
-        operator is a number, the result will be a
+        operand is a number, the result will be a
         polynomial
 
         >>> Monomial(5, x=1, y=3) - Monomial(3, x=1)
         5xy**3 - 3x
         >>> Monomial(17, a=1, b=1) - 2.5
-        17ab - 2.5
+        17ab - 5/2
 
-        :type other: Polynomial, Monomial, int, float
+        :type other: Polynomial, Monomial, int, float, Fraction
         :rtype: Monomial, Polynomial
         :raise: TypeError
         """
 
         from . import Polynomial
 
-        if isinstance(other, (Polynomial, Monomial, int, float)):
+        try:
             return self + (-other)
-
-        else:
+        except TypeError:
             raise TypeError(f"unsupported operand type(s) for -: 'Monomial' and '{other.__class__.__name__}'")
 
     def __mul__(self, other):
         """
-        Multiplicates this monomial by `other`,
-        which can be a monomial or a number
+        Multiplicates two monomials or a monomial
+        and a number
 
         >>> Monomial(5, x=1, y=2) * Monomial(2, a=1, b=1)
         10abxy**2
         >>> Monomial(3, c=2) * 5
         15c**2
-        >>> Monomial(k=3) * Monomial(k=3)
-        k**6
 
-        :type other: Polynomial, Monomial, int, float
+        :type other: Polynomial, Monomial, int, float, Fraction
         :rtype: Polynomial, Monomial
         :raise: TypeError
         """
@@ -444,7 +442,7 @@ class Monomial:
         from . import Polynomial
 
         # numbers
-        if isinstance(other, (int, float)):
+        if isinstance(other, (int, float, Fraction)):
             other = Monomial(other)
 
         # monomials
@@ -463,15 +461,12 @@ class Monomial:
 
     def __truediv__(self, other):
         """
-        Divide this monomial by another monomial or
-        a number
+        Divides two monomials or a monomial and a number
 
         >>> Monomial(6, a=3) / Monomial(3, a=1)
         2a**2
         >>> Monomial(18, k=3) / 6
         3k**3
-        >>> Monomial(27, x=6) / Monomial(3, x=6)
-        9
 
         If `other`'s variable's exponents
         are higher than this monomial's, it raises a
@@ -482,16 +477,16 @@ class Monomial:
         ...
         ValueError: variable's exponent must be positive
 
-        :type other: Monomial, int, float
+        :type other: Monomial, int, float, Fraction
         :rtype: Monomial
         :raise: ValueError, TypeError
         """
 
-        if isinstance(other, (int, float)):
+        if isinstance(other, (int, float, Fraction)):
             other = Monomial(other)
 
         if isinstance(other, Monomial):
-            coefficient = self.coefficient / other.coefficient
+            coefficient = Fraction(self.coefficient, other.coefficient)
             variables = self.variables - other.variables
             return Monomial(coefficient, variables)
 
@@ -504,20 +499,11 @@ class Monomial:
 
         >>> Monomial(5, x=1) ** 2
         25x**2
-        >>> Monomial(4, c=6) ** 3
-        64c**18
 
         If the exponent is 0, the result will be 1
 
         >>> Monomial(5, k=6) ** 0
         1
-
-        It raises a `TypeError` if `exp` is an istance of `float`.
-
-        >>> Monomial(3.14, a=3) ** 2.5
-        Traceback (most recent call last):
-        ...
-        TypeError: unsupported operand type(s) for ** or pow(): 'Monomial' and 'float'
 
         It raises a `ValueError` if the exponent is negative
 
@@ -525,6 +511,15 @@ class Monomial:
         Traceback (most recent call last):
         ...
         ValueError: Exponent can't be negative
+
+        It raises a `TypeError` if `exp` isn't an istance of `int`.
+
+        >>> Monomial(3.14, a=3) ** 2.5
+        Traceback (most recent call last):
+        ...
+        TypeError: unsupported operand type(s) for ** or pow(): 'Monomial' and 'float'
+
+        To calculate roots, use :func:`Monomial.root`.
 
         :type exp: int
         :rtype: Monomial
@@ -540,7 +535,7 @@ class Monomial:
             return 1
 
         # Raise an error if exponent is negative
-        elif not exp > 0:
+        elif exp < 0:
             raise ValueError("Exponent can't be negative")
 
         return Monomial(self.coefficient ** exp, self.variables * exp)
@@ -549,16 +544,14 @@ class Monomial:
 
     def __radd__(self, other):
         """
-        This method is the reverse for :func:`Monomial.__add__`.
-        With this method, you can swap the two operands
-        of the addition:
+        Reverse for :func:`Monomial.__add__`
 
         >>> 18 + Monomial(3)
         21
 
         For more informations, see :func:`Monomial.__add__` docs.
 
-        :type other: Polynomial, int, float
+        :type other: Polynomial, int, float, Fraction
         :rtype: Monomial, Polynomial
         :raise: TypeError
         """
@@ -570,17 +563,15 @@ class Monomial:
 
     def __rsub__(self, other):
         """
-        This method is the reverse for :func:`Monomial.__sub__`.
-        With this method, you can swap the two operands
-        of the subtraction:
+        Reverse for :func:`Monomial.__sub__`
 
         >>> 9 - Monomial(4)
         5
 
         For more informations, see :func:`Monomial.__sub__` docs.
 
-        :type other: Polynomial, int, float
-        :rtype: Polynomial, Monomial, int, float
+        :type other: Polynomial, int, float, Fraction
+        :rtype: Polynomial, Monomial
         :raise: TypeError
         """
 
@@ -591,16 +582,14 @@ class Monomial:
 
     def __rmul__(self, other):
         """
-        This method is the reverse for :func:`Monomial.__mul__`.
-        With this method, you can swap the two operands
-        of the multiplication:
+        Reverse for :func:`Monomial.__mul__`
 
         >>> 5 * Monomial(2, x=2)
         10x**2
 
         For more informations, see :func:`Monomial.__mul__` docs.
 
-        :type other: Polynomial, int, float
+        :type other: Polynomial, int, float, Fraction
         :rtype: Monomial, Polynomial
         :raise: TypeError
         """
@@ -612,27 +601,25 @@ class Monomial:
 
     def __rtruediv__(self, other):
         """
-        This method is the reverse for :func:`Monomial.__truediv__`.
-        With this method, you can swap the two operands
-        of the division:
+        Reverse for :func:`Monomial.__truediv__`
 
         >>> 8 / Monomial(4)
         2
 
         For more informations, see :func:`Monomial.__truediv__ docs`.
 
-        :type other: int, float
+        :type other: int, float, Fraction
         :rtype: Monomial
         :raise: ValueError, TypeError
         """
 
-        if not isinstance(other, (int, float)):
+        if not isinstance(other, (int, float, Fraction)):
             raise TypeError(f"unsupported operand type(s) for /: '{other.__class__.__name__}' and 'Monomial'")
 
         if self.variables:
             raise ValueError("Exponent must be positive")
 
-        return Monomial(other/self.coefficient)
+        return Monomial(Fraction(other, self.coefficient))
 
     ### Magic Methods ###
 
@@ -701,12 +688,10 @@ class Monomial:
 
     def __repr__(self):
         """
-        Returns the monomial as a string
+        Return the monomial as a string
 
         >>> Monomial(5, x=5)
         5x**5
-        >>> Monomial(-1, a=2, c=3)
-        -a**2c**3
 
         For more informations, see :func:Monomial.__str__()`.
 
@@ -717,8 +702,7 @@ class Monomial:
 
     def __eq__(self, other):
         """
-        Checks if two monomials are equivalent,
-        comparing coefficients and variables
+        Checks if two monomials are equivalent
 
         >>> Monomial(5, x=1) == Monomial(5, x=1)
         True
@@ -729,10 +713,13 @@ class Monomial:
         >>> Monomial(4) == 4
         True
 
-        If the second operator isn't a monomial or
+        If the second operand isn't a monomial or
         a number, it will return `False`.
 
-        :type other: Monomial, int, float
+        It works by comparing the hashes
+        calculated with :func:`Monomial.__hash__`.
+
+        :type other: Monomial, int, float, Fraction
         :rtype: bool
         :raise: TypeError
         """
@@ -745,30 +732,30 @@ class Monomial:
     def __neg__(self):
         """
         Returns the opposite of the monomial
-        inverting the coefficient
 
         >>> - Monomial(5, x=1, y=1)
         -5xy
 
         :rtype: Monomial
         """
+
         return Monomial(-self.coefficient, self.variables)
 
     def __abs__(self):
         """
-        Returns the absolute value of the monomial,
-        calculating the absolute value of the coefficient
+        Returns the absolute value of the monomial
 
         >>> abs(Monomial(-3, a=1, b=4))
         3ab**4
 
         :rtype: Monomial
         """
+
         return Monomial(abs(self.coefficient), self.variables)
 
     def __hash__(self):
         """
-        Return the hash for the Monomial
+        Returns the hash for the Monomial
 
         The hash for `8xy`, for example, is equivalent
         to the hash of `(8, ('x', 1), ('y', 1))`.
@@ -792,6 +779,51 @@ class Monomial:
 
         return hash((self.coefficient, ) + tuple(list(variables)))
 
+
 # Variables shorthands
 def Variable(letter):
+    """
+    Returns a monomial of coefficient
+    with the given variable
+
+    >>> x = Variable('x')
+    >>> x
+    x
+
+    With this you can create monomials and
+    polynomial more easily
+
+    >>> 3*x, type(3*x)
+    (3x, <class 'ruffini.monomials.Monomial'>)
+    >>> 3*x + 5, type(3*x + 5)
+    (3x + 5, <class 'ruffini.polynomials.Polynomial'>)
+
+    For more informations, see :func:`Monomial.__init__`
+    """
+
     return Monomial(1, {str(letter): 1})
+
+# GCD shorthand
+def gcd(*args):
+    """
+    Returns the gcd between two or more monomials.
+    For more informations, see :func:`Monomial.gcd`
+    """
+
+    if not isinstance(args[0], Monomial):
+        args = (Monomial(args[0]),) + args[1:]
+
+    return reduce(lambda x, y: x.gcd(y), args)
+
+# LCM shorthand
+def lcm(*args):
+    """
+    Returns the lcm between two or more monomials.
+    For more informations, see :func:`Monomial.lcm`
+    """
+
+    if not isinstance(args[0], Monomial):
+        args = (Monomial(args[0]),) + args[1:]
+
+    return reduce(lambda x, y: x.lcm(y), args)
+

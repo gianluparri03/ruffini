@@ -14,4 +14,7 @@ The Makefile also has a coverage function: if you want to see the lines of code 
 
 ### Todo
 
+
 #### Done
+
+- [X] Implemented `Fraction`

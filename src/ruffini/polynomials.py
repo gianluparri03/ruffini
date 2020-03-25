@@ -2,6 +2,7 @@ from .variables import VariablesDict
 from .monomials import Monomial, Variable
 
 from collections import Counter
+from fractions import Fraction
 
 
 def get_divisors(n):
@@ -50,7 +51,7 @@ class Polynomial(tuple):
 
         # Sum the similar terms
         for term in terms:
-            if isinstance(term, (int, float)):
+            if isinstance(term, (int, float, Fraction)):
                 term = Monomial(term)
             elif isinstance(term, Monomial):
                 pass
@@ -96,7 +97,7 @@ class Polynomial(tuple):
         10xy - 6xy**3
         >>>
         >>> p.term_coefficient(x=1, y=1)
-        10
+        Fraction(10, 1)
 
         If none is found, the result will be 0
 
@@ -106,7 +107,7 @@ class Polynomial(tuple):
         You can also give directly the variables as an argument
 
         >>> p.term_coefficient(x*y)
-        10
+        Fraction(10, 1)
 
         :type variables: dict, VariablesDict
         :rtype: int, float
@@ -150,7 +151,7 @@ class Polynomial(tuple):
         >>> x = Variable('x')
         >>> p = 3*x**3 + 2*x**2 - 3*x - 2
         >>> p.zeros
-        {-0.6666666666666666, 1.0, -1.0}
+        {Fraction(1, 1), Fraction(-2, 3), Fraction(-1, 1)}
 
         It works only with polynomials with only a variable
         and a constant term
@@ -186,7 +187,7 @@ class Polynomial(tuple):
         # Create a list of candidates
         constant_term_divs = {d for n in get_divisors(constant_term) for d in (+n, -n)}
         coefficient_divs = get_divisors(coefficient)
-        candidates = {a/b for a in constant_term_divs for b in coefficient_divs}
+        candidates = {Fraction(a, b) for a in constant_term_divs for b in coefficient_divs}
 
         # Try every candidate
         zeros = set()

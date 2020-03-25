@@ -4,33 +4,9 @@ from .polynomials import *
 from .fpolynomials import *
 
 
-# Delete some (ugly) things
-del variables
-del monomials
-del polynomials
-del fpolynomials
-
-
-# GCD shorthand
-def gcd(*args):
-    """
-    A shorthand to calculate the gcd between two or more monomials.
-    For more informations, see :func:`Monomial.gcd`
-    """
-
-    if not isinstance(args[0], Monomial):
-        args = (Monomial(args[0]),) + args[1:]
-
-    return reduce(lambda x, y: x.gcd(y), args)
-
-# LCM shorthand
-def lcm(*args):
-    """
-    A shorthand to calculate the lcm between two or more monomials.
-    For more informations, see :func:`Monomial.lcm`
-    """
-
-    if not isinstance(args[0], Monomial):
-        args = (Monomial(args[0]),) + args[1:]
-
-    return reduce(lambda x, y: x.lcm(y), args)
+__all__ = [
+           "VariablesDict",                      # variables.py
+           "Monomial", "gcd", "lcm", "Variable", # monomials.py
+           "Polynomial",                         # polynomials.py
+           "FPolynomial", "factorize"            # fpolynomials.py
+]

@@ -1,4 +1,5 @@
 from unittest import TestCase
+from fractions import Fraction as F
 
 from ruffini import gcd, lcm, Variable
 from ruffini import Monomial as M
@@ -29,10 +30,6 @@ class Test(TestCase):
 
         # default variables is empty
         self.assertTrue(M().variables.is_empty)
-
-        # if the coefficient is a whole number
-        # it will be an integer
-        self.assertIsInstance(M(3.0, a=2).coefficient, int)
 
         # check the degree
         self.assertEqual(M(2, x=2, y=7).degree, 9)
@@ -120,7 +117,7 @@ class Test(TestCase):
 
         # works with monomials
         self.assertEqual(self.m[5] * self.m[1], M(54, x=1, y=6))
-        self.assertEqual(self.m[1] / self.m[5], M(2/3, x=1))
+        self.assertEqual(self.m[1] / self.m[5], M(F(2, 3), x=1))
 
         # works with numbers
         self.assertEqual(self.m[0] * self.m[3], self.m[0] * 3)
@@ -199,8 +196,8 @@ class Test(TestCase):
         # it will stay there
         self.assertEqual(self.m[0].eval(x=5), M(10, y=4))
 
-        # if there are no variables left returns an int/float
-        self.assertIsInstance(self.m[5].eval(y=2), int)
+        # if there are no variables left returns a fraction
+        self.assertIsInstance(self.m[5].eval(y=2), F)
 
         # otherwise it return a monomial
         self.assertIsInstance(self.m[2].eval(x=3), M)
