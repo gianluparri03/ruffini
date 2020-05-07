@@ -81,6 +81,7 @@ class Polynomial(tuple):
 
         # Add polynomial degree
         self.degree = max(m.degree for m in self) if self else 0
+        self.variables = tuple({variable for term in self for variable in term.variables})
 
     ### Utility Methods ###
 
@@ -119,6 +120,9 @@ class Polynomial(tuple):
 
         elif isinstance(variables, Monomial) and variables.coefficient == 1:
             variables = variables.variables
+
+        elif variables == 1:
+            variables = VariablesDict()
 
         elif not isinstance(variables, VariablesDict):
             variables = VariablesDict(variables)
@@ -171,18 +175,17 @@ class Polynomial(tuple):
         """
 
         # Fetch variables and the constant term
-        variable = {v for m in self for v in m.variables.keys()}
         constant_term = self.term_coefficient()
 
         # Raise a ValueError if there are more than one variable
         # or if there isn't a constant term
-        if len(set(variable)) != 1:
+        if len(self.variables) != 1:
             raise ValueError("Can't calculate zeros for polynomials with more than a variable")
         elif not constant_term:
             raise ValueError("Can't calculate zeros for polynomials without a constant term")
 
-        variable = tuple(variable)[0]
-        coefficient = self.term_coefficient({variable: self.degree})
+        variable = Variable(self.variables[0])
+        coefficient = self.term_coefficient(variable**self.degree)
 
         # Create a list of candidates
         constant_term_divs = {d for n in get_divisors(constant_term) for d in (+n, -n)}
@@ -193,7 +196,7 @@ class Polynomial(tuple):
         zeros = set()
 
         for candidate in candidates:
-            if self.eval({variable: candidate}) == 0:
+            if self.eval({self.variables[0]: candidate}) == 0:
                 zeros.add(candidate)
 
         return zeros
@@ -244,7 +247,7 @@ class Polynomial(tuple):
         :raise: TypeError
         """
 
-        if isinstance(other, (int, float)):
+        if isinstance(other, (int, float, Fraction)):
             other = Monomial(other)
 
         if isinstance(other, Polynomial):
@@ -280,7 +283,7 @@ class Polynomial(tuple):
         :raise: TypeError
         """
 
-        if isinstance(other, (int, float)):
+        if isinstance(other, (int, float, Fraction)):
             other = Monomial(other)
 
         if isinstance(other, Polynomial):
@@ -316,7 +319,7 @@ class Polynomial(tuple):
         :raise: TypeError
         """
 
-        if isinstance(other, (Monomial, int, float)):
+        if isinstance(other, (Monomial, int, float, Fraction)):
             return Polynomial([t*other for t in self])
 
         elif isinstance(other, Polynomial):

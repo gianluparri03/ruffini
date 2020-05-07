@@ -826,4 +826,3 @@ def lcm(*args):
         args = (Monomial(args[0]),) + args[1:]
 
     return reduce(lambda x, y: x.lcm(y), args)
-

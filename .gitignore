@@ -1,6 +1,13 @@
+# WIP things
+src/WIP
+
+# Direnv
+**.direnv
+**.envrc
+
+# Python
 **__pycache__
+**.pyc
+
+# Sublime Text
 *.sublime-*
-*.pyc
-env
-**coverage**
-docs/build

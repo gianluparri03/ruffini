@@ -1,5 +1,6 @@
 from .monomials import Monomial, Variable
 from .polynomials import Polynomial
+from .equations import Equation
 
 from functools import reduce
 from fractions import Fraction
@@ -235,17 +236,17 @@ def gcf(polynomial):
     for example:
 
     >>> gcf(Polynomial(Monomial(10, x=1), 15))
-    5(2x + 3)
+    (5, 2x + 3)
 
     If there isn't a gcf, it will return the starting polynomial
 
     >>> gcf(Polynomial(Monomial(11, x=1), 15))
-    11x + 15
+    (11x + 15,)
 
-    The function will always return a FPolynomial.
+    The function returns a tuple.
 
     :type p: Polynomial
-    :rtype: FPolynomial
+    :rtype: tuple
     :raise: TypeError
     """
 
@@ -258,11 +259,11 @@ def gcf(polynomial):
 
     # If there is no gcf, return the given polynomial
     if gcd == 1:
-        return FPolynomial(polynomial)
+        return (polynomial, )
 
     # Otherwise, return the gcf and the reduced polynomial
     polynomial = Polynomial([t/gcd for t in polynomial])
-    return FPolynomial(gcd, polynomial)
+    return gcd, polynomial
 
 def binomial_square(polynomial):
     """
@@ -277,7 +278,7 @@ def binomial_square(polynomial):
     >>> p
     4x**2 + 9y**4 - 12xy**2
     >>> binomial_square(p)
-    (2x - 3y**2)**2
+    (2x - 3y**2, 2x - 3y**2)
 
     It can raise ValueError in three cases:
 
@@ -305,7 +306,7 @@ def binomial_square(polynomial):
     ValueError: Not a binomial square
 
     :type p: Polynomial
-    :rtype: FPolynomial
+    :rtype: tuple
     :raise: TypeError, ValueError
     """
 
@@ -336,7 +337,58 @@ def binomial_square(polynomial):
     if polynomial[2].coefficient < 0:
         b = -b
 
-    return FPolynomial(Polynomial(a, b), Polynomial(a, b))
+    return Polynomial(a, b), Polynomial(a, b)
+
+def ruffinis_rule(polynomial):
+    """
+    Try to factorize the polynomial with the Ruffini's rule.
+
+    >>> ruffinis_rule(Polynomial(Monomial(3, x=3), Monomial(2, x=2), Monomial(-3, x=1), Monomial(-2)))
+    (x - 1, 3x**2 + 2 + 5x)
+
+    If it didn't work, it raises a ValueError.
+
+    If polynomial isn't a :class:`Polynomial` instance it raises a TypeError
+
+    >>> ruffinis_rule('Pepe the frog')
+    Traceback (most recent call last):
+    ...
+    TypeError: Can't use ruffini's rule with an object of type 'str'
+
+    :type polynomial: Polynomial
+    :rtype: tuple
+    :raise: TypeError, ValueError
+    """
+
+    # raise a TypeError if polynomial isn't a polynomial instance
+    if not isinstance(polynomial, Polynomial):
+        raise TypeError(f"Can't use ruffini's rule with an object of type '{polynomial.__class__.__name__}'")
+
+    # Get the variable
+    variable = polynomial.variables[0]
+
+    for zero in polynomial.zeros:
+        # Calculate the coefficients
+        coefficients = [polynomial.term_coefficient({variable: polynomial.degree})]
+        try:
+            for exponent in range(polynomial.degree)[::-1]:
+                coefficients.append(coefficients[-1] * zero + polynomial.term_coefficient({variable: exponent}))
+
+            # Check that the remider is 0 (otherwise try with another zero)
+            if coefficients[-1]:
+                raise RuntimeError
+
+            result = 0
+
+            # Build the monomials
+            for d in range(len(coefficients) - 1):
+                result += Monomial(coefficients[d], {variable: polynomial.degree - d - 1})
+
+            return Monomial(1, {variable: 1}) - zero, Polynomial(result)
+        except RuntimeError:
+            continue
+
+    raise ValueError("Can't factor the polynomial with Ruffini's rule")
 
 def factorize(polynomial):
     """
@@ -360,8 +412,8 @@ def factorize(polynomial):
     ...
     TypeError: Can't factorize object of type 'str'
 
-    :type polynomial: Polynomial, Monomial, int, float
-    :rtype: FPolynomial, Monomial, int, float
+    :type polynomial: Polynomial
+    :rtype: FPolynomial
     :raises: TypeError
     """
 
@@ -370,29 +422,49 @@ def factorize(polynomial):
         raise TypeError(f"Can't factorize object of type '{polynomial.__class__.__name__}'")
 
     # initialize factors
-    factors = tuple()
+    factors = []
+    new_factors = list(gcf(polynomial))
 
-    # apply gcf() to polynomial, then iterate the result
-    for factor in gcf(polynomial):
+    # while there are things to factorize, factorize them!
+    while not factors == new_factors:
+        factors = new_factors
+        new_factors = []
 
-        # if the factor is not a polynomial, add it to the factors list
-        if not isinstance(factor, Polynomial):
-            factors += (factor, )
+        # for each factor
+        for factor in factors:
+            # leave it like it was if it isn't a polynomial, if it's a polynomial
+            # of first degree or if it has more than a variable
+            if not isinstance(factor, Polynomial) or not len(factor.variables) == 1 or factor.degree < 2:
+                new_factors.append(factor)
+                continue
 
-        # if it's a polynomial of length one, add it to the list
-        elif len(factor) == 1:
-            factors += (factor[0], )
+            # try with a binomial square
+            if len(factor) == 3 and factor.degree == 2:
+                try:
+                    new_factors.extend(binomial_square(factor))
+                    continue
+                except ValueError:
+                    pass
 
-        # if it's a polynomial of length one, try binomial square
-        elif len(factor) == 3:
-            try:
-                factors += binomial_square(factor)
-            except ValueError:
-                pass
+            # if it is a trinomial try with an equation
+            if len(factor) == 3 and factor.degree == 2:
+                try:
+                    x1, x2 = Equation(factor, 0).solve()
+                    variable = Monomial(1, {factor.variables[0]: 1})
+                    new_factors.extend([factor.term_coefficient(variable**2), variable - x1, variable - x2])
+                    continue
+                except AssertionError:
+                    pass
 
-        # otherwise, add it to the list
-        else:
-            factors += (factor, )
+            # try with ruffini's rule
+            if factor.degree >= 2:
+                try:
+                    new_factors.extend(ruffinis_rule(factor))
+                    continue
+                except ValueError:
+                    pass
+
+            new_factors.append(factor)
 
     # Return the result
-    return FPolynomial(factors)
+    return FPolynomial(*factors)

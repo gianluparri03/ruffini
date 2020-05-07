@@ -73,18 +73,23 @@ class Test(TestCase):
         factorization = FP(5, P(M(2, x=2), M(3, y=1)), P(M(2, x=2), M(3, y=1)))
         self.assertEqual(polynomial.factorize(), factorization)
 
+        self.assertEqual(factorize(M(x=2) + 1 - M(2, x=1)), FP(M(x=1) - 1, M(x=1) - 1))
+        self.assertEqual(factorize(M(8, x=2) + M(2, x=1) - 3), FP(8, M(x=1) - 1/2, M(x=1) + 3/4))
+        self.assertEqual(factorize(M(10, x=1) + 5), FP(5, M(2, x=1) + 1))
+        self.assertEqual(factorize(M(3, x=3) + M(2, x=2) - M(3, x=1) -2), FP(M(x=1) - 1, M(x=1) + 1, M(3, x=1) + 2))
+
     def test_gcf(self):
         # works only with polynomials
         self.assertRaises(TypeError, gcf, 'a number')
 
-        # always return a FPolynomial
-        self.assertIsInstance(gcf(self.p[1]), FP)
+        # always return a tuple
+        self.assertIsInstance(gcf(self.p[1]), tuple)
 
         # return the same polynomial if it's not factorizable with gcf
-        self.assertEqual(gcf(self.p[0]), FP(self.p[0]))
+        self.assertEqual(gcf(self.p[0]), (self.p[0], ))
 
         # otherwise return the gcf and the polynomial reduced
-        self.assertEqual(gcf(self.p[1]), self.fp[1])
+        self.assertEqual(gcf(self.p[1]), (5, M(2, x=1) + 3))
 
         # commutative property
         self.assertEqual(gcf(self.p[1]), gcf(P(*self.p[1][::-1])))
@@ -104,14 +109,14 @@ class Test(TestCase):
 
         # test with a binomial square
         polynomial = self.p[2]*self.p[2]
-        factorized = FP(self.p[2], self.p[2])
-        self.assertEqual(binomial_square(polynomial), factorized)
+        self.assertEqual(binomial_square(polynomial), (self.p[2], self.p[2]))
 
         # test with a negative binomial square
         polynomial -= M(24, x=2, y=1)
-        factorized = FP(*[P(self.p[2][0], -self.p[2][1])] * 2)
+        factorized = self.p[2][0] -self.p[2][1], self.p[2][0] -self.p[2][1]
         self.assertEqual(binomial_square(polynomial), factorized)
 
         # commutative property
         polynomial = P(*polynomial[::-1])
+        factorized = self.p[2][1] -self.p[2][0], self.p[2][1] -self.p[2][0]
         self.assertEqual(binomial_square(polynomial), factorized)
