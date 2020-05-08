@@ -1,8 +1,7 @@
-from .polynomials import Polynomial
-
-from math import sqrt
-from math import gcd as math_gcd
+from math import sqrt, gcd as math_gcd
 from fractions import Fraction
+
+from .polynomials import Polynomial
 
 
 class Equation:
@@ -111,7 +110,7 @@ class Equation:
         Traceback (most recent call last):
         ...
         NotImplementedError: Can't solve equations with degree higher than 2
-    
+
         If the result is impossible or indeterminate
         it raises a ValueError
 

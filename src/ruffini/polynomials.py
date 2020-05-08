@@ -1,8 +1,8 @@
-from .variables import VariablesDict
-from .monomials import Monomial, Variable
-
 from collections import Counter
 from fractions import Fraction
+
+from .variables import VariablesDict
+from .monomials import Monomial, Variable
 
 
 def get_divisors(n):

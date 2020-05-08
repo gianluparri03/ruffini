@@ -7,3 +7,4 @@ Reference
    monomials
    polynomials
    factorization
+   equations

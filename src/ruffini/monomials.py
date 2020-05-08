@@ -1,8 +1,8 @@
-from .variables import VariablesDict
-
+from fractions import Fraction
 from functools import reduce
 from math import gcd as math_gcd
-from fractions import Fraction
+
+from .variables import VariablesDict
 
 
 class Monomial:

@@ -1,9 +1,9 @@
+from fractions import Fraction
+from functools import reduce
+
 from .monomials import Monomial, Variable
 from .polynomials import Polynomial
 from .equations import Equation
-
-from functools import reduce
-from fractions import Fraction
 
 
 class FPolynomial(tuple):
