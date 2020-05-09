@@ -76,7 +76,7 @@ class Monomial:
         self.variables = VariablesDict(variables)
 
         # Calculate the degree
-        self.degree = sum(self.variables.values())
+        self.degree = sum(self.variables.exponents())
 
     ### Utility Methods ###
 
@@ -656,11 +656,11 @@ class Monomial:
         variables = ""
 
         # order the variables
-        for letter in sorted(self.variables.keys()):
-            if self.variables[letter] > 1:
-                variables += f"{letter}**{self.variables[letter]}"
+        for variable, exponent in self.variables.items():
+            if exponent > 1:
+                variables += f"{variable}**{exponent}"
             else:
-                variables += letter
+                variables += variable
 
         # coefficient == 1 w/ variables
         if self.coefficient == 1 and variables:
@@ -775,9 +775,7 @@ class Monomial:
         if self.variables.is_empty:
             return hash(self.coefficient)
 
-        variables = ((k, self.variables[k]) for k in sorted(self.variables.keys()))
-
-        return hash((self.coefficient, ) + tuple(list(variables)))
+        return hash((self.coefficient, *self.variables.items()))
 
 
 # Variables shorthands

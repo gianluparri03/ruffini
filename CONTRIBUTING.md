@@ -18,3 +18,7 @@ The Makefile also has a coverage function: if you want to see the lines of code 
 #### Done
 
 - [X] Implemented `Fraction`
+- [X] Created `Equation`
+- [X] Implemented Ruffini's rule
+- [X] Implemented trinomial scomposition with equations
+- [X] `VariablesDict` is no more a subclass of `dict`

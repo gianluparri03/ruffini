@@ -115,16 +115,14 @@ class Polynomial(tuple):
         """
 
         # adjust arguments
-        if not variables:
+        if variables == 1 or not variables and not kwargs:
+            variables = VariablesDict()
+        elif not variables:
             variables = kwargs
-
         elif isinstance(variables, Monomial) and variables.coefficient == 1:
             variables = variables.variables
-
-        elif variables == 1:
-            variables = VariablesDict()
-
-        elif not isinstance(variables, VariablesDict):
+        
+        if not isinstance(variables, VariablesDict):
             variables = VariablesDict(variables)
 
         for term in self:

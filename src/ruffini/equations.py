@@ -1,6 +1,7 @@
 from math import sqrt, gcd as math_gcd
 from fractions import Fraction
 
+from .monomials import Monomial
 from .polynomials import Polynomial
 
 
@@ -28,9 +29,9 @@ class Equation:
         >>> equation.second
         0
         >>> equation.degree
-        2
+        1
         >>> equation.variable
-        x
+        'x'
 
         NB: It raises a NotImplementedError if you try to create an
         equation with more than one variable
@@ -101,7 +102,7 @@ class Equation:
         Solve the equation.
 
         >>> Equation(Monomial(x=2), 4).solve()
-        +2, -2
+        (Fraction(2, 1), Fraction(-2, 1))
 
         It works only with equations of degree 1 or 2;
         if it's higher, it raises a NotImplementedError.
